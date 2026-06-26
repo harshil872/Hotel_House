@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Royal Plate · Luxury Dining</title>
+  <!-- Google Fonts (Playfair Display + Poppins) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Main CSS file -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+</head>
+<body>
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <i class="fas fa-crown"></i> The Royal Plate
+        </div>
+        <ul class="nav-links">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#">Menu</a></li>
+          <li><a href="#">Reservations</a></li>
+          <li><a href="#">Gallery</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#" class="nav-cta"><i class="fas fa-calendar-check"></i> Book Now</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-container">
+      <div class="hero-content">
+        <span class="hero-badge">✦ Michelin Starred</span>
+        <h1>Dining at the <span>Pinnacle</span> of <span>Excellence</span></h1>
+        <p>
+          The Royal Plate offers an unparalleled gastronomic journey, where each dish is a celebration of flavour, artistry, and tradition.
+        </p>
+        <div class="hero-buttons">
+          <a href="#" class="btn-primary"><i class="fas fa-utensil-spoon"></i> Discover Menu</a>
+          <a href="#" class="btn-outline"><i class="fas fa-video"></i> Virtual Tour</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Years of Excellence</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">4.9</div>
+          <div class="stat-label">★ Guest Rating</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">300+</div>
+          <div class="stat-label">Wine Labels</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">12</div>
+          <div class="stat-label">Award-Winning Dishes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SIGNATURE DISHES ===== -->
+  <section class="signature">
+    <div class="container">
+      <h2 class="section-title">Our <span>Signature</span> Creations</h2>
+      <p class="section-sub">Crafted with passion, presented with pride</p>
+      <div class="signature-grid">
+        <div class="signature-card">
+          <div class="card-icon"><i class="fas fa-utensils"></i></div>
+          <h4>Golden Lobster Thermidor</h4>
+          <p>Butter-poached lobster, cognac cream, truffle essence</p>
+          <div class="card-price">$68</div>
+        </div>
+        <div class="signature-card featured">
+          <div class="card-icon"><i class="fas fa-crown"></i></div>
+          <h4>Royal Wagyu Striploin</h4>
+          <p>Grade A5 wagyu, red wine jus, black garlic purée</p>
+          <div class="card-price">$95</div>
+          <div class="featured-badge">★ Chef's Choice</div>
+        </div>
+        <div class="signature-card">
+          <div class="card-icon"><i class="fas fa-fish"></i></div>
+          <h4>Wild Sea Bass</h4>
+          <p>Citrus beurre blanc, heirloom vegetables, basil oil</p>
+          <div class="card-price">$52</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EXPERIENCE ===== -->
+  <section class="experience">
+    <div class="container">
+      <div class="experience-grid">
+        <div class="experience-content">
+          <span class="experience-tag">✦ The Experience</span>
+          <h2>Beyond <span>Extraordinary</span></h2>
+          <p>
+            From the moment you step through our doors, you are transported into a world of refined elegance. Our team of world-class chefs and sommeliers curate every detail to ensure an unforgettable evening.
+          </p>
+          <ul class="experience-list">
+            <li><i class="fas fa-check-circle"></i> Private dining rooms available</li>
+            <li><i class="fas fa-check-circle"></i> Exclusive wine tastings</li>
+            <li><i class="fas fa-check-circle"></i> Personalized menus for special occasions</li>
+          </ul>
+          <a href="#" class="btn-primary">Reserve Your Table</a>
+        </div>
+        <div class="experience-image">
+          <div class="experience-card">
+            <i class="fas fa-wine-glass-alt"></i>
+            <h4>Wine Cellar</h4>
+            <p>Over 300 handpicked labels from the world's finest vineyards</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIAL ===== -->
+  <section class="testimonial">
+    <div class="container">
+      <div class="testimonial-box">
+        <i class="fas fa-quote-left"></i>
+        <blockquote>
+          “The Royal Plate is not just a restaurant; it is a destination. Every visit is a celebration of culinary artistry.”
+        </blockquote>
+        <div class="author">
+          <strong>James Whitfield</strong>
+          <span>Food Critic, The Gourmet Review</span>
+        </div>
+        <div class="testimonial-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESERVATION ===== -->
+  <section class="reservation">
+    <div class="container">
+      <div class="reservation-card">
+        <h2>Reserve Your <span>Royal</span> Table</h2>
+        <p>Join us for an evening of culinary splendour. Book your table today.</p>
+        <a href="#" class="btn-primary"><i class="fas fa-calendar-check"></i> Make a Reservation</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><i class="fas fa-crown"></i> The Royal Plate</h3>
+          <p>Fine dining in the heart of the city. Open daily for lunch &amp; dinner.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h5>Quick Links</h5>
+          <ul>
+            <li><a href="#">Menu</a></li>
+            <li><a href="#">Reservations</a></li>
+            <li><a href="#">Private Events</a></li>
+            <li><a href="#">Gift Cards</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>About</h5>
+          <ul>
+            <li><a href="#">Our Story</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Contact</h5>
+          <ul>
+            <li><i class="fas fa-phone-alt"></i> +1 (555) 123-4567</li>
+            <li><i class="fas fa-map-marker-alt"></i> 22 Kings Road, NYC</li>
+            <li><i class="far fa-envelope"></i> info@royalplate.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 The Royal Plate. All rights reserved.</span>
+        <span class="footer-legal">
+          <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
