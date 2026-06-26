@@ -1,216 +1,226 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Royal Plate · Luxury Dining</title>
-  <!-- Google Fonts (Playfair Display + Poppins) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <!-- Font Awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- Main CSS file -->
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Savoria | Fine Dining Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}"/>
 </head>
 <body>
-  <!-- ===== HEADER / NAV ===== -->
-  <header class="header">
-    <div class="container">
-      <nav class="navbar">
-        <div class="logo">
-          <i class="fas fa-crown"></i> The Royal Plate
-        </div>
-        <ul class="nav-links">
-          <li><a href="#" class="active">Home</a></li>
-          <li><a href="#">Menu</a></li>
-          <li><a href="#">Reservations</a></li>
-          <li><a href="#">Gallery</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#" class="nav-cta"><i class="fas fa-calendar-check"></i> Book Now</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
 
-  <!-- ===== HERO ===== -->
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-logo">Savoria</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-close" onclick="closeMobile()">&times;</span>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'menu' %}">Menu</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'gallery' %}">Gallery</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'reservations' %}" style="color:var(--gold)">Reserve</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'index' %}" class="active">Home</a></li>
+      <li><a href="{% url 'menu' %}">Menu</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'gallery' %}">Gallery</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+      <li><a href="{% url 'reservations' %}" class="nav-reserve">Reserve a Table</a></li>
+    </ul>
+    <div class="hamburger" onclick="openMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
   <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="container hero-container">
-      <div class="hero-content">
-        <span class="hero-badge">✦ Michelin Starred</span>
-        <h1>Dining at the <span>Pinnacle</span> of <span>Excellence</span></h1>
-        <p>
-          The Royal Plate offers an unparalleled gastronomic journey, where each dish is a celebration of flavour, artistry, and tradition.
-        </p>
-        <div class="hero-buttons">
-          <a href="#" class="btn-primary"><i class="fas fa-utensil-spoon"></i> Discover Menu</a>
-          <a href="#" class="btn-outline"><i class="fas fa-video"></i> Virtual Tour</a>
-        </div>
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Est. 2010 &middot; Award Winning</div>
+      <h1>Where Every Meal<span>Tells A Story</span></h1>
+      <p>Experience the art of fine dining with fresh ingredients, bold flavors, and exceptional hospitality.</p>
+      <div class="hero-btns">
+        <a href="{% url 'menu' %}" class="btn-primary">Explore Menu</a>
+        <a href="{% url 'reservations' %}" class="btn-outline">Reserve a Table</a>
+      </div>
+    </div>
+    <div class="scroll-indicator"><span></span><span></span></div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stats-grid">
+      <div class="stat-item reveal"><div class="stat-num" data-count="150">0</div><div class="stat-label">Menu Items</div></div>
+      <div class="stat-item reveal"><div class="stat-num" data-count="35">0</div><div class="stat-label">Expert Chefs</div></div>
+      <div class="stat-item reveal"><div class="stat-num" data-count="12">0</div><div class="stat-label">Awards Won</div></div>
+      <div class="stat-item reveal"><div class="stat-num" data-count="50000">0</div><div class="stat-label">Happy Guests</div></div>
+    </div>
+  </div>
+
+  <!-- SPECIALTIES -->
+  <section class="specialties">
+    <div class="section-label reveal">Our Craft</div>
+    <h2 class="section-title reveal">Why Choose Savoria</h2>
+    <div class="section-divider center reveal"></div>
+    <p class="reveal" style="max-width:550px;margin:0 auto 0;color:rgba(255,255,255,0.6);line-height:1.8;">
+      We believe dining is more than food — it's a complete sensory experience crafted with passion.
+    </p>
+    <div class="spec-grid">
+      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-fire"></i></div><h3>Live Kitchen</h3><p>Watch our chefs craft your meal in our open kitchen concept — transparency in every dish.</p></div>
+      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-leaf"></i></div><h3>Farm to Table</h3><p>Fresh, locally sourced ingredients delivered daily. Every bite connects you to nature.</p></div>
+      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-wine-glass-alt"></i></div><h3>Premium Wines</h3><p>A curated cellar of 200+ fine wines from across the globe, selected by our sommelier.</p></div>
+      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-star"></i></div><h3>Michelin Quality</h3><p>Award-winning recipes refined over decades, bringing you restaurant-grade excellence.</p></div>
+      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-birthday-cake"></i></div><h3>Private Events</h3><p>Host birthdays, weddings, and corporate events in our luxurious private dining rooms.</p></div>
+      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-concierge-bell"></i></div><h3>VIP Service</h3><p>White-glove service from the moment you walk in. Your comfort is our priority.</p></div>
+    </div>
+  </section>
+
+  <!-- FEATURED DISHES -->
+  <section class="featured">
+    <div class="featured-header">
+      <div>
+        <div class="section-label reveal">Chef's Selection</div>
+        <h2 class="section-title reveal">Featured Dishes</h2>
+        <div class="section-divider reveal"></div>
+      </div>
+      <a href="{% url 'menu' %}" class="btn-outline reveal">View Full Menu</a>
+    </div>
+    <div class="dishes-grid">
+      <div class="dish-card reveal">
+        <div class="dish-img"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Salmon" loading="lazy"/><span class="dish-badge">Popular</span></div>
+        <div class="dish-info"><h4>Pan-Seared Salmon</h4><p>Atlantic salmon with lemon butter sauce, asparagus, and wild rice.</p><div class="dish-footer"><span class="dish-price">$38</span><button class="dish-order">Order Now</button></div></div>
+      </div>
+      <div class="dish-card reveal">
+        <div class="dish-img"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600" alt="Steak" loading="lazy"/><span class="dish-badge">Best Seller</span></div>
+        <div class="dish-info"><h4>Wagyu Ribeye Steak</h4><p>A5 Wagyu with truffle butter, roasted garlic mash, and red wine jus.</p><div class="dish-footer"><span class="dish-price">$85</span><button class="dish-order">Order Now</button></div></div>
+      </div>
+      <div class="dish-card reveal">
+        <div class="dish-img"><img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600" alt="Pasta" loading="lazy"/><span class="dish-badge">Chef's Pick</span></div>
+        <div class="dish-info"><h4>Truffle Carbonara</h4><p>Handmade pappardelle with black truffle, pancetta, and aged pecorino.</p><div class="dish-footer"><span class="dish-price">$32</span><button class="dish-order">Order Now</button></div></div>
+      </div>
+      <div class="dish-card reveal">
+        <div class="dish-img"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600" alt="Dessert" loading="lazy"/><span class="dish-badge">New</span></div>
+        <div class="dish-info"><h4>Chocolate Fondant</h4><p>Warm Belgian chocolate lava cake with vanilla bean ice cream.</p><div class="dish-footer"><span class="dish-price">$18</span><button class="dish-order">Order Now</button></div></div>
       </div>
     </div>
   </section>
 
-  <!-- ===== STATS ===== -->
-  <section class="stats">
-    <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-number">15+</div>
-          <div class="stat-label">Years of Excellence</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">4.9</div>
-          <div class="stat-label">★ Guest Rating</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">300+</div>
-          <div class="stat-label">Wine Labels</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">12</div>
-          <div class="stat-label">Award-Winning Dishes</div>
-        </div>
+  <!-- EXPERIENCE -->
+  <div class="experience">
+    <div class="exp-img"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800" alt="Restaurant Interior" loading="lazy"/></div>
+    <div class="exp-content">
+      <div class="section-label reveal">The Savoria Experience</div>
+      <h2 class="section-title reveal">Dining Redefined<br>Since 2010</h2>
+      <div class="section-divider reveal"></div>
+      <p class="reveal">Nestled in the heart of the city, Savoria has been crafting unforgettable dining experiences for over a decade. Our philosophy is simple: exceptional ingredients, masterful technique, warm hospitality.</p>
+      <ul class="exp-features reveal">
+        <li><i class="fas fa-check"></i>Seasonal menus crafted by award-winning chefs</li>
+        <li><i class="fas fa-check"></i>Intimate ambiance with handcrafted interiors</li>
+        <li><i class="fas fa-check"></i>Private dining rooms for up to 80 guests</li>
+        <li><i class="fas fa-check"></i>Vegan, gluten-free &amp; allergy-aware options</li>
+        <li><i class="fas fa-check"></i>Live jazz every Friday and Saturday evening</li>
+      </ul>
+      <a href="{% url 'about' %}" class="btn-primary reveal">Our Story</a>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="section-label reveal">What Guests Say</div>
+    <h2 class="section-title reveal">Guest Reviews</h2>
+    <div class="section-divider center reveal"></div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-quote">&ldquo;</div>
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">The most extraordinary dining experience of my life. The Wagyu steak was cooked to absolute perfection. Service was impeccable from start to finish.</p>
+        <div class="testi-author"><div class="testi-avatar"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah"/></div><div class="testi-name"><strong>Sarah Mitchell</strong><span>Food Critic, NY Times</span></div></div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-quote">&ldquo;</div>
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">We celebrated our anniversary here and it was magical. The ambiance, the food, the wine pairing — everything was beyond expectations. Will definitely return.</p>
+        <div class="testi-author"><div class="testi-avatar"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="James"/></div><div class="testi-name"><strong>James &amp; Elena Chen</strong><span>Regular Guests</span></div></div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-quote">&ldquo;</div>
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">The truffle carbonara is unlike anything I've ever tasted. The attention to detail in every dish shows true culinary artistry. A must-visit in the city.</p>
+        <div class="testi-author"><div class="testi-avatar"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya"/></div><div class="testi-name"><strong>Priya Sharma</strong><span>Travel Blogger</span></div></div>
       </div>
     </div>
   </section>
 
-  <!-- ===== SIGNATURE DISHES ===== -->
-  <section class="signature">
-    <div class="container">
-      <h2 class="section-title">Our <span>Signature</span> Creations</h2>
-      <p class="section-sub">Crafted with passion, presented with pride</p>
-      <div class="signature-grid">
-        <div class="signature-card">
-          <div class="card-icon"><i class="fas fa-utensils"></i></div>
-          <h4>Golden Lobster Thermidor</h4>
-          <p>Butter-poached lobster, cognac cream, truffle essence</p>
-          <div class="card-price">$68</div>
+  <!-- CTA BANNER -->
+  <div class="cta-banner">
+    <div class="section-label reveal">Limited Seats Available</div>
+    <h2 class="reveal">Ready for an Unforgettable Evening?</h2>
+    <p class="reveal">Book your table today and let us craft a dining experience you'll never forget.</p>
+    <a href="{% url 'reservations' %}" class="btn-primary reveal">Reserve Your Table</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
+        <p>A dining destination where culinary art meets warm hospitality. Located in the heart of the city.</p>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
-        <div class="signature-card featured">
-          <div class="card-icon"><i class="fas fa-crown"></i></div>
-          <h4>Royal Wagyu Striploin</h4>
-          <p>Grade A5 wagyu, red wine jus, black garlic purée</p>
-          <div class="card-price">$95</div>
-          <div class="featured-badge">★ Chef's Choice</div>
-        </div>
-        <div class="signature-card">
-          <div class="card-icon"><i class="fas fa-fish"></i></div>
-          <h4>Wild Sea Bass</h4>
-          <p>Citrus beurre blanc, heirloom vegetables, basil oil</p>
-          <div class="card-price">$52</div>
-        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'menu' %}">Menu</a></li>
+          <li><a href="{% url 'about' %}">About Us</a></li>
+          <li><a href="{% url 'gallery' %}">Gallery</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <ul>
+          <li><a href="#">Mon–Thu: 12PM – 10PM</a></li>
+          <li><a href="#">Fri–Sat: 12PM – 12AM</a></li>
+          <li><a href="#">Sunday: 11AM – 9PM</a></li>
+          <li><a href="#">Brunch: Sat–Sun 10AM</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">123 Gourmet Ave, New York</a></li>
+          <li><a href="tel:+12125550100">+1 (212) 555-0100</a></li>
+          <li><a href="mailto:hello@savoria.com">hello@savoria.com</a></li>
+          <li><a href="{% url 'reservations' %}">Book a Table</a></li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <!-- ===== EXPERIENCE ===== -->
-  <section class="experience">
-    <div class="container">
-      <div class="experience-grid">
-        <div class="experience-content">
-          <span class="experience-tag">✦ The Experience</span>
-          <h2>Beyond <span>Extraordinary</span></h2>
-          <p>
-            From the moment you step through our doors, you are transported into a world of refined elegance. Our team of world-class chefs and sommeliers curate every detail to ensure an unforgettable evening.
-          </p>
-          <ul class="experience-list">
-            <li><i class="fas fa-check-circle"></i> Private dining rooms available</li>
-            <li><i class="fas fa-check-circle"></i> Exclusive wine tastings</li>
-            <li><i class="fas fa-check-circle"></i> Personalized menus for special occasions</li>
-          </ul>
-          <a href="#" class="btn-primary">Reserve Your Table</a>
-        </div>
-        <div class="experience-image">
-          <div class="experience-card">
-            <i class="fas fa-wine-glass-alt"></i>
-            <h4>Wine Cellar</h4>
-            <p>Over 300 handpicked labels from the world's finest vineyards</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== TESTIMONIAL ===== -->
-  <section class="testimonial">
-    <div class="container">
-      <div class="testimonial-box">
-        <i class="fas fa-quote-left"></i>
-        <blockquote>
-          “The Royal Plate is not just a restaurant; it is a destination. Every visit is a celebration of culinary artistry.”
-        </blockquote>
-        <div class="author">
-          <strong>James Whitfield</strong>
-          <span>Food Critic, The Gourmet Review</span>
-        </div>
-        <div class="testimonial-stars">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== RESERVATION ===== -->
-  <section class="reservation">
-    <div class="container">
-      <div class="reservation-card">
-        <h2>Reserve Your <span>Royal</span> Table</h2>
-        <p>Join us for an evening of culinary splendour. Book your table today.</p>
-        <a href="#" class="btn-primary"><i class="fas fa-calendar-check"></i> Make a Reservation</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <h3><i class="fas fa-crown"></i> The Royal Plate</h3>
-          <p>Fine dining in the heart of the city. Open daily for lunch &amp; dinner.</p>
-          <div class="footer-social">
-            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-          </div>
-        </div>
-        <div class="footer-links">
-          <h5>Quick Links</h5>
-          <ul>
-            <li><a href="#">Menu</a></li>
-            <li><a href="#">Reservations</a></li>
-            <li><a href="#">Private Events</a></li>
-            <li><a href="#">Gift Cards</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h5>About</h5>
-          <ul>
-            <li><a href="#">Our Story</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Press</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h5>Contact</h5>
-          <ul>
-            <li><i class="fas fa-phone-alt"></i> +1 (555) 123-4567</li>
-            <li><i class="fas fa-map-marker-alt"></i> 22 Kings Road, NYC</li>
-            <li><i class="far fa-envelope"></i> info@royalplate.com</li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>&copy; 2026 The Royal Plate. All rights reserved.</span>
-        <span class="footer-legal">
-          <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
-        </span>
-      </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
+      <p>Designed with <i class="fas fa-heart" style="color:#b22222"></i> for food lovers</p>
     </div>
   </footer>
+
+  <script src="{% static 'js/base.js' %}"></script>
+  <script src="{% static 'js/index.js' %}"></script>
 </body>
 </html>

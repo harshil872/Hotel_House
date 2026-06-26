@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reserve a Table | Savoria Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/reservations.css' %}"/>
+</head>
+<body>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-close" onclick="closeMobile()">&times;</span>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'menu' %}">Menu</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'gallery' %}">Gallery</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'reservations' %}" style="color:var(--gold)">Reserve</a>
+  </div>
+
+  <nav class="always-solid">
+    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'index' %}">Home</a></li>
+      <li><a href="{% url 'menu' %}">Menu</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'gallery' %}">Gallery</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+      <li><a href="{% url 'reservations' %}" class="nav-reserve active">Reserve</a></li>
+    </ul>
+    <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- HERO WITH FORM -->
+  <div class="res-hero">
+    <div class="res-hero-inner">
+      <!-- Info side (hidden on mobile) -->
+      <div class="res-info">
+        <div class="section-label">Online Booking</div>
+        <h1>Reserve Your <span>Perfect</span> Table</h1>
+        <div class="section-divider"></div>
+        <p>Experience the finest dining in the city. Book your table in just a few steps and let us take care of everything else.</p>
+        <ul class="res-perks">
+          <li><i class="fas fa-check"></i>Instant confirmation via email</li>
+          <li><i class="fas fa-check"></i>Free cancellation up to 24 hours before</li>
+          <li><i class="fas fa-check"></i>Special occasion arrangements available</li>
+          <li><i class="fas fa-check"></i>Dietary preferences accommodated</li>
+          <li><i class="fas fa-check"></i>Private dining rooms for groups of 8+</li>
+        </ul>
+        <div class="res-contact">
+          <a href="tel:+12125550100"><i class="fas fa-phone"></i> +1 (212) 555-0100</a>
+          <a href="mailto:hello@savoria.com"><i class="fas fa-envelope"></i> hello@savoria.com</a>
+        </div>
+      </div>
+
+      <!-- BOOKING FORM CARD -->
+      <div class="res-form-card">
+        <div class="form-header">
+          <h2>Make a Reservation</h2>
+          <p>Complete the steps below to secure your table</p>
+        </div>
+
+        <!-- STEPS INDICATOR -->
+        <div class="steps" id="stepsBar">
+          <div class="step active" id="step1Ind"><div class="step-circle">1</div><div class="step-label">Details</div></div>
+          <div class="step" id="step2Ind"><div class="step-circle">2</div><div class="step-label">Date &amp; Time</div></div>
+          <div class="step" id="step3Ind"><div class="step-circle">3</div><div class="step-label">Confirm</div></div>
+        </div>
+
+        <!-- PANEL 1: PERSONAL DETAILS -->
+        <div class="form-panel active" id="panel1">
+          <div class="form-row">
+            <div class="form-group"><label>First Name *</label><input type="text" id="firstName" placeholder="John" required/></div>
+            <div class="form-group"><label>Last Name *</label><input type="text" id="lastName" placeholder="Doe" required/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email *</label><input type="email" id="email" placeholder="john@example.com" required/></div>
+            <div class="form-group"><label>Phone *</label><input type="tel" id="phone" placeholder="+1 555-0000" required/></div>
+          </div>
+          <div class="form-group">
+            <label>Number of Guests *</label>
+            <div class="guest-counter">
+              <button class="counter-btn" type="button" onclick="changeGuest(-1)">&#8722;</button>
+              <span class="counter-val" id="guestCount">2</span>
+              <button class="counter-btn" type="button" onclick="changeGuest(1)">&#43;</button>
+              <span class="guest-label">guests</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Occasion (optional)</label>
+            <select>
+              <option value="" disabled selected>Select occasion</option>
+              <option>Birthday Celebration</option>
+              <option>Anniversary Dinner</option>
+              <option>Business Meeting</option>
+              <option>Proposal</option>
+              <option>Family Gathering</option>
+              <option>Just Dining Out</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button class="btn-next" type="button" onclick="goToStep(2)">Continue <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- PANEL 2: DATE & TIME -->
+        <div class="form-panel" id="panel2">
+          <div class="form-group"><label>Select Date *</label><input type="date" id="resDate"/></div>
+          <div class="form-group">
+            <label>Preferred Time *</label>
+            <div class="time-slots">
+              <div class="time-slot" onclick="selectTime(this)">12:00 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">12:30 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">1:00 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">1:30 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">6:00 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">6:30 PM</div>
+              <div class="time-slot selected" onclick="selectTime(this)">7:00 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">7:30 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">8:00 PM</div>
+              <div class="time-slot unavailable">8:30 PM</div>
+              <div class="time-slot" onclick="selectTime(this)">9:00 PM</div>
+              <div class="time-slot unavailable">9:30 PM</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Seating Preference</label>
+            <select>
+              <option value="" disabled selected>No preference</option>
+              <option>Window Table</option>
+              <option>Terrace / Outdoor</option>
+              <option>Private Room</option>
+              <option>Bar Area</option>
+              <option>Main Dining</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Special Requests</label><textarea placeholder="Dietary requirements, allergies, special arrangements..."></textarea></div>
+          <div class="form-actions">
+            <button class="btn-prev" type="button" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-next" type="button" onclick="goToStep(3)">Review <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- PANEL 3: CONFIRM -->
+        <div class="form-panel" id="panel3">
+          <div class="booking-summary">
+            <h4>Booking Summary</h4>
+            <div id="summaryContent"></div>
+          </div>
+          <div class="form-group"><label>Promo Code (optional)</label><input type="text" placeholder="Enter promo code"/></div>
+          <div class="policy-note"><i class="fas fa-info-circle"></i> By confirming, you agree to our reservation policy. Free cancellation up to 24 hours before your booking.</div>
+          <div class="form-actions">
+            <button class="btn-prev" type="button" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-submit" type="button" onclick="confirmBooking()">Confirm Booking</button>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="success-panel" id="successPanel">
+          <div class="success-icon"><i class="fas fa-check"></i></div>
+          <h3>Booking Confirmed!</h3>
+          <p>Your reservation has been successfully placed. A confirmation email has been sent to your inbox. We look forward to welcoming you!</p>
+          <div class="booking-ref">Booking Reference: <span id="bookingRef">SAV-000000</span></div><br>
+          <a href="{% url 'menu' %}" class="btn-primary">Browse Our Menu</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PACKAGES -->
+  <section class="packages-section">
+    <div class="section-label reveal">Dining Packages</div>
+    <h2 class="section-title reveal">Choose Your Experience</h2>
+    <div class="section-divider center reveal"></div>
+    <div class="packages-grid">
+      <div class="pkg-card reveal">
+        <h3>Classic Dining</h3>
+        <div class="pkg-price">$65<small>/person</small></div>
+        <ul class="pkg-features">
+          <li><i class="fas fa-check"></i>3-course dinner</li>
+          <li><i class="fas fa-check"></i>Welcome amuse-bouche</li>
+          <li><i class="fas fa-check"></i>Still or sparkling water</li>
+          <li><i class="fas fa-check"></i>Choice of dessert</li>
+        </ul>
+        <a href="{% url 'reservations' %}" class="pkg-btn">Book Now</a>
+      </div>
+      <div class="pkg-card featured reveal">
+        <div class="pkg-badge">Most Popular</div>
+        <h3>Chef's Tasting</h3>
+        <div class="pkg-price">$145<small>/person</small></div>
+        <ul class="pkg-features">
+          <li><i class="fas fa-check"></i>7-course degustation menu</li>
+          <li><i class="fas fa-check"></i>Paired wine selection</li>
+          <li><i class="fas fa-check"></i>Meet the chef experience</li>
+          <li><i class="fas fa-check"></i>Petits fours &amp; mignardises</li>
+          <li><i class="fas fa-check"></i>Personalized menu card</li>
+        </ul>
+        <a href="{% url 'reservations' %}" class="pkg-btn">Book Now</a>
+      </div>
+      <div class="pkg-card reveal">
+        <h3>Private Celebration</h3>
+        <div class="pkg-price">$220<small>/person</small></div>
+        <ul class="pkg-features">
+          <li><i class="fas fa-check"></i>Exclusive private dining room</li>
+          <li><i class="fas fa-check"></i>Bespoke menu consultation</li>
+          <li><i class="fas fa-check"></i>Champagne on arrival</li>
+          <li><i class="fas fa-check"></i>Custom floral arrangements</li>
+          <li><i class="fas fa-check"></i>Professional photography</li>
+        </ul>
+        <a href="{% url 'reservations' %}" class="pkg-btn">Book Now</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-mini">
+    <div class="footer-mini-inner">
+      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
+      <a href="{% url 'index' %}">&larr; Back to Home</a>
+    </div>
+  </div>
+
+  <script src="{% static 'js/base.js' %}"></script>
+  <script src="{% static 'js/reservations.js' %}"></script>
+</body>
+</html>

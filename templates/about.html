@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | Savoria Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/about.css' %}"/>
+</head>
+<body>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-close" onclick="closeMobile()">&times;</span>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'menu' %}">Menu</a>
+    <a href="{% url 'about' %}" style="color:var(--gold)">About</a>
+    <a href="{% url 'gallery' %}">Gallery</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'reservations' %}">Reserve</a>
+  </div>
+
+  <nav class="always-solid">
+    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'index' %}">Home</a></li>
+      <li><a href="{% url 'menu' %}">Menu</a></li>
+      <li><a href="{% url 'about' %}" class="active">About</a></li>
+      <li><a href="{% url 'gallery' %}">Gallery</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+      <li><a href="{% url 'reservations' %}" class="nav-reserve">Reserve</a></li>
+    </ul>
+    <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="page-hero" style="background:url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600') center/cover;">
+    <div class="page-hero-content">
+      <div class="breadcrumb"><a href="{% url 'index' %}">Home</a> / About</div>
+      <h1>Our Story</h1>
+      <p>A journey of passion, flavor, and tradition</p>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <div class="story">
+    <div class="story-img"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800" alt="Story" loading="lazy"/></div>
+    <div class="story-content">
+      <div class="section-label reveal">Est. 2010</div>
+      <h2 class="section-title reveal">A Passion Born<br>in the Kitchen</h2>
+      <div class="section-divider reveal"></div>
+      <p class="reveal">Savoria was born from a simple dream: to create a place where food tells a story. Founded by Chef Marco Russo and his partner Elena in 2010, what started as a small 30-seat bistro has grown into one of the city's most celebrated dining destinations.</p>
+      <p class="reveal">Marco spent 15 years training under legendary chefs in Lyon, Milan, and Tokyo before returning home with a vision to blend classical techniques with modern innovation. Every dish on our menu carries a piece of that journey.</p>
+      <p class="reveal">Today, Savoria holds 2 Michelin stars and has been voted "Best Restaurant in the City" four years running — but what matters most to us is seeing the joy on every guest's face.</p>
+      <div class="signature reveal">
+        <div class="sig-img"><img src="https://randomuser.me/api/portraits/men/55.jpg" alt="Chef Marco"/></div>
+        <div class="sig-text"><span>Chef Marco Russo</span><small>Founder &amp; Executive Chef</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALUES -->
+  <section class="values">
+    <div class="section-label reveal">What Drives Us</div>
+    <h2 class="section-title reveal">Our Core Values</h2>
+    <div class="section-divider center reveal"></div>
+    <div class="values-grid">
+      <div class="value-card reveal"><div class="value-icon"><i class="fas fa-seedling"></i></div><h3>Freshness</h3><p>We source only the freshest, seasonal ingredients from local farms and trusted producers every single day.</p></div>
+      <div class="value-card reveal"><div class="value-icon"><i class="fas fa-heart"></i></div><h3>Passion</h3><p>Every dish is crafted with genuine love and care. Our chefs put their heart into every plate that leaves the kitchen.</p></div>
+      <div class="value-card reveal"><div class="value-icon"><i class="fas fa-award"></i></div><h3>Excellence</h3><p>We never settle. Constant refinement, training, and creativity drive us to be better every day.</p></div>
+      <div class="value-card reveal"><div class="value-icon"><i class="fas fa-users"></i></div><h3>Community</h3><p>We are proud members of our community — supporting local farmers, artisans, and sustainability initiatives.</p></div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="team">
+    <div class="team-header">
+      <div class="section-label reveal">The People Behind the Magic</div>
+      <h2 class="section-title reveal">Meet Our Team</h2>
+      <div class="section-divider center reveal"></div>
+    </div>
+    <div class="team-grid">
+      <div class="chef-card reveal">
+        <div class="chef-img"><img src="https://randomuser.me/api/portraits/men/55.jpg" alt="Marco"/><div class="chef-overlay"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a></div></div>
+        <h3>Marco Russo</h3><span>Executive Chef</span><p>2 Michelin stars. 20 years of culinary mastery across Europe and Asia.</p>
+      </div>
+      <div class="chef-card reveal">
+        <div class="chef-img"><img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Elena"/><div class="chef-overlay"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a></div></div>
+        <h3>Elena Russo</h3><span>Pastry Chef &amp; Co-Founder</span><p>Known for desserts that are as beautiful as they are delicious. Featured in Vogue.</p>
+      </div>
+      <div class="chef-card reveal">
+        <div class="chef-img"><img src="https://randomuser.me/api/portraits/men/44.jpg" alt="David"/><div class="chef-overlay"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a></div></div>
+        <h3>David Chen</h3><span>Head Sommelier</span><p>Curates our 200+ wine cellar with unmatched expertise and passion for pairing.</p>
+      </div>
+      <div class="chef-card reveal">
+        <div class="chef-img"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Aisha"/><div class="chef-overlay"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a></div></div>
+        <h3>Aisha Patel</h3><span>Sous Chef</span><p>Specializes in modern Indian-French fusion. James Beard Award nominee 2024.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="timeline-section">
+    <div class="section-label reveal">Our Journey</div>
+    <h2 class="section-title reveal">The Savoria Timeline</h2>
+    <div class="section-divider center reveal"></div>
+    <div class="timeline">
+      <div class="tl-item reveal"><div class="tl-content"><div class="tl-year">2010</div><h3>The Beginning</h3><p>Marco and Elena open Savoria as a small 30-seat bistro in downtown Manhattan.</p></div><div class="tl-dot"></div><div class="tl-spacer"></div></div>
+      <div class="tl-item reveal"><div class="tl-spacer"></div><div class="tl-dot"></div><div class="tl-content"><div class="tl-year">2013</div><h3>First Michelin Star</h3><p>Savoria earns its first Michelin star, establishing itself as a destination restaurant.</p></div></div>
+      <div class="tl-item reveal"><div class="tl-content"><div class="tl-year">2016</div><h3>Expansion</h3><p>The restaurant expands to 120 seats and introduces the iconic open kitchen concept.</p></div><div class="tl-dot"></div><div class="tl-spacer"></div></div>
+      <div class="tl-item reveal"><div class="tl-spacer"></div><div class="tl-dot"></div><div class="tl-content"><div class="tl-year">2019</div><h3>Second Michelin Star</h3><p>After years of relentless pursuit of perfection, Savoria receives its second Michelin star.</p></div></div>
+      <div class="tl-item reveal"><div class="tl-content"><div class="tl-year">2022</div><h3>Sustainability Pledge</h3><p>Savoria achieves carbon-neutral status and partners exclusively with regenerative farms.</p></div><div class="tl-dot"></div><div class="tl-spacer"></div></div>
+      <div class="tl-item reveal"><div class="tl-spacer"></div><div class="tl-dot"></div><div class="tl-content"><div class="tl-year">2026</div><h3>Today</h3><p>Over 50,000 guests served, 12 awards, and still as passionate as day one.</p></div></div>
+    </div>
+  </section>
+
+  <!-- AWARDS -->
+  <section class="awards">
+    <div class="section-label reveal">Recognition</div>
+    <h2 class="section-title reveal">Awards &amp; Accolades</h2>
+    <div class="section-divider center reveal"></div>
+    <div class="awards-grid">
+      <div class="award-item reveal"><div class="award-icon"><i class="fas fa-star"></i></div><h4>Michelin &#9733;&#9733;</h4><span>2019 &ndash; Present</span></div>
+      <div class="award-item reveal"><div class="award-icon"><i class="fas fa-trophy"></i></div><h4>Best Restaurant</h4><span>NY Food Guide 2025</span></div>
+      <div class="award-item reveal"><div class="award-icon"><i class="fas fa-crown"></i></div><h4>Top 50 Restaurants</h4><span>World's Best 2024</span></div>
+      <div class="award-item reveal"><div class="award-icon"><i class="fas fa-leaf"></i></div><h4>Sustainability Award</h4><span>Green Dining 2023</span></div>
+      <div class="award-item reveal"><div class="award-icon"><i class="fas fa-wine-glass-alt"></i></div><h4>Best Wine List</h4><span>Wine Spectator 2024</span></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="about-cta">
+    <div class="section-label reveal">Come Visit Us</div>
+    <h2 class="section-title reveal">Become Part of Our Story</h2>
+    <p class="reveal" style="color:rgba(255,255,255,0.68);max-width:480px;margin:0 auto 28px;line-height:1.8;">Every reservation is a new chapter. We'd love to write one with you.</p>
+    <a href="{% url 'reservations' %}" class="btn-primary reveal">Book Your Table</a>
+  </div>
+
+  <div class="footer-mini">
+    <div class="footer-mini-inner">
+      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
+      <a href="{% url 'index' %}">&larr; Back to Home</a>
+    </div>
+  </div>
+
+  <script src="{% static 'js/base.js' %}"></script>
+</body>
+</html>

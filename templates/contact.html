@@ -1,197 +1,136 @@
 {% load static %}
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | The Royal Plate</title>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact | Savoria Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/contact.css' %}"/>
 </head>
+<body>
 
-<!-- Header -->
-<header class="header">
-    <div class="container">
-        <nav class="navbar">
-            <div class="logo">
-                <i class="fas fa-crown"></i> The Royal Plate
-            </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-close" onclick="closeMobile()">&times;</span>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'menu' %}">Menu</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'gallery' %}">Gallery</a>
+    <a href="{% url 'contact' %}" style="color:var(--gold)">Contact</a>
+    <a href="{% url 'reservations' %}">Reserve</a>
+  </div>
 
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Reservations</a></li>
-                <li><a href="#">Gallery</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#" class="active">Contact</a></li>
-            </ul>
-        </nav>
+  <nav class="always-solid">
+    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'index' %}">Home</a></li>
+      <li><a href="{% url 'menu' %}">Menu</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'gallery' %}">Gallery</a></li>
+      <li><a href="{% url 'contact' %}" class="active">Contact</a></li>
+      <li><a href="{% url 'reservations' %}" class="nav-reserve">Reserve</a></li>
+    </ul>
+    <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="page-hero" style="background:url('https://images.unsplash.com/photo-1444021465936-c6ca81d39b84?w=1600') center/cover;">
+    <div class="page-hero-content">
+      <div class="breadcrumb"><a href="{% url 'index' %}">Home</a> / Contact</div>
+      <h1>Contact Us</h1>
+      <p>We'd love to hear from you</p>
     </div>
-</header>
+  </div>
 
-<!-- Hero -->
-<section class="contact-hero">
-    <div class="container">
-        <span class="hero-badge">✦ Get In Touch</span>
-
-        <h1>Contact <span>The Royal Plate</span></h1>
-
-        <p>
-            We'd love to hear from you. Whether it's a reservation,
-            private event, or special dining request, our team is here
-            to create an unforgettable experience.
-        </p>
-    </div>
-</section>
-
-<!-- Contact Section -->
-<section class="contact-section">
-
-    <div class="container">
-
-        <div class="contact-grid">
-
-            <!-- Contact Info -->
-
-            <div class="contact-info">
-
-                <h2>Visit Us</h2>
-
-                <div class="info-card">
-                    <i class="fas fa-map-marker-alt"></i>
-
-                    <div>
-                        <h4>Address</h4>
-                        <p>22 Kings Road<br>New York City, NY</p>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <i class="fas fa-phone"></i>
-
-                    <div>
-                        <h4>Phone</h4>
-                        <p>+1 (555) 123-4567</p>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <i class="fas fa-envelope"></i>
-
-                    <div>
-                        <h4>Email</h4>
-                        <p>info@royalplate.com</p>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <i class="fas fa-clock"></i>
-
-                    <div>
-                        <h4>Opening Hours</h4>
-                        <p>
-                            Monday - Friday : 11 AM - 11 PM<br>
-                            Saturday - Sunday : 10 AM - Midnight
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Contact Form -->
-
-            <div class="contact-form">
-
-                <h2>Send a Message</h2>
-
-                <form>
-
-                    <div class="input-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-
-                    <div class="input-group">
-                        <input type="email" placeholder="Email Address" required>
-                    </div>
-
-                    <div class="input-group">
-                        <input type="text" placeholder="Subject">
-                    </div>
-
-                    <div class="input-group">
-                        <textarea rows="6" placeholder="Write your message..." required></textarea>
-                    </div>
-
-                    <button class="btn-primary">
-                        <i class="fas fa-paper-plane"></i>
-                        Send Message
-                    </button>
-
-                </form>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- Footer -->
-
-<footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <h3><i class="fas fa-crown"></i> The Royal Plate</h3>
-          <p>Fine dining in the heart of the city. Open daily for lunch &amp; dinner.</p>
-          <div class="footer-social">
-            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-          </div>
-        </div>
-        <div class="footer-links">
-          <h5>Quick Links</h5>
-          <ul>
-            <li><a href="#">Menu</a></li>
-            <li><a href="#">Reservations</a></li>
-            <li><a href="#">Private Events</a></li>
-            <li><a href="#">Gift Cards</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h5>About</h5>
-          <ul>
-            <li><a href="#">Our Story</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Press</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h5>Contact</h5>
-          <ul>
-            <li><i class="fas fa-phone-alt"></i> +1 (555) 123-4567</li>
-            <li><i class="fas fa-map-marker-alt"></i> 22 Kings Road, NYC</li>
-            <li><i class="far fa-envelope"></i> info@royalplate.com</li>
-          </ul>
-        </div>
+  <div class="contact-section">
+    <!-- INFO -->
+    <div class="contact-info reveal">
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title">Let's Start a Conversation</h2>
+      <div class="section-divider"></div>
+      <p>Whether you have a question about our menu, want to arrange a private event, or simply want to say hello — we're here and happy to hear from you.</p>
+      <div class="info-cards">
+        <div class="info-card"><div class="info-icon"><i class="fas fa-map-marker-alt"></i></div><div class="info-text"><h4>Address</h4><p>123 Gourmet Avenue<br>Manhattan, New York, NY 10001</p></div></div>
+        <div class="info-card"><div class="info-icon"><i class="fas fa-phone"></i></div><div class="info-text"><h4>Phone</h4><a href="tel:+12125550100">+1 (212) 555-0100</a><a href="tel:+12125550101">+1 (212) 555-0101</a></div></div>
+        <div class="info-card"><div class="info-icon"><i class="fas fa-envelope"></i></div><div class="info-text"><h4>Email</h4><a href="mailto:hello@savoria.com">hello@savoria.com</a><a href="mailto:events@savoria.com">events@savoria.com</a></div></div>
+        <div class="info-card"><div class="info-icon"><i class="fas fa-clock"></i></div><div class="info-text"><h4>Opening Hours</h4><p>Mon&ndash;Thu: 12PM &ndash; 10PM<br>Fri&ndash;Sat: 12PM &ndash; 12AM<br>Sunday: 11AM &ndash; 9PM</p></div></div>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; 2026 The Royal Plate. All rights reserved.</span>
-        <span class="footer-legal">
-          <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
-        </span>
+      <div class="social-row">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
       </div>
     </div>
-</footer>
+
+    <!-- FORM -->
+    <div class="contact-form-wrap reveal">
+      <h3 class="form-title">Send Us a Message</h3>
+      <p class="form-sub">We typically respond within 2&ndash;4 hours during business hours.</p>
+      <form id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group"><label>First Name *</label><input type="text" placeholder="John" required/></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Doe" required/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email *</label><input type="email" placeholder="john@example.com" required/></div>
+          <div class="form-group"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000"/></div>
+        </div>
+        <div class="form-group">
+          <label>Subject *</label>
+          <select required>
+            <option value="" disabled selected>Select a subject</option>
+            <option>General Inquiry</option>
+            <option>Reservation Assistance</option>
+            <option>Private Event Enquiry</option>
+            <option>Feedback / Review</option>
+            <option>Catering Request</option>
+            <option>Press &amp; Media</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message *</label><textarea placeholder="Write your message here..." required></textarea></div>
+        <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+        <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i> Thank you! Your message has been sent. We'll be in touch soon.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-section">
+    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-74.02%2C40.70%2C-73.96%2C40.76&layer=mapnik" allowfullscreen loading="lazy" title="Savoria Location"></iframe>
+    <div class="map-overlay"><strong>Savoria Restaurant</strong><p>123 Gourmet Avenue<br>Manhattan, New York</p></div>
+  </div>
+
+  <!-- HOURS -->
+  <div class="hours-section">
+    <div class="reveal">
+      <div class="section-label">Visiting Hours</div>
+      <h2 class="section-title">When to Find Us</h2>
+      <div class="section-divider"></div>
+      <p>Reservations are recommended, especially for weekends. Walk-ins are always welcome based on availability.</p>
+    </div>
+    <div class="reveal">
+      <table class="hours-table">
+        <tr><td>Monday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
+        <tr><td>Tuesday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
+        <tr><td>Wednesday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
+        <tr><td>Thursday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
+        <tr><td>Friday</td><td>12:00 PM &ndash; 12:00 AM</td></tr>
+        <tr><td>Saturday</td><td>10:00 AM &ndash; 12:00 AM</td></tr>
+        <tr><td>Sunday</td><td>11:00 AM &ndash; 9:00 PM</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer-mini">
+    <div class="footer-mini-inner">
+      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
+      <a href="{% url 'index' %}">&larr; Back to Home</a>
+    </div>
+  </div>
+
+  <script src="{% static 'js/base.js' %}"></script>
+  <script src="{% static 'js/contact.js' %}"></script>
 </body>
 </html>

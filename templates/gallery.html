@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery | Savoria Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/gallery.css' %}"/>
+</head>
+<body>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-close" onclick="closeMobile()">&times;</span>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'menu' %}">Menu</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'gallery' %}" style="color:var(--gold)">Gallery</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'reservations' %}">Reserve</a>
+  </div>
+
+  <nav class="always-solid">
+    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'index' %}">Home</a></li>
+      <li><a href="{% url 'menu' %}">Menu</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'gallery' %}" class="active">Gallery</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+      <li><a href="{% url 'reservations' %}" class="nav-reserve">Reserve</a></li>
+    </ul>
+    <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="page-hero" style="background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600') center/cover;">
+    <div class="page-hero-content">
+      <div class="breadcrumb"><a href="{% url 'index' %}">Home</a> / Gallery</div>
+      <h1>Our Gallery</h1>
+      <p>A visual feast of flavors, ambiance, and moments</p>
+    </div>
+  </div>
+
+  <div class="gallery-section">
+    <div class="filter-wrap reveal">
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="food">Food</button>
+        <button class="filter-btn" data-filter="ambiance">Ambiance</button>
+        <button class="filter-btn" data-filter="events">Events</button>
+        <button class="filter-btn" data-filter="chef">Chef's Table</button>
+      </div>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-item" data-cat="food" data-caption="Pan-Seared Salmon"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Salmon" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Pan-Seared Salmon</span></div></div>
+      <div class="gallery-item" data-cat="ambiance" data-caption="Dining Hall"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600" alt="Interior" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Dining Hall</span></div></div>
+      <div class="gallery-item" data-cat="food" data-caption="Wagyu Ribeye"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600" alt="Steak" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Wagyu Ribeye</span></div></div>
+      <div class="gallery-item" data-cat="chef" data-caption="Chef at Work"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600" alt="Chef" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Chef at Work</span></div></div>
+      <div class="gallery-item" data-cat="food" data-caption="Truffle Carbonara"><img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600" alt="Pasta" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Truffle Carbonara</span></div></div>
+      <div class="gallery-item" data-cat="ambiance" data-caption="Private Dining"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600" alt="Private Dining" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Private Dining</span></div></div>
+      <div class="gallery-item" data-cat="food" data-caption="Chocolate Fondant"><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600" alt="Dessert" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Chocolate Fondant</span></div></div>
+      <div class="gallery-item" data-cat="events" data-caption="Wedding Reception"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600" alt="Event" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Wedding Reception</span></div></div>
+      <div class="gallery-item" data-cat="chef" data-caption="Plating Mastery"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" alt="Kitchen" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Plating Mastery</span></div></div>
+      <div class="gallery-item" data-cat="food" data-caption="Butter Lobster"><img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=600" alt="Lobster" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Butter Lobster</span></div></div>
+      <div class="gallery-item" data-cat="ambiance" data-caption="Signature Bar"><img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600" alt="Bar" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Signature Bar</span></div></div>
+      <div class="gallery-item" data-cat="events" data-caption="Corporate Dinner"><img src="https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=600" alt="Event" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Corporate Dinner</span></div></div>
+      <div class="gallery-item" data-cat="food" data-caption="Creme Brulee"><img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600" alt="Dessert" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Cr&egrave;me Br&ucirc;l&eacute;e</span></div></div>
+      <div class="gallery-item" data-cat="chef" data-caption="Live Kitchen"><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600" alt="Chef" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Live Kitchen</span></div></div>
+      <div class="gallery-item" data-cat="ambiance" data-caption="Terrace Seating"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600" alt="Terrace" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Terrace Seating</span></div></div>
+      <div class="gallery-item" data-cat="food" data-caption="Cajun Tiger Prawns"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600" alt="Prawns" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Cajun Tiger Prawns</span></div></div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-prev" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
+    <div class="lightbox-inner">
+      <span class="lb-close" id="lbClose">&times;</span>
+      <img class="lightbox-img" id="lbImg" src="" alt=""/>
+      <div class="lb-caption" id="lbCaption"></div>
+    </div>
+    <button class="lb-next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+  <div class="footer-mini">
+    <div class="footer-mini-inner">
+      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
+      <a href="{% url 'index' %}">&larr; Back to Home</a>
+    </div>
+  </div>
+
+  <script src="{% static 'js/base.js' %}"></script>
+  <script src="{% static 'js/gallery.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu | Savoria Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/menu.css' %}"/>
+</head>
+<body>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-close" onclick="closeMobile()">&times;</span>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'menu' %}" style="color:var(--gold)">Menu</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'gallery' %}">Gallery</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'reservations' %}">Reserve</a>
+  </div>
+
+  <nav class="always-solid">
+    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'index' %}">Home</a></li>
+      <li><a href="{% url 'menu' %}" class="active">Menu</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'gallery' %}">Gallery</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+      <li><a href="{% url 'reservations' %}" class="nav-reserve">Reserve</a></li>
+    </ul>
+    <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="page-hero" style="background:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600') center/cover;">
+    <div class="page-hero-content">
+      <div class="breadcrumb"><a href="{% url 'index' %}">Home</a> / Menu</div>
+      <h1>Our Menu</h1>
+      <p>Crafted with passion, served with love</p>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <div class="filter-wrap reveal">
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all">All Items</button>
+        <button class="filter-btn" data-filter="starters">Starters</button>
+        <button class="filter-btn" data-filter="mains">Mains</button>
+        <button class="filter-btn" data-filter="seafood">Seafood</button>
+        <button class="filter-btn" data-filter="pasta">Pasta</button>
+        <button class="filter-btn" data-filter="desserts">Desserts</button>
+        <button class="filter-btn" data-filter="drinks">Drinks</button>
+      </div>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <!-- STARTERS -->
+      <div class="menu-card reveal" data-cat="starters">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1541014741259-de529411b96a?w=600" alt="Bruschetta" loading="lazy"/><span class="menu-tag tag-veg">Veg</span></div>
+        <div class="menu-body"><h3>Classic Bruschetta</h3><p>Toasted sourdough with vine tomatoes, basil oil, and aged balsamic.</p><div class="menu-meta"><span class="menu-price">$12</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.7</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="starters">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600" alt="Soup" loading="lazy"/><span class="menu-tag tag-new">New</span></div>
+        <div class="menu-body"><h3>French Onion Soup</h3><p>Slow-caramelized onion broth with Gruy&egrave;re crouton topping.</p><div class="menu-meta"><span class="menu-price">$14</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.8</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="starters">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=600" alt="Calamari" loading="lazy"/><span class="menu-tag tag-popular">Popular</span></div>
+        <div class="menu-body"><h3>Crispy Calamari</h3><p>Golden-fried squid rings with marinara sauce and lemon aioli.</p><div class="menu-meta"><span class="menu-price">$16</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.6</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <!-- MAINS -->
+      <div class="menu-card reveal" data-cat="mains">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600" alt="Steak" loading="lazy"/><span class="menu-tag tag-popular">Popular</span></div>
+        <div class="menu-body"><h3>Wagyu Ribeye Steak</h3><p>A5 Wagyu with truffle butter, roasted garlic mash, and red wine jus.</p><div class="menu-meta"><span class="menu-price">$85</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 5.0</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="mains">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600" alt="Chicken" loading="lazy"/><span class="menu-tag tag-new">New</span></div>
+        <div class="menu-body"><h3>Herb Roasted Chicken</h3><p>Free-range chicken with rosemary jus, roasted vegetables, and potatoes.</p><div class="menu-meta"><span class="menu-price">$34</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.7</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="mains">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600" alt="Lamb" loading="lazy"/><span class="menu-tag tag-spicy">Spicy</span></div>
+        <div class="menu-body"><h3>Rack of Lamb</h3><p>Herb-crusted lamb rack with mint gremolata and roasted garlic pur&eacute;e.</p><div class="menu-meta"><span class="menu-price">$62</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.9</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <!-- SEAFOOD -->
+      <div class="menu-card reveal" data-cat="seafood">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Salmon" loading="lazy"/><span class="menu-tag tag-popular">Popular</span></div>
+        <div class="menu-body"><h3>Pan-Seared Salmon</h3><p>Atlantic salmon with lemon butter, asparagus, and wild rice.</p><div class="menu-meta"><span class="menu-price">$38</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.8</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="seafood">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=600" alt="Lobster" loading="lazy"/><span class="menu-tag tag-new">New</span></div>
+        <div class="menu-body"><h3>Butter Poached Lobster</h3><p>Whole Maine lobster poached in clarified butter with tarragon cream.</p><div class="menu-meta"><span class="menu-price">$95</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.9</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="seafood">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600" alt="Prawns" loading="lazy"/><span class="menu-tag tag-spicy">Spicy</span></div>
+        <div class="menu-body"><h3>Cajun Tiger Prawns</h3><p>Jumbo prawns in spiced Cajun butter with garlic sourdough.</p><div class="menu-meta"><span class="menu-price">$44</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.7</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <!-- PASTA -->
+      <div class="menu-card reveal" data-cat="pasta">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600" alt="Carbonara" loading="lazy"/><span class="menu-tag tag-popular">Popular</span></div>
+        <div class="menu-body"><h3>Truffle Carbonara</h3><p>Handmade pappardelle with black truffle, pancetta, and aged pecorino.</p><div class="menu-meta"><span class="menu-price">$32</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.9</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="pasta">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1551183053-bf91798d702f?w=600" alt="Arrabbiata" loading="lazy"/><span class="menu-tag tag-veg">Veg</span></div>
+        <div class="menu-body"><h3>Penne Arrabbiata</h3><p>Penne pasta in spicy San Marzano tomato sauce with fresh basil.</p><div class="menu-meta"><span class="menu-price">$22</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.5</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="pasta">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=600" alt="Ravioli" loading="lazy"/><span class="menu-tag tag-new">New</span></div>
+        <div class="menu-body"><h3>Lobster Ravioli</h3><p>Fresh ricotta-stuffed ravioli in a saffron bisque with crispy sage.</p><div class="menu-meta"><span class="menu-price">$42</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.8</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <!-- DESSERTS -->
+      <div class="menu-card reveal" data-cat="desserts">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600" alt="Lava Cake" loading="lazy"/><span class="menu-tag tag-popular">Popular</span></div>
+        <div class="menu-body"><h3>Chocolate Lava Cake</h3><p>Warm Belgian chocolate fondant with vanilla ice cream and berry coulis.</p><div class="menu-meta"><span class="menu-price">$18</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 5.0</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="desserts">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=600" alt="Tiramisu" loading="lazy"/><span class="menu-tag tag-new">New</span></div>
+        <div class="menu-body"><h3>Classic Tiramisu</h3><p>Espresso-soaked ladyfingers with mascarpone cream and cocoa dust.</p><div class="menu-meta"><span class="menu-price">$14</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.8</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="desserts">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600" alt="Creme Brulee" loading="lazy"/><span class="menu-tag tag-veg">Veg</span></div>
+        <div class="menu-body"><h3>Cr&egrave;me Br&ucirc;l&eacute;e</h3><p>Silky vanilla custard with caramelized sugar crust and fresh berries.</p><div class="menu-meta"><span class="menu-price">$15</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.7</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <!-- DRINKS -->
+      <div class="menu-card reveal" data-cat="drinks">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=600" alt="Cocktail" loading="lazy"/><span class="menu-tag tag-new">New</span></div>
+        <div class="menu-body"><h3>Savoria Signature</h3><p>Elderflower, gin, cucumber, and a hint of rose water over crushed ice.</p><div class="menu-meta"><span class="menu-price">$16</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.9</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="drinks">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=600" alt="Wine" loading="lazy"/><span class="menu-tag tag-popular">Popular</span></div>
+        <div class="menu-body"><h3>Reserve Bordeaux</h3><p>Full-bodied red wine with notes of black cherry, cedar, and tobacco.</p><div class="menu-meta"><span class="menu-price">$22</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.8</span><button class="add-btn">+</button></div></div></div>
+      </div>
+      <div class="menu-card reveal" data-cat="drinks">
+        <div class="menu-img"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600" alt="Coffee" loading="lazy"/><span class="menu-tag tag-veg">Veg</span></div>
+        <div class="menu-body"><h3>Arabica Cold Brew</h3><p>18-hour slow-steeped single-origin Arabica with vanilla cream.</p><div class="menu-meta"><span class="menu-price">$8</span><div style="display:flex;align-items:center;gap:10px"><span class="menu-rating"><i class="fas fa-star"></i> 4.6</span><button class="add-btn">+</button></div></div></div>
+      </div>
+    </div>
+
+    <!-- SPECIAL BANNER -->
+    <div class="special-banner reveal">
+      <div>
+        <div class="section-label">Chef's Special</div>
+        <h2 class="section-title">Tasting Menu</h2>
+        <p>Experience our 7-course degustation journey crafted by Executive Chef Marco Russo. Available Friday and Saturday evenings only. Includes wine pairing.</p>
+        <p style="color:var(--gold);font-size:1.3rem;font-weight:600;margin-bottom:22px">$145 per person</p>
+        <a href="{% url 'reservations' %}" class="btn-primary">Reserve Now</a>
+      </div>
+      <div class="special-img">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800" alt="Tasting Menu" loading="lazy"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-mini">
+    <div class="footer-mini-inner">
+      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
+      <a href="{% url 'index' %}">&larr; Back to Home</a>
+    </div>
+  </div>
+
+  <script src="{% static 'js/base.js' %}"></script>
+  <script src="{% static 'js/menu.js' %}"></script>
+</body>
+</html>
