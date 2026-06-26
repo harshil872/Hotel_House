@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | The Royal Plate</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+</head>
+
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-crown"></i> The Royal Plate
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Menu</a></li>
+                <li><a href="#">Reservations</a></li>
+                <li><a href="#">Gallery</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#" class="active">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="contact-hero">
+    <div class="container">
+        <span class="hero-badge">✦ Get In Touch</span>
+
+        <h1>Contact <span>The Royal Plate</span></h1>
+
+        <p>
+            We'd love to hear from you. Whether it's a reservation,
+            private event, or special dining request, our team is here
+            to create an unforgettable experience.
+        </p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+
+    <div class="container">
+
+        <div class="contact-grid">
+
+            <!-- Contact Info -->
+
+            <div class="contact-info">
+
+                <h2>Visit Us</h2>
+
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+
+                    <div>
+                        <h4>Address</h4>
+                        <p>22 Kings Road<br>New York City, NY</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-phone"></i>
+
+                    <div>
+                        <h4>Phone</h4>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-envelope"></i>
+
+                    <div>
+                        <h4>Email</h4>
+                        <p>info@royalplate.com</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-clock"></i>
+
+                    <div>
+                        <h4>Opening Hours</h4>
+                        <p>
+                            Monday - Friday : 11 AM - 11 PM<br>
+                            Saturday - Sunday : 10 AM - Midnight
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Contact Form -->
+
+            <div class="contact-form">
+
+                <h2>Send a Message</h2>
+
+                <form>
+
+                    <div class="input-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="email" placeholder="Email Address" required>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" placeholder="Subject">
+                    </div>
+
+                    <div class="input-group">
+                        <textarea rows="6" placeholder="Write your message..." required></textarea>
+                    </div>
+
+                    <button class="btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Footer -->
+
+<footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><i class="fas fa-crown"></i> The Royal Plate</h3>
+          <p>Fine dining in the heart of the city. Open daily for lunch &amp; dinner.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h5>Quick Links</h5>
+          <ul>
+            <li><a href="#">Menu</a></li>
+            <li><a href="#">Reservations</a></li>
+            <li><a href="#">Private Events</a></li>
+            <li><a href="#">Gift Cards</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>About</h5>
+          <ul>
+            <li><a href="#">Our Story</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Contact</h5>
+          <ul>
+            <li><i class="fas fa-phone-alt"></i> +1 (555) 123-4567</li>
+            <li><i class="fas fa-map-marker-alt"></i> 22 Kings Road, NYC</li>
+            <li><i class="far fa-envelope"></i> info@royalplate.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 The Royal Plate. All rights reserved.</span>
+        <span class="footer-legal">
+          <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
+        </span>
+      </div>
+    </div>
+</footer>
+</body>
+</html>
