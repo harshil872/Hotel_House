@@ -20,7 +20,7 @@ def about(request):
 def contact(request):
     return render(request, "contact.html")
 
-def login(request):
+def login_view(request):
     form = LoginForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -35,7 +35,6 @@ def login(request):
         )
 
         if user is not None:
-
             login(request, user)
             return redirect("index")
 
@@ -55,7 +54,7 @@ def register(request):
 
             user = form.save()
 
-            login(request, user)
+            login_view(request, user)
 
             return redirect("index")
 
