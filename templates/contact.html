@@ -1,15 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact | Savoria Restaurant</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
-  <link rel="stylesheet" href="{% static 'css/contact.css' %}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/contact.css' %}" />
 </head>
+
 <body>
 
   <div class="mobile-menu" id="mobileMenu">
@@ -35,7 +39,8 @@
     <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
   </nav>
 
-  <div class="page-hero" style="background:url('https://images.unsplash.com/photo-1444021465936-c6ca81d39b84?w=1600') center/cover;">
+  <div class="page-hero"
+    style="background:url('https://images.unsplash.com/photo-1444021465936-c6ca81d39b84?w=1600') center/cover;">
     <div class="page-hero-content">
       <div class="breadcrumb"><a href="{% url 'index' %}">Home</a> / Contact</div>
       <h1>Contact Us</h1>
@@ -49,12 +54,37 @@
       <div class="section-label">Get In Touch</div>
       <h2 class="section-title">Let's Start a Conversation</h2>
       <div class="section-divider"></div>
-      <p>Whether you have a question about our menu, want to arrange a private event, or simply want to say hello — we're here and happy to hear from you.</p>
+      <p>Whether you have a question about our menu, want to arrange a private event, or simply want to say hello —
+        we're here and happy to hear from you.</p>
       <div class="info-cards">
-        <div class="info-card"><div class="info-icon"><i class="fas fa-map-marker-alt"></i></div><div class="info-text"><h4>Address</h4><p>123 Gourmet Avenue<br>Manhattan, New York, NY 10001</p></div></div>
-        <div class="info-card"><div class="info-icon"><i class="fas fa-phone"></i></div><div class="info-text"><h4>Phone</h4><a href="tel:+12125550100">+1 (212) 555-0100</a><a href="tel:+12125550101">+1 (212) 555-0101</a></div></div>
-        <div class="info-card"><div class="info-icon"><i class="fas fa-envelope"></i></div><div class="info-text"><h4>Email</h4><a href="mailto:hello@savoria.com">hello@savoria.com</a><a href="mailto:events@savoria.com">events@savoria.com</a></div></div>
-        <div class="info-card"><div class="info-icon"><i class="fas fa-clock"></i></div><div class="info-text"><h4>Opening Hours</h4><p>Mon&ndash;Thu: 12PM &ndash; 10PM<br>Fri&ndash;Sat: 12PM &ndash; 12AM<br>Sunday: 11AM &ndash; 9PM</p></div></div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="info-text">
+            <h4>Address</h4>
+            <p>123 Gourmet Avenue<br>Manhattan, New York, NY 10001</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-phone"></i></div>
+          <div class="info-text">
+            <h4>Phone</h4><a href="tel:+12125550100">+1 (212) 555-0100</a><a href="tel:+12125550101">+1 (212)
+              555-0101</a>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-envelope"></i></div>
+          <div class="info-text">
+            <h4>Email</h4><a href="mailto:hello@savoria.com">hello@savoria.com</a><a
+              href="mailto:events@savoria.com">events@savoria.com</a>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-clock"></i></div>
+          <div class="info-text">
+            <h4>Opening Hours</h4>
+            <p>Mon&ndash;Thu: 12PM &ndash; 10PM<br>Fri&ndash;Sat: 12PM &ndash; 12AM<br>Sunday: 11AM &ndash; 9PM</p>
+          </div>
+        </div>
       </div>
       <div class="social-row">
         <a href="#"><i class="fab fa-instagram"></i></a>
@@ -65,41 +95,50 @@
     </div>
 
     <!-- FORM -->
-    <div class="contact-form-wrap reveal">
-      <h3 class="form-title">Send Us a Message</h3>
-      <p class="form-sub">We typically respond within 2&ndash;4 hours during business hours.</p>
-      <form id="contactForm" onsubmit="handleSubmit(event)">
-        <div class="form-row">
-          <div class="form-group"><label>First Name *</label><input type="text" placeholder="John" required/></div>
-          <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Doe" required/></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Email *</label><input type="email" placeholder="john@example.com" required/></div>
-          <div class="form-group"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000"/></div>
-        </div>
-        <div class="form-group">
-          <label>Subject *</label>
-          <select required>
-            <option value="" disabled selected>Select a subject</option>
-            <option>General Inquiry</option>
-            <option>Reservation Assistance</option>
-            <option>Private Event Enquiry</option>
-            <option>Feedback / Review</option>
-            <option>Catering Request</option>
-            <option>Press &amp; Media</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Message *</label><textarea placeholder="Write your message here..." required></textarea></div>
-        <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
-        <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i> Thank you! Your message has been sent. We'll be in touch soon.</div>
-      </form>
-    </div>
+    <form class="auth-form" action="{% url 'contact' %}" method="post">
+      {% csrf_token %}
+      <div class="contact-form-wrap reveal">
+        <h3 class="form-title">Send Us a Message</h3>
+        <p class="form-sub">We typically respond within 2&ndash;4 hours during business hours.</p>
+        <form id="contactForm" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group"><label>First Name *</label><input type="text" placeholder="John" required /></div>
+            <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Doe" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email *</label><input type="email" placeholder="john@example.com" required />
+            </div>
+            <div class="form-group"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000" /></div>
+          </div>
+          <div class="form-group">
+            <label>Subject *</label>
+            <select required>
+              <option value="" disabled selected>Select a subject</option>
+              <option>General Inquiry</option>
+              <option>Reservation Assistance</option>
+              <option>Private Event Enquiry</option>
+              <option>Feedback / Review</option>
+              <option>Catering Request</option>
+              <option>Press &amp; Media</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Message *</label><textarea placeholder="Write your message here..."
+              required></textarea></div>
+          <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+          <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i> Thank you! Your message has been
+            sent. We'll be in touch soon.</div>
+        </form>
+      </div>
+    </form>
   </div>
 
   <!-- MAP -->
   <div class="map-section">
-    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-74.02%2C40.70%2C-73.96%2C40.76&layer=mapnik" allowfullscreen loading="lazy" title="Savoria Location"></iframe>
-    <div class="map-overlay"><strong>Savoria Restaurant</strong><p>123 Gourmet Avenue<br>Manhattan, New York</p></div>
+    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-74.02%2C40.70%2C-73.96%2C40.76&layer=mapnik"
+      allowfullscreen loading="lazy" title="Savoria Location"></iframe>
+    <div class="map-overlay"><strong>Savoria Restaurant</strong>
+      <p>123 Gourmet Avenue<br>Manhattan, New York</p>
+    </div>
   </div>
 
   <!-- HOURS -->
@@ -112,13 +151,34 @@
     </div>
     <div class="reveal">
       <table class="hours-table">
-        <tr><td>Monday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
-        <tr><td>Tuesday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
-        <tr><td>Wednesday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
-        <tr><td>Thursday</td><td>12:00 PM &ndash; 10:00 PM</td></tr>
-        <tr><td>Friday</td><td>12:00 PM &ndash; 12:00 AM</td></tr>
-        <tr><td>Saturday</td><td>10:00 AM &ndash; 12:00 AM</td></tr>
-        <tr><td>Sunday</td><td>11:00 AM &ndash; 9:00 PM</td></tr>
+        <tr>
+          <td>Monday</td>
+          <td>12:00 PM &ndash; 10:00 PM</td>
+        </tr>
+        <tr>
+          <td>Tuesday</td>
+          <td>12:00 PM &ndash; 10:00 PM</td>
+        </tr>
+        <tr>
+          <td>Wednesday</td>
+          <td>12:00 PM &ndash; 10:00 PM</td>
+        </tr>
+        <tr>
+          <td>Thursday</td>
+          <td>12:00 PM &ndash; 10:00 PM</td>
+        </tr>
+        <tr>
+          <td>Friday</td>
+          <td>12:00 PM &ndash; 12:00 AM</td>
+        </tr>
+        <tr>
+          <td>Saturday</td>
+          <td>10:00 AM &ndash; 12:00 AM</td>
+        </tr>
+        <tr>
+          <td>Sunday</td>
+          <td>11:00 AM &ndash; 9:00 PM</td>
+        </tr>
       </table>
     </div>
   </div>
@@ -133,4 +193,5 @@
   <script src="{% static 'js/base.js' %}"></script>
   <script src="{% static 'js/contact.js' %}"></script>
 </body>
+
 </html>
