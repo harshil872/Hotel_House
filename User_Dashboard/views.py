@@ -1,7 +1,7 @@
-from .froms import ContactForm
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ContactForm
 
 
 def index(request):

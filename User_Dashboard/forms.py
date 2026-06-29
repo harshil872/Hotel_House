@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-
+from .models import Contact
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -68,3 +68,8 @@ class RegisterForm(forms.ModelForm):
             user.save()
 
         return user
+    
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ["first_name", "last_name", "email", "phone", "subject", "message"]
