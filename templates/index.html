@@ -1,226 +1,1024 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Savoria | Fine Dining Restaurant</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}"/>
-</head>
-<body>
+{% extends 'base.html' %}
 
-  <!-- LOADER -->
-  <div id="loader">
-    <div class="loader-logo">Savoria</div>
-    <div class="loader-bar"><div class="loader-fill"></div></div>
-  </div>
+{% block title %}Savoir — Fine Dining Restaurant | NY{% endblock %}
+{% block meta_description %}Experience the pinnacle of fine dining at Savoir. Exquisite seasonal menus, world-class service, and an ambiance that captures the soul of culinary art.{% endblock %}
 
-  <!-- MOBILE MENU -->
-  <div class="mobile-menu" id="mobileMenu">
-    <span class="mobile-close" onclick="closeMobile()">&times;</span>
-    <a href="{% url 'index' %}">Home</a>
-    <a href="{% url 'menu' %}">Menu</a>
-    <a href="{% url 'about' %}">About</a>
-    <a href="{% url 'gallery' %}">Gallery</a>
-    <a href="{% url 'contact' %}">Contact</a>
-    <a href="{% url 'reservations' %}" style="color:var(--gold)">Reserve</a>
-  </div>
+{% block extra_css %}
+<style>
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-  <!-- NAVBAR -->
-  <nav id="navbar">
-    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
-    <ul class="nav-links">
-      <li><a href="{% url 'index' %}" class="active">Home</a></li>
-      <li><a href="{% url 'menu' %}">Menu</a></li>
-      <li><a href="{% url 'about' %}">About</a></li>
-      <li><a href="{% url 'gallery' %}">Gallery</a></li>
-      <li><a href="{% url 'contact' %}">Contact</a></li>
-      <li><a href="{% url 'reservations' %}" class="nav-reserve">Reserve a Table</a></li>
-    </ul>
-    <div class="hamburger" onclick="openMobile()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 30%, rgba(100,50,20,0.15) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0804 0%, #0d0d0d 100%);
+  }
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-      <div class="hero-badge">Est. 2010 &middot; Award Winning</div>
-      <h1>Where Every Meal<span>Tells A Story</span></h1>
-      <p>Experience the art of fine dining with fresh ingredients, bold flavors, and exceptional hospitality.</p>
-      <div class="hero-btns">
-        <a href="{% url 'menu' %}" class="btn-primary">Explore Menu</a>
-        <a href="{% url 'reservations' %}" class="btn-outline">Reserve a Table</a>
-      </div>
-    </div>
-    <div class="scroll-indicator"><span></span><span></span></div>
-  </section>
+  /* Animated golden particles */
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 20%, var(--gold) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 15%, var(--gold) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 70%, rgba(201,168,76,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 10% 80%, rgba(201,168,76,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 90%, var(--gold) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 40%, rgba(201,168,76,0.6) 0%, transparent 100%);
+    animation: particleFloat 8s ease-in-out infinite alternate;
+    opacity: 0.6;
+  }
 
-  <!-- STATS -->
-  <div class="stats">
-    <div class="stats-grid">
-      <div class="stat-item reveal"><div class="stat-num" data-count="150">0</div><div class="stat-label">Menu Items</div></div>
-      <div class="stat-item reveal"><div class="stat-num" data-count="35">0</div><div class="stat-label">Expert Chefs</div></div>
-      <div class="stat-item reveal"><div class="stat-num" data-count="12">0</div><div class="stat-label">Awards Won</div></div>
-      <div class="stat-item reveal"><div class="stat-num" data-count="50000">0</div><div class="stat-label">Happy Guests</div></div>
-    </div>
-  </div>
+  @keyframes particleFloat {
+    0%   { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-20px) scale(1.05); }
+  }
 
-  <!-- SPECIALTIES -->
-  <section class="specialties">
-    <div class="section-label reveal">Our Craft</div>
-    <h2 class="section-title reveal">Why Choose Savoria</h2>
-    <div class="section-divider center reveal"></div>
-    <p class="reveal" style="max-width:550px;margin:0 auto 0;color:rgba(255,255,255,0.6);line-height:1.8;">
-      We believe dining is more than food — it's a complete sensory experience crafted with passion.
+  .hero-content {
+    position: relative;
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 860px;
+    animation: heroReveal 1.2s ease forwards;
+  }
+
+  @keyframes heroReveal {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-family: var(--font-elegant);
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: bounce 2s ease infinite;
+  }
+
+  .hero-scroll i { font-size: 1.2rem; color: var(--gold); }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* Decorative line */
+  .hero-line {
+    position: absolute;
+    top: 50%;
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+  .hero-line.left  { left: 5%; }
+  .hero-line.right { right: 5%; }
+
+  /* ===== MARQUEE STRIP ===== */
+  .marquee-strip {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    padding: 0.85rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-track span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .marquee-track span::after {
+    content: '✦';
+    opacity: 0.5;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ===== FEATURED DISHES ===== */
+  .dishes-section {
+    padding: 7rem 0;
+    background: var(--bg-section);
+  }
+
+  .dishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  .dish-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.4s ease;
+    position: relative;
+  }
+
+  .dish-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 0 1px var(--gold-dim);
+  }
+
+  .dish-img-wrap {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: #1a1008;
+  }
+
+  .dish-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .dish-card:hover .dish-img-wrap img { transform: scale(1.08); }
+
+  .dish-badge {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+  }
+
+  .dish-no-img {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    background: linear-gradient(135deg, #1a1008, #2a1a10);
+  }
+
+  .dish-body {
+    padding: 1.5rem;
+  }
+
+  .dish-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .dish-category {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .dish-badges {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .badge-veg, .badge-vegan, .badge-gf {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-veg   { background: rgba(80,200,100,0.15); color: #6BCB77; border: 1px solid rgba(80,200,100,0.3); }
+  .badge-vegan { background: rgba(100,220,120,0.12); color: #5CBD6A; border: 1px solid rgba(100,220,120,0.3); }
+  .badge-gf    { background: rgba(200,160,80,0.12); color: var(--gold); border: 1px solid rgba(200,160,80,0.3); }
+
+  .dish-name {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .dish-desc {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .dish-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dish-price {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .dish-price span {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .dish-spice {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  /* Empty state */
+  .dishes-empty {
+    text-align: center;
+    padding: 4rem;
+    color: var(--text-muted);
+    font-family: var(--font-elegant);
+    font-style: italic;
+    font-size: 1.2rem;
+    grid-column: 1 / -1;
+  }
+
+  /* ===== ABOUT SNIPPET ===== */
+  .about-snippet {
+    padding: 7rem 0;
+    background: var(--bg-dark);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+
+  .about-img-main {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: linear-gradient(145deg, #1a1008, #2a1a0a);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .about-img-main img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .about-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.7));
+  }
+
+  .about-stat-card {
+    position: absolute;
+    bottom: -2rem;
+    right: -2rem;
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    min-width: 150px;
+  }
+
+  .about-stat-card .number {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--gold);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .about-stat-card .label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+  }
+
+  .about-placeholder-icon {
+    font-size: 8rem;
+    opacity: 0.15;
+    color: var(--gold);
+  }
+
+  .about-text .section-subtitle {
+    max-width: 100%;
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .about-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .about-feature {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .about-feature-icon {
+    width: 42px; height: 42px;
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .about-feature-text h4 {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 0.2rem;
+  }
+
+  .about-feature-text p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials-section {
+    padding: 7rem 0;
+    background: var(--bg-section);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonials-section::before {
+    content: '"';
+    position: absolute;
+    top: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-heading);
+    font-size: 20rem;
+    color: rgba(201,168,76,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .testimonial-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .testimonial-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+
+  .testimonial-quote {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    color: var(--gold);
+    opacity: 0.4;
+    line-height: 0.7;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-stars {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-stars i { color: var(--gold); font-size: 0.85rem; }
+  .testimonial-stars i.empty { color: var(--border); }
+
+  .testimonial-text {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .testimonial-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--gold);
+    font-weight: 700;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .testimonial-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .testimonial-author-info .name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  .testimonial-author-info .source {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .testimonials-empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-family: var(--font-elegant);
+    font-style: italic;
+    grid-column: 1 / -1;
+    font-size: 1.1rem;
+  }
+
+  /* Default testimonials (no DB data) */
+  .default-testimonial { display: block; }
+
+  /* ===== GALLERY TEASER ===== */
+  .gallery-teaser {
+    padding: 7rem 0;
+    background: var(--bg-dark);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 220px);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .gallery-item {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+  }
+
+  .gallery-item:first-child {
+    grid-row: span 2;
+  }
+
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .gallery-item:hover img { transform: scale(1.08); }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.8));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.25rem;
+  }
+
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+  .gallery-overlay span {
+    color: var(--cream);
+    font-family: var(--font-elegant);
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  .gallery-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    background: linear-gradient(145deg, #141414, #1e1e12);
+    color: var(--gold);
+    opacity: 0.4;
+  }
+
+  .gallery-cta { text-align: center; }
+
+  /* ===== CTA SECTION ===== */
+  .cta-section {
+    padding: 6rem 0;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.1) 0%, transparent 65%),
+      var(--bg-section);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .cta-section .section-title { margin-bottom: 1rem; }
+  .cta-section p {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .about-stat-card { right: 0; }
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+    }
+    .gallery-item:first-child { grid-row: span 1; }
+  }
+
+  @media (max-width: 600px) {
+    .dishes-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero" id="hero" aria-label="Hero section">
+  <div class="hero-bg"></div>
+  <div class="hero-line left"></div>
+  <div class="hero-line right"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Est. 2015 &nbsp;&nbsp; New York</div>
+    <h1 class="hero-title" id="hero-title">
+      The Art of<br><em>Dining Well</em>
+    </h1>
+    <p class="hero-sub">
+      Where every plate is a canvas, every ingredient a brushstroke,<br>
+      and every visit a memory crafted to last a lifetime.
     </p>
-    <div class="spec-grid">
-      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-fire"></i></div><h3>Live Kitchen</h3><p>Watch our chefs craft your meal in our open kitchen concept — transparency in every dish.</p></div>
-      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-leaf"></i></div><h3>Farm to Table</h3><p>Fresh, locally sourced ingredients delivered daily. Every bite connects you to nature.</p></div>
-      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-wine-glass-alt"></i></div><h3>Premium Wines</h3><p>A curated cellar of 200+ fine wines from across the globe, selected by our sommelier.</p></div>
-      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-star"></i></div><h3>Michelin Quality</h3><p>Award-winning recipes refined over decades, bringing you restaurant-grade excellence.</p></div>
-      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-birthday-cake"></i></div><h3>Private Events</h3><p>Host birthdays, weddings, and corporate events in our luxurious private dining rooms.</p></div>
-      <div class="spec-card reveal"><div class="spec-icon"><i class="fas fa-concierge-bell"></i></div><h3>VIP Service</h3><p>White-glove service from the moment you walk in. Your comfort is our priority.</p></div>
+    <div class="hero-actions">
+      <a href="{% url 'contact' %}" class="btn btn-gold" id="hero-reserve-btn">
+        <i class="fas fa-calendar-check"></i> Reserve a Table
+      </a>
+      <a href="{% url 'about' %}" class="btn btn-outline" id="hero-story-btn">
+        Our Story <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
-  </section>
+  </div>
 
-  <!-- FEATURED DISHES -->
-  <section class="featured">
-    <div class="featured-header">
-      <div>
-        <div class="section-label reveal">Chef's Selection</div>
-        <h2 class="section-title reveal">Featured Dishes</h2>
-        <div class="section-divider reveal"></div>
-      </div>
-      <a href="{% url 'menu' %}" class="btn-outline reveal">View Full Menu</a>
+  <div class="hero-scroll" aria-hidden="true">
+    <span>Scroll</span>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- ═══════ MARQUEE STRIP ═══════ -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track" id="marquee-track">
+    {% for _ in "12345678" %}
+    <span>Fine Dining</span>
+    <span>Seasonal Menu</span>
+    <span>Award Winning</span>
+    <span>Private Events</span>
+    <span>Michelin Inspired</span>
+    <span>Farm to Table</span>
+    <span>Craft Cocktails</span>
+    <span>Live Music</span>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ═══════ FEATURED DISHES ═══════ -->
+<section class="dishes-section" id="featured-dishes" aria-label="Featured dishes">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Signature Creations</span>
+      <h2 class="section-title">Chef's Featured Selections</h2>
+      <div class="gold-divider"></div>
+      <p class="section-subtitle">Handpicked masterpieces from our ever-evolving seasonal menu, crafted with the finest ingredients.</p>
     </div>
+
     <div class="dishes-grid">
-      <div class="dish-card reveal">
-        <div class="dish-img"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Salmon" loading="lazy"/><span class="dish-badge">Popular</span></div>
-        <div class="dish-info"><h4>Pan-Seared Salmon</h4><p>Atlantic salmon with lemon butter sauce, asparagus, and wild rice.</p><div class="dish-footer"><span class="dish-price">$38</span><button class="dish-order">Order Now</button></div></div>
-      </div>
-      <div class="dish-card reveal">
-        <div class="dish-img"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600" alt="Steak" loading="lazy"/><span class="dish-badge">Best Seller</span></div>
-        <div class="dish-info"><h4>Wagyu Ribeye Steak</h4><p>A5 Wagyu with truffle butter, roasted garlic mash, and red wine jus.</p><div class="dish-footer"><span class="dish-price">$85</span><button class="dish-order">Order Now</button></div></div>
-      </div>
-      <div class="dish-card reveal">
-        <div class="dish-img"><img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600" alt="Pasta" loading="lazy"/><span class="dish-badge">Chef's Pick</span></div>
-        <div class="dish-info"><h4>Truffle Carbonara</h4><p>Handmade pappardelle with black truffle, pancetta, and aged pecorino.</p><div class="dish-footer"><span class="dish-price">$32</span><button class="dish-order">Order Now</button></div></div>
-      </div>
-      <div class="dish-card reveal">
-        <div class="dish-img"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600" alt="Dessert" loading="lazy"/><span class="dish-badge">New</span></div>
-        <div class="dish-info"><h4>Chocolate Fondant</h4><p>Warm Belgian chocolate lava cake with vanilla bean ice cream.</p><div class="dish-footer"><span class="dish-price">$18</span><button class="dish-order">Order Now</button></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <div class="experience">
-    <div class="exp-img"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800" alt="Restaurant Interior" loading="lazy"/></div>
-    <div class="exp-content">
-      <div class="section-label reveal">The Savoria Experience</div>
-      <h2 class="section-title reveal">Dining Redefined<br>Since 2010</h2>
-      <div class="section-divider reveal"></div>
-      <p class="reveal">Nestled in the heart of the city, Savoria has been crafting unforgettable dining experiences for over a decade. Our philosophy is simple: exceptional ingredients, masterful technique, warm hospitality.</p>
-      <ul class="exp-features reveal">
-        <li><i class="fas fa-check"></i>Seasonal menus crafted by award-winning chefs</li>
-        <li><i class="fas fa-check"></i>Intimate ambiance with handcrafted interiors</li>
-        <li><i class="fas fa-check"></i>Private dining rooms for up to 80 guests</li>
-        <li><i class="fas fa-check"></i>Vegan, gluten-free &amp; allergy-aware options</li>
-        <li><i class="fas fa-check"></i>Live jazz every Friday and Saturday evening</li>
-      </ul>
-      <a href="{% url 'about' %}" class="btn-primary reveal">Our Story</a>
+      {% for item in featured_items %}
+      <article class="dish-card fade-in" id="dish-{{ item.id }}" style="transition-delay: {{ forloop.counter0 }}00ms">
+        <div class="dish-img-wrap">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy" />
+          {% else %}
+            <div class="dish-no-img">🍽️</div>
+          {% endif %}
+          <div class="dish-badge">Featured</div>
+        </div>
+        <div class="dish-body">
+          <div class="dish-meta">
+            <span class="dish-category">{{ item.category.name }}</span>
+            <div class="dish-badges">
+              {% if item.is_vegetarian %}<span class="badge-veg">Veg</span>{% endif %}
+              {% if item.is_vegan %}<span class="badge-vegan">Vegan</span>{% endif %}
+              {% if item.is_gluten_free %}<span class="badge-gf">GF</span>{% endif %}
+            </div>
+          </div>
+          <h3 class="dish-name"><a href="{% url 'dish_detail' pk=item.pk %}" style="color:var(--cream)">{{ item.name }}</a></h3>
+          <p class="dish-desc">{{ item.description }}</p>
+          <div class="dish-footer" style="flex-wrap:wrap; gap:0.5rem;">
+            <div class="dish-price">${{ item.price }}<span> / serving</span></div>
+            <div style="display:flex; gap:0.5rem; margin-left:auto;">
+              <button onclick="addToCart('{{ item.name|escapejs }}', {{ item.price }})" class="btn btn-outline" style="padding:0.4rem 0.9rem; font-size:0.72rem;">
+                <i class="fas fa-plus"></i> Add
+              </button>
+              <a href="{% url 'dish_detail' pk=item.pk %}" class="btn btn-gold" style="padding:0.4rem 0.9rem; font-size:0.72rem;">
+                Details <i class="fas fa-chevron-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <!-- Default demo cards when no DB data -->
+      {% for dish in "123456" %}
+      <article class="dish-card fade-in" style="transition-delay: {{ forloop.counter0 }}00ms">
+        <div class="dish-img-wrap">
+          <div class="dish-no-img">
+            {% if forloop.counter == 1 %}🥩{% elif forloop.counter == 2 %}🍝{% elif forloop.counter == 3 %}🦞{% elif forloop.counter == 4 %}🥗{% elif forloop.counter == 5 %}🍮{% else %}🍷{% endif %}
+          </div>
+          <div class="dish-badge">Featured</div>
+        </div>
+        <div class="dish-body">
+          <div class="dish-meta">
+            <span class="dish-category">{% if forloop.counter <= 2 %}Mains{% elif forloop.counter == 3 %}Seafood{% elif forloop.counter == 4 %}Salads{% elif forloop.counter == 5 %}Desserts{% else %}Drinks{% endif %}</span>
+          </div>
+          <h3 class="dish-name">
+            {% if forloop.counter == 1 %}Wagyu Beef Tenderloin
+            {% elif forloop.counter == 2 %}Black Truffle Pasta
+            {% elif forloop.counter == 3 %}Butter-Poached Lobster
+            {% elif forloop.counter == 4 %}Heirloom Tomato Salad
+            {% elif forloop.counter == 5 %}Crème Brûlée
+            {% else %}Aged Bordeaux Selection{% endif %}
+          </h3>
+          <p class="dish-desc">
+            {% if forloop.counter == 1 %}Slow-cooked A5 Wagyu with bone marrow jus and truffle pomme purée.
+            {% elif forloop.counter == 2 %}Hand-rolled pasta with 24-month Périgord truffle and aged Parmesan.
+            {% elif forloop.counter == 3 %}Maine lobster, saffron beurre blanc, caviar, micro herbs.
+            {% elif forloop.counter == 4 %}Sun-ripened heirloom tomatoes, aged balsamic, burrata, basil oil.
+            {% elif forloop.counter == 5 %}Vanilla Tahitian crème brûlée with caramelized sugar and seasonal berries.
+            {% else %}Curated selection from our 3,000-bottle cellar.{% endif %}
+          </p>
+          <div class="dish-footer">
+            <div class="dish-price">
+              {% if forloop.counter == 1 %}$89{% elif forloop.counter == 2 %}$42{% elif forloop.counter == 3 %}$74{% elif forloop.counter == 4 %}$22{% elif forloop.counter == 5 %}$18{% else %}$35{% endif %}
+              <span> / serving</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+      {% endfor %}
     </div>
   </div>
+</section>
 
-  <!-- TESTIMONIALS -->
-  <section class="testimonials">
-    <div class="section-label reveal">What Guests Say</div>
-    <h2 class="section-title reveal">Guest Reviews</h2>
-    <div class="section-divider center reveal"></div>
-    <div class="testi-grid">
-      <div class="testi-card reveal">
-        <div class="testi-quote">&ldquo;</div>
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">The most extraordinary dining experience of my life. The Wagyu steak was cooked to absolute perfection. Service was impeccable from start to finish.</p>
-        <div class="testi-author"><div class="testi-avatar"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah"/></div><div class="testi-name"><strong>Sarah Mitchell</strong><span>Food Critic, NY Times</span></div></div>
-      </div>
-      <div class="testi-card reveal">
-        <div class="testi-quote">&ldquo;</div>
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">We celebrated our anniversary here and it was magical. The ambiance, the food, the wine pairing — everything was beyond expectations. Will definitely return.</p>
-        <div class="testi-author"><div class="testi-avatar"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="James"/></div><div class="testi-name"><strong>James &amp; Elena Chen</strong><span>Regular Guests</span></div></div>
-      </div>
-      <div class="testi-card reveal">
-        <div class="testi-quote">&ldquo;</div>
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">The truffle carbonara is unlike anything I've ever tasted. The attention to detail in every dish shows true culinary artistry. A must-visit in the city.</p>
-        <div class="testi-author"><div class="testi-avatar"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya"/></div><div class="testi-name"><strong>Priya Sharma</strong><span>Travel Blogger</span></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BANNER -->
-  <div class="cta-banner">
-    <div class="section-label reveal">Limited Seats Available</div>
-    <h2 class="reveal">Ready for an Unforgettable Evening?</h2>
-    <p class="reveal">Book your table today and let us craft a dining experience you'll never forget.</p>
-    <a href="{% url 'reservations' %}" class="btn-primary reveal">Reserve Your Table</a>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
-        <p>A dining destination where culinary art meets warm hospitality. Located in the heart of the city.</p>
-        <div class="footer-social">
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-facebook"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-youtube"></i></a>
+<!-- ═══════ ABOUT SNIPPET ═══════ -->
+<section class="about-snippet" id="about-snippet" aria-label="About us preview">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual fade-in">
+        <div class="about-img-main">
+          <div class="about-placeholder-icon"><i class="fas fa-utensils"></i></div>
+          <div class="about-img-overlay"></div>
+        </div>
+        <div class="about-stat-card">
+          <div class="number">15+</div>
+          <div class="label">Years of Excellence</div>
         </div>
       </div>
-      <div class="footer-col">
-        <h4>Navigate</h4>
-        <ul>
-          <li><a href="{% url 'index' %}">Home</a></li>
-          <li><a href="{% url 'menu' %}">Menu</a></li>
-          <li><a href="{% url 'about' %}">About Us</a></li>
-          <li><a href="{% url 'gallery' %}">Gallery</a></li>
-          <li><a href="{% url 'contact' %}">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Hours</h4>
-        <ul>
-          <li><a href="#">Mon–Thu: 12PM – 10PM</a></li>
-          <li><a href="#">Fri–Sat: 12PM – 12AM</a></li>
-          <li><a href="#">Sunday: 11AM – 9PM</a></li>
-          <li><a href="#">Brunch: Sat–Sun 10AM</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="#">123 Gourmet Ave, New York</a></li>
-          <li><a href="tel:+12125550100">+1 (212) 555-0100</a></li>
-          <li><a href="mailto:hello@savoria.com">hello@savoria.com</a></li>
-          <li><a href="{% url 'reservations' %}">Book a Table</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
-      <p>Designed with <i class="fas fa-heart" style="color:#b22222"></i> for food lovers</p>
-    </div>
-  </footer>
 
-  <script src="{% static 'js/base.js' %}"></script>
-  <script src="{% static 'js/index.js' %}"></script>
-</body>
-</html>
+      <div class="about-text fade-in" style="transition-delay: 0.2s">
+        <span class="section-label">Our Philosophy</span>
+        <h2 class="section-title">A Legacy of<br>Culinary Excellence</h2>
+        <p class="section-subtitle">We believe every meal should be an experience — a journey of flavors, textures, and emotions that lingers long after the last bite.</p>
+
+        <div class="about-features">
+          <div class="about-feature">
+            <div class="about-feature-icon"><i class="fas fa-leaf"></i></div>
+            <div class="about-feature-text">
+              <h4>Seasonal & Sustainable</h4>
+              <p>Our menu rotates with the seasons, sourcing from local farms and ethical suppliers.</p>
+            </div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon"><i class="fas fa-award"></i></div>
+            <div class="about-feature-text">
+              <h4>Award-Winning Chefs</h4>
+              <p>Led by Chef Marco Delacroix, a Michelin-trained culinary artist with 20+ years of experience.</p>
+            </div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon"><i class="fas fa-wine-glass"></i></div>
+            <div class="about-feature-text">
+              <h4>Curated Wine Cellar</h4>
+              <p>Over 3,000 labels from the world's finest wine-producing regions.</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="{% url 'about' %}" class="btn btn-gold" id="about-learn-btn">
+          Discover Our Story <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ TESTIMONIALS ═══════ -->
+<section class="testimonials-section" id="testimonials" aria-label="Customer testimonials">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Voices of Our Guests</span>
+      <h2 class="section-title">What They're Saying</h2>
+      <div class="gold-divider"></div>
+    </div>
+
+    <div class="testimonials-grid">
+      {% for t in testimonials %}
+      <div class="testimonial-card fade-in" id="testimonial-{{ t.id }}" style="transition-delay: {{ forloop.counter0 }}00ms">
+        <div class="testimonial-quote">"</div>
+        <div class="testimonial-stars">
+          {% for i in "12345" %}
+            {% if forloop.counter <= t.rating %}
+              <i class="fas fa-star"></i>
+            {% else %}
+              <i class="fas fa-star empty"></i>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <p class="testimonial-text">{{ t.review }}</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">
+            {% if t.avatar %}<img src="{{ t.avatar.url }}" alt="{{ t.name }}" />
+            {% else %}{{ t.name|first|upper }}{% endif %}
+          </div>
+          <div class="testimonial-author-info">
+            <div class="name">{{ t.name }}</div>
+            {% if t.source %}<div class="source">via {{ t.source }}</div>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <!-- Demo testimonials -->
+      {% for r in "123456" %}
+      <div class="testimonial-card fade-in" style="transition-delay: {{ forloop.counter0 }}00ms">
+        <div class="testimonial-quote">"</div>
+        <div class="testimonial-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testimonial-text">
+          {% if forloop.counter == 1 %}The Wagyu Tenderloin was unlike anything I've ever tasted. An absolute masterpiece of culinary art. Savoir has redefined fine dining for me.
+          {% elif forloop.counter == 2 %}From the warm greeting to the last dessert, every moment felt like a luxury. The sommelier's wine pairing was perfection.
+          {% elif forloop.counter == 3 %}We celebrated our anniversary here and it was magical. The truffle pasta alone is worth the trip from London!
+          {% elif forloop.counter == 4 %}The ambiance is intimate and romantic. The chef even came out to greet us personally. Truly a world-class experience.
+          {% elif forloop.counter == 5 %}I've dined at Michelin-starred restaurants across Europe and Savoir holds its own against the very best. Exceptional.
+          {% else %}The seasonal tasting menu was a revelation. Each course told a story. We're already planning our next visit.{% endif %}
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">
+            {% if forloop.counter == 1 %}A{% elif forloop.counter == 2 %}M{% elif forloop.counter == 3 %}S{% elif forloop.counter == 4 %}J{% elif forloop.counter == 5 %}E{% else %}L{% endif %}
+          </div>
+          <div class="testimonial-author-info">
+            <div class="name">
+              {% if forloop.counter == 1 %}Alexandra M.{% elif forloop.counter == 2 %}Marc Lefèvre{% elif forloop.counter == 3 %}Sophie Chen{% elif forloop.counter == 4 %}James & Rachel{% elif forloop.counter == 5 %}Elena Torres{% else %}Lucas Bernard{% endif %}
+            </div>
+            <div class="source">via {% if forloop.counter <= 2 %}Google{% elif forloop.counter <= 4 %}TripAdvisor{% else %}Yelp{% endif %}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ GALLERY TEASER ═══════ -->
+<section class="gallery-teaser" id="gallery-teaser" aria-label="Gallery preview">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Visual Stories</span>
+      <h2 class="section-title">A Feast for the Eyes</h2>
+      <div class="gold-divider"></div>
+    </div>
+
+    <div class="gallery-grid fade-in">
+      {% for img in gallery_teaser %}
+      <div class="gallery-item" id="gallery-item-{{ img.id }}">
+        {% if img.image %}
+          <img src="{{ img.image.url }}" alt="{{ img.caption }}" loading="lazy" />
+        {% else %}
+          <div class="gallery-placeholder">🍷</div>
+        {% endif %}
+        <div class="gallery-overlay">
+          <span>{{ img.caption|default:img.get_category_display }}</span>
+        </div>
+      </div>
+      {% empty %}
+      {% for g in "123456" %}
+      <div class="gallery-item" id="gallery-demo-{{ forloop.counter }}">
+        <div class="gallery-placeholder">
+          {% if forloop.counter == 1 %}🍽️{% elif forloop.counter == 2 %}🥂{% elif forloop.counter == 3 %}🕯️{% elif forloop.counter == 4 %}👨‍🍳{% elif forloop.counter == 5 %}🌿{% else %}🍷{% endif %}
+        </div>
+        <div class="gallery-overlay">
+          <span>{% if forloop.counter == 1 %}Fine Dining{% elif forloop.counter == 2 %}Celebrations{% elif forloop.counter == 3 %}Ambiance{% elif forloop.counter == 4 %}Our Chefs{% elif forloop.counter == 5 %}Seasonal Ingredients{% else %}Wine Cellar{% endif %}</span>
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+
+    <div class="gallery-cta">
+      <a href="{% url 'gallery' %}" class="btn btn-outline" id="view-gallery-btn">
+        <i class="fas fa-images"></i> View Full Gallery
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CTA ═══════ -->
+<section class="cta-section" id="cta-section" aria-label="Call to action">
+  <div class="container fade-in">
+    <span class="section-label">Your Table Awaits</span>
+    <h2 class="section-title">Ready for an Unforgettable<br>Evening?</h2>
+    <p>Join us for an experience that transcends the ordinary. Reservations recommended.</p>
+    <div class="cta-actions">
+      <a href="{% url 'contact' %}" class="btn btn-gold" id="cta-reserve-btn">
+        <i class="fas fa-calendar-check"></i> Reserve Now
+      </a>
+      <a href="{% url 'gallery' %}" class="btn btn-outline" id="cta-gallery-btn">
+        <i class="fas fa-images"></i> View Gallery
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

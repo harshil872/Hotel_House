@@ -1,98 +1,510 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gallery | Savoria Restaurant</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
-  <link rel="stylesheet" href="{% static 'css/gallery.css' %}"/>
-</head>
-<body>
+{% extends 'base.html' %}
 
-  <div class="mobile-menu" id="mobileMenu">
-    <span class="mobile-close" onclick="closeMobile()">&times;</span>
-    <a href="{% url 'index' %}">Home</a>
-    <a href="{% url 'menu' %}">Menu</a>
-    <a href="{% url 'about' %}">About</a>
-    <a href="{% url 'gallery' %}" style="color:var(--gold)">Gallery</a>
-    <a href="{% url 'contact' %}">Contact</a>
-    <a href="{% url 'reservations' %}">Reserve</a>
-  </div>
+{% block title %}Gallery — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Explore Savoir Restaurant's gallery — stunning images of our signature dishes, intimate dining rooms, celebrated chefs, and unforgettable events.{% endblock %}
 
-  <nav class="always-solid">
-    <a href="{% url 'index' %}" class="nav-logo">Savoria</a>
-    <ul class="nav-links">
-      <li><a href="{% url 'index' %}">Home</a></li>
-      <li><a href="{% url 'menu' %}">Menu</a></li>
-      <li><a href="{% url 'about' %}">About</a></li>
-      <li><a href="{% url 'gallery' %}" class="active">Gallery</a></li>
-      <li><a href="{% url 'contact' %}">Contact</a></li>
-      <li><a href="{% url 'reservations' %}" class="nav-reserve">Reserve</a></li>
-    </ul>
-    <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
-  </nav>
+{% block extra_css %}
+<style>
+  /* ===== PAGE HERO ===== */
+  .page-hero {
+    padding: 10rem 0 5rem;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%),
+      var(--bg-dark);
+    position: relative;
+    overflow: hidden;
+  }
 
-  <div class="page-hero" style="background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600') center/cover;">
-    <div class="page-hero-content">
-      <div class="breadcrumb"><a href="{% url 'index' %}">Home</a> / Gallery</div>
-      <h1>Our Gallery</h1>
-      <p>A visual feast of flavors, ambiance, and moments</p>
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .page-hero-breadcrumb {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .page-hero-breadcrumb a { color: var(--gold); }
+
+  .page-hero h1 { font-size: clamp(3rem, 6vw, 5rem); color: var(--cream); margin-bottom: 1.25rem; }
+
+  .page-hero p {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+
+  /* ===== FILTER BAR ===== */
+  .gallery-section {
+    padding: 5rem 0 7rem;
+    background: var(--bg-section);
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .filter-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    border-color: transparent;
+  }
+
+  /* ===== MASONRY GALLERY ===== */
+  .gallery-masonry {
+    columns: 3;
+    column-gap: 1.25rem;
+  }
+
+  .gallery-card {
+    break-inside: avoid;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .gallery-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border-color: var(--gold);
+  }
+
+  .gallery-card img {
+    width: 100%;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  .gallery-card:hover img { transform: scale(1.04); }
+
+  .gallery-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+  }
+
+  .gallery-card:hover .gallery-card-overlay { opacity: 1; }
+
+  .gallery-card-caption {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--cream);
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .gallery-card-cat {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .gallery-card-zoom {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cream);
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-card:hover .gallery-card-zoom { opacity: 1; }
+
+  /* Placeholder */
+  .gallery-placeholder-img {
+    aspect-ratio: {% verbatim %}{{ ratio }}{% endverbatim %};
+    background: linear-gradient(145deg, #141414, #1e1e0d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.25;
+  }
+
+  .gallery-empty {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--text-muted);
+    font-family: var(--font-elegant);
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+
+  /* ===== LIGHTBOX MODAL ===== */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: fadeInModal 0.3s ease;
+  }
+
+  .lightbox.open { display: flex; }
+
+  @keyframes fadeInModal {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .lightbox-inner {
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+  }
+
+  .lightbox-img {
+    width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+
+  .lightbox-placeholder {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(145deg, #141414, #1e1e0d);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    gap: 1rem;
+  }
+
+  .lightbox-placeholder i { font-size: 8rem; color: var(--gold); opacity: 0.3; }
+  .lightbox-placeholder span { color: var(--text-muted); font-family: var(--font-elegant); font-style: italic; }
+
+  .lightbox-info {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .lightbox-caption {
+    font-family: var(--font-elegant);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 0.25rem;
+  }
+
+  .lightbox-cat {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: 1.5rem; right: 1.5rem;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: rgba(30,30,20,0.9);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cream);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 9001;
+  }
+
+  .lightbox-close:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: rgba(30,30,20,0.9);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cream);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 9001;
+  }
+
+  .lightbox-nav:hover { border-color: var(--gold); color: var(--gold); }
+  .lightbox-nav.prev { left: 1rem; }
+  .lightbox-nav.next { right: 1rem; }
+
+  /* ===== CTA ===== */
+  .gallery-cta-section {
+    padding: 5rem 0;
+    background: var(--bg-dark);
+    text-align: center;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .gallery-masonry { columns: 2; }
+  }
+
+  @media (max-width: 600px) {
+    .gallery-masonry { columns: 1; }
+    .lightbox-nav { display: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== PAGE HERO ===== -->
+<section class="page-hero" id="gallery-hero" aria-label="Gallery page header">
+  <div class="container">
+    <div class="page-hero-breadcrumb">
+      <a href="{% url 'index' %}">Home</a> &nbsp;/&nbsp; Gallery
     </div>
+    <h1>Our <em>Gallery</em></h1>
+    <div class="gold-divider"></div>
+    <p>A visual celebration of flavours, ambiance, and the art of fine dining.</p>
   </div>
+</section>
 
-  <div class="gallery-section">
-    <div class="filter-wrap reveal">
-      <div class="filter-tabs">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="food">Food</button>
-        <button class="filter-btn" data-filter="ambiance">Ambiance</button>
-        <button class="filter-btn" data-filter="events">Events</button>
-        <button class="filter-btn" data-filter="chef">Chef's Table</button>
+<!-- ===== GALLERY SECTION ===== -->
+<section class="gallery-section" id="gallery-main" aria-label="Photo gallery">
+  <div class="container">
+
+    <!-- Filter bar -->
+    <div class="filter-bar" role="navigation" aria-label="Gallery category filter">
+      <a href="{% url 'gallery' %}" id="filter-all"
+         class="filter-btn {% if not active_filter %}active{% endif %}">All</a>
+      {% for value, label in category_choices %}
+      <a href="{% url 'gallery' %}?category={{ value }}"
+         id="filter-{{ value }}"
+         class="filter-btn {% if active_filter == value %}active{% endif %}">
+        {{ label }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Masonry grid -->
+    {% if images %}
+    <div class="gallery-masonry" id="gallery-grid">
+      {% for img in images %}
+      {% if img.image %}
+      <div class="gallery-card fade-in"
+           id="gallery-card-{{ img.id }}"
+           onclick="openLightbox('{{ img.image.url }}', '{{ img.caption|escapejs }}', '{{ img.get_category_display }}')"
+           style="transition-delay: {{ forloop.counter0 }}0ms"
+           role="button" tabindex="0"
+           aria-label="View {{ img.caption|default:img.get_category_display }}">
+        <img src="{{ img.image.url }}" alt="{{ img.caption|default:img.get_category_display }}" loading="lazy" />
+        <div class="gallery-card-overlay">
+          <span class="gallery-card-caption">{{ img.caption|default:img.get_category_display }}</span>
+          <span class="gallery-card-cat">{{ img.get_category_display }}</span>
+        </div>
+        <div class="gallery-card-zoom"><i class="fas fa-expand"></i></div>
       </div>
+      {% endif %}
+      {% endfor %}
     </div>
 
-    <div class="gallery-grid" id="galleryGrid">
-      <div class="gallery-item" data-cat="food" data-caption="Pan-Seared Salmon"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Salmon" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Pan-Seared Salmon</span></div></div>
-      <div class="gallery-item" data-cat="ambiance" data-caption="Dining Hall"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600" alt="Interior" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Dining Hall</span></div></div>
-      <div class="gallery-item" data-cat="food" data-caption="Wagyu Ribeye"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600" alt="Steak" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Wagyu Ribeye</span></div></div>
-      <div class="gallery-item" data-cat="chef" data-caption="Chef at Work"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600" alt="Chef" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Chef at Work</span></div></div>
-      <div class="gallery-item" data-cat="food" data-caption="Truffle Carbonara"><img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600" alt="Pasta" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Truffle Carbonara</span></div></div>
-      <div class="gallery-item" data-cat="ambiance" data-caption="Private Dining"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600" alt="Private Dining" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Private Dining</span></div></div>
-      <div class="gallery-item" data-cat="food" data-caption="Chocolate Fondant"><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600" alt="Dessert" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Chocolate Fondant</span></div></div>
-      <div class="gallery-item" data-cat="events" data-caption="Wedding Reception"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600" alt="Event" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Wedding Reception</span></div></div>
-      <div class="gallery-item" data-cat="chef" data-caption="Plating Mastery"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" alt="Kitchen" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Plating Mastery</span></div></div>
-      <div class="gallery-item" data-cat="food" data-caption="Butter Lobster"><img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=600" alt="Lobster" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Butter Lobster</span></div></div>
-      <div class="gallery-item" data-cat="ambiance" data-caption="Signature Bar"><img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600" alt="Bar" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Signature Bar</span></div></div>
-      <div class="gallery-item" data-cat="events" data-caption="Corporate Dinner"><img src="https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=600" alt="Event" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Corporate Dinner</span></div></div>
-      <div class="gallery-item" data-cat="food" data-caption="Creme Brulee"><img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600" alt="Dessert" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Cr&egrave;me Br&ucirc;l&eacute;e</span></div></div>
-      <div class="gallery-item" data-cat="chef" data-caption="Live Kitchen"><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600" alt="Chef" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Live Kitchen</span></div></div>
-      <div class="gallery-item" data-cat="ambiance" data-caption="Terrace Seating"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600" alt="Terrace" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Terrace Seating</span></div></div>
-      <div class="gallery-item" data-cat="food" data-caption="Cajun Tiger Prawns"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600" alt="Prawns" loading="lazy"/><div class="gallery-overlay"><i class="fas fa-expand"></i><span>Cajun Tiger Prawns</span></div></div>
+    {% else %}
+    <!-- Demo gallery for empty DB -->
+    <div class="gallery-masonry" id="gallery-grid-demo">
+      {% for item in "123456789101112" %}
+      <div class="gallery-card fade-in"
+           id="gallery-demo-{{ forloop.counter }}"
+           onclick="openLightboxPlaceholder(this)"
+           style="transition-delay: {{ forloop.counter0 }}0ms"
+           role="button" tabindex="0"
+           data-caption="{% if forloop.counter == 1 %}Wagyu Beef Tenderloin{% elif forloop.counter == 2 %}Private Dining Room{% elif forloop.counter == 3 %}Chef Marco at Work{% elif forloop.counter == 4 %}Wine Cellar{% elif forloop.counter == 5 %}Seasonal Tasting Menu{% elif forloop.counter == 6 %}Evening Ambiance{% elif forloop.counter == 7 %}Lobster Bisque{% elif forloop.counter == 8 %}Anniversary Celebration{% elif forloop.counter == 9 %}Garden Terrace{% elif forloop.counter == 10 %}Chocolate Soufflé{% elif forloop.counter == 11 %}Chef's Table{% else %}Sunrise Brunch{% endif %}"
+           data-cat="{% if forloop.counter <= 3 %}Food & Dishes{% elif forloop.counter == 4 %}Ambiance{% elif forloop.counter == 5 %}Food & Dishes{% elif forloop.counter == 6 %}Ambiance{% elif forloop.counter == 7 %}Food & Dishes{% elif forloop.counter == 8 %}Events{% elif forloop.counter == 9 %}Exterior{% elif forloop.counter == 10 %}Food & Dishes{% elif forloop.counter == 11 %}Chefs{% else %}Food & Dishes{% endif %}">
+        <div class="gallery-placeholder-img" style="aspect-ratio: {% if forloop.counter == 1 or forloop.counter == 4 or forloop.counter == 9 %}4/5{% elif forloop.counter == 3 or forloop.counter == 7 %}16/9{% else %}1/1{% endif %};">
+          {% if forloop.counter == 1 %}🥩{% elif forloop.counter == 2 %}🕯️{% elif forloop.counter == 3 %}👨‍🍳{% elif forloop.counter == 4 %}🍷{% elif forloop.counter == 5 %}🍽️{% elif forloop.counter == 6 %}✨{% elif forloop.counter == 7 %}🦞{% elif forloop.counter == 8 %}🎂{% elif forloop.counter == 9 %}🌿{% elif forloop.counter == 10 %}🍮{% elif forloop.counter == 11 %}⭐{% else %}☀️{% endif %}
+        </div>
+        <div class="gallery-card-overlay">
+          <span class="gallery-card-caption">{% if forloop.counter == 1 %}Wagyu Beef Tenderloin{% elif forloop.counter == 2 %}Private Dining Room{% elif forloop.counter == 3 %}Chef Marco at Work{% elif forloop.counter == 4 %}Wine Cellar{% elif forloop.counter == 5 %}Seasonal Tasting Menu{% elif forloop.counter == 6 %}Evening Ambiance{% elif forloop.counter == 7 %}Lobster Bisque{% elif forloop.counter == 8 %}Anniversary Celebration{% elif forloop.counter == 9 %}Garden Terrace{% elif forloop.counter == 10 %}Chocolate Soufflé{% elif forloop.counter == 11 %}Chef's Table{% else %}Sunrise Brunch{% endif %}</span>
+          <span class="gallery-card-cat">{% if forloop.counter <= 3 %}Food & Dishes{% elif forloop.counter == 4 %}Ambiance{% elif forloop.counter == 5 %}Food & Dishes{% elif forloop.counter == 6 %}Ambiance{% elif forloop.counter == 7 %}Food & Dishes{% elif forloop.counter == 8 %}Events{% elif forloop.counter == 9 %}Exterior{% elif forloop.counter == 10 %}Food & Dishes{% elif forloop.counter == 11 %}Chefs{% else %}Food & Dishes{% endif %}</span>
+        </div>
+        <div class="gallery-card-zoom"><i class="fas fa-expand"></i></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="gallery-cta-section" id="gallery-cta" aria-label="Call to action">
+  <div class="container fade-in">
+    <span class="section-label">Come Experience It Live</span>
+    <h2 class="section-title" style="margin: 0.75rem 0 1.5rem; font-size: clamp(1.8rem, 3vw, 2.5rem);">
+      Pictures Don't Do It Justice
+    </h2>
+    <a href="{% url 'contact' %}" class="btn btn-gold" id="gallery-reserve-btn">
+      <i class="fas fa-calendar-check"></i> Reserve Your Table
+    </a>
+  </div>
+</section>
+
+<!-- ===== LIGHTBOX MODAL ===== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox-close" id="lightbox-close" onclick="closeLightbox()" aria-label="Close">
+    <i class="fas fa-times"></i>
+  </button>
+  <button class="lightbox-nav prev" id="lightbox-prev" aria-label="Previous image" onclick="navLightbox(-1)">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <button class="lightbox-nav next" id="lightbox-next" aria-label="Next image" onclick="navLightbox(1)">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+
+  <div class="lightbox-inner" id="lightbox-inner">
+    <div class="lightbox-placeholder" id="lightbox-placeholder">
+      <i class="fas fa-image"></i>
+      <span>Add images through the admin panel</span>
+    </div>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" style="display:none" />
+    <div class="lightbox-info">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+      <div class="lightbox-cat" id="lightbox-cat"></div>
     </div>
   </div>
+</div>
 
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox">
-    <button class="lb-prev" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
-    <div class="lightbox-inner">
-      <span class="lb-close" id="lbClose">&times;</span>
-      <img class="lightbox-img" id="lbImg" src="" alt=""/>
-      <div class="lb-caption" id="lbCaption"></div>
-    </div>
-    <button class="lb-next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
-  </div>
+{% endblock %}
 
-  <div class="footer-mini">
-    <div class="footer-mini-inner">
-      <p>&copy; 2026 Savoria Restaurant. All rights reserved.</p>
-      <a href="{% url 'index' %}">&larr; Back to Home</a>
-    </div>
-  </div>
+{% block extra_js %}
+<script>
+  // ── Lightbox ──
+  const lightbox    = document.getElementById('lightbox');
+  const lbImg       = document.getElementById('lightbox-img');
+  const lbPlaceholder = document.getElementById('lightbox-placeholder');
+  const lbCaption   = document.getElementById('lightbox-caption');
+  const lbCat       = document.getElementById('lightbox-cat');
 
-  <script src="{% static 'js/base.js' %}"></script>
-  <script src="{% static 'js/gallery.js' %}"></script>
-</body>
-</html>
+  function openLightbox(src, caption, cat) {
+    lbImg.src = src;
+    lbImg.alt = caption;
+    lbImg.style.display = 'block';
+    lbPlaceholder.style.display = 'none';
+    lbCaption.textContent = caption;
+    lbCat.textContent = cat;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openLightboxPlaceholder(card) {
+    const cap = card.dataset.caption || '';
+    const cat = card.dataset.cat || '';
+    lbImg.style.display = 'none';
+    lbPlaceholder.style.display = 'flex';
+    lbCaption.textContent = cap;
+    lbCat.textContent = cat;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  function navLightbox(dir) {
+    const cards = Array.from(document.querySelectorAll('.gallery-card'));
+    let current = cards.findIndex(c => c.dataset.active === 'true');
+    if (current === -1) return;
+    const next = (current + dir + cards.length) % cards.length;
+    cards[current].dataset.active = 'false';
+    cards[next].click();
+    cards[next].dataset.active = 'true';
+  }
+
+  // Click on card sets active
+  document.querySelectorAll('.gallery-card').forEach(card => {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.gallery-card').forEach(c => c.dataset.active = 'false');
+      this.dataset.active = 'true';
+    });
+    // Keyboard support
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') card.click(); });
+  });
+
+  // Close on backdrop click
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  navLightbox(-1);
+    if (e.key === 'ArrowRight') navLightbox(1);
+  });
+</script>
+{% endblock %}

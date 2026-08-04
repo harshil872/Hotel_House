@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Order Tracker #{{ order.order_ref }} — Savoir Fine Dining{% endblock %}
+{% block meta_description %}Track your food order in real-time with live kitchen status updates and courier location at Savoir Restaurant.{% endblock %}
+
+{% block extra_css %}
+<style>
+  .track-page-section {
+    padding: 7rem 0 6rem;
+    background: var(--bg-dark);
+    min-height: 85vh;
+  }
+
+  .track-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .track-header-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+
+  .track-header-card h1 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--cream);
+    margin-bottom: 0.25rem;
+  }
+
+  .track-ref-tag {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .eta-pill {
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  /* 4-Stage Progress Tracker */
+  .tracker-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .tracker-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .tracker-card h3 i { color: var(--gold); }
+
+  .track-timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    position: relative;
+  }
+
+  .track-step {
+    text-align: center;
+    position: relative;
+  }
+
+  .track-step-icon {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.85rem;
+    font-size: 1.2rem;
+    transition: all 0.35s ease;
+  }
+
+  .track-step.done .track-step-icon {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .track-step.current .track-step-icon {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-color: var(--gold);
+    color: var(--bg-dark);
+    box-shadow: 0 0 25px rgba(201,168,76,0.6);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
+  .track-step-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .track-step.done .track-step-title,
+  .track-step.current .track-step-title { color: var(--cream); }
+
+  .track-step-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* Courier Card & Map Grid */
+  .courier-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2rem;
+  }
+
+  .courier-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+  }
+
+  .courier-info {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .courier-avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    font-size: 1.5rem;
+  }
+
+  .map-box {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 250px;
+  }
+
+  @media (max-width: 800px) {
+    .track-timeline { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .courier-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="track-page-section">
+  <div class="container track-container">
+
+    <!-- Header Card -->
+    <div class="track-header-card fade-in">
+      <div>
+        <div class="track-ref-tag">ORDER REFERENCE #{{ order.order_ref }}</div>
+        <h1>Live Order Tracking</h1>
+      </div>
+      <div class="eta-pill">
+        <i class="fas fa-motorcycle"></i> Estimated Arrival: 25 mins
+      </div>
+    </div>
+
+    <!-- Live 4-Stage Progress Tracker Bar -->
+    <div class="tracker-card fade-in">
+      <h3><i class="fas fa-tasks"></i> Kitchen & Delivery Status</h3>
+
+      <div class="track-timeline">
+        <div class="track-step done">
+          <div class="track-step-icon"><i class="fas fa-check"></i></div>
+          <div class="track-step-title">Order Placed</div>
+          <div class="track-step-time">Confirmed</div>
+        </div>
+
+        <div class="track-step current">
+          <div class="track-step-icon"><i class="fas fa-fire"></i></div>
+          <div class="track-step-title">Kitchen Prep</div>
+          <div class="track-step-time">In Progress...</div>
+        </div>
+
+        <div class="track-step">
+          <div class="track-step-icon"><i class="fas fa-box"></i></div>
+          <div class="track-step-title">Quality Pack</div>
+          <div class="track-step-time">Upcoming</div>
+        </div>
+
+        <div class="track-step">
+          <div class="track-step-icon"><i class="fas fa-motorcycle"></i></div>
+          <div class="track-step-title">Out for Delivery</div>
+          <div class="track-step-time">Upcoming</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courier & Delivery Location Grid -->
+    <div class="courier-grid fade-in">
+      
+      <!-- Courier Info -->
+      <div class="courier-card">
+        <h4 style="font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:1.25rem;">
+          Assigned Delivery Specialist
+        </h4>
+        <div class="courier-info">
+          <div class="courier-avatar">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div>
+            <div style="font-family:var(--font-heading); font-size:1.2rem; color:var(--cream);">Marcus Vance</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">Savoir Executive Courier #4</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.88rem; color:var(--cream); line-height:1.6; margin-bottom:1.5rem;">
+          <strong>Delivery Destination:</strong><br>
+          {{ order.delivery_address|default:"Pickup at Restaurant — 42 Gourmet Ave, NY" }}
+        </div>
+
+        <a href="tel:+12125550192" class="btn btn-gold" style="width:100%; justify-content:center; padding:0.75rem;">
+          <i class="fas fa-phone-alt"></i> Contact Courier / Restaurant
+        </a>
+      </div>
+
+      <!-- Live Map Simulation -->
+      <div class="map-box" id="delivery-map">
+        <iframe
+          width="100%"
+          height="100%"
+          style="border:0;"
+          loading="lazy"
+          allowfullscreen
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-74.008%2C40.710%2C-73.990%2C40.725&amp;layer=mapnik">
+        </iframe>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:2.5rem;">
+      <a href="{% url 'order_details' ref=order.order_ref %}" class="btn btn-outline" style="padding:0.6rem 1.5rem;">
+        <i class="fas fa-receipt"></i> View Itemized Receipt
+      </a>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,423 @@
+{% extends 'base.html' %}
+
+{% block title %}Book a Table — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Reserve your table at Savoir Restaurant. Enjoy an extraordinary dining experience with gourmet cuisine and refined service.{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ===== PAGE HERO ===== */
+  .page-hero {
+    padding: 10rem 0 5rem;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%),
+      var(--bg-dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .page-hero-breadcrumb {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .page-hero-breadcrumb a { color: var(--gold); }
+
+  .page-hero h1 { font-size: clamp(3rem, 6vw, 5rem); color: var(--cream); margin-bottom: 1.25rem; }
+
+  .page-hero p {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+
+  /* ===== RESERVATION SECTION ===== */
+  .reservation-section {
+    padding: 6rem 0 8rem;
+    background: var(--bg-section);
+  }
+
+  .reservation-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  /* Left Side Info Cards */
+  .res-info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .res-info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+  }
+
+  .res-info-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--cream);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .res-info-card h3 i { color: var(--gold); }
+
+  .res-info-card p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .res-policy-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .res-policy-list li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .res-policy-list i {
+    color: var(--gold);
+    margin-top: 3px;
+    font-size: 0.8rem;
+  }
+
+  /* Right Side Form Wrap */
+  .res-form-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  }
+
+  .res-form-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .res-form-header h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .res-form-header p {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  /* Form Layout */
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group.full { grid-column: span 2; }
+
+  .form-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    background: var(--bg-dark);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .form-select-wrap { position: relative; }
+  .form-select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    pointer-events: none;
+  }
+
+  .form-textarea { resize: vertical; min-height: 110px; }
+
+  .form-error {
+    font-size: 0.78rem;
+    color: #e87070;
+    margin-top: 0.25rem;
+  }
+
+  .res-submit-btn {
+    width: 100%;
+    padding: 1.1rem;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .res-submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 45px rgba(201,168,76,0.4);
+  }
+
+  @media (max-width: 900px) {
+    .reservation-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .res-form-wrap { padding: 2rem 1.5rem; }
+  }
+
+  @media (max-width: 600px) {
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: span 1; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== PAGE HERO ===== -->
+<section class="page-hero" id="reservation-hero" aria-label="Reservation page header">
+  <div class="container">
+    <div class="page-hero-breadcrumb">
+      <a href="{% url 'index' %}">Home</a> &nbsp;/&nbsp; Reservation
+    </div>
+    <h1>Table <em>Reservation</em></h1>
+    <div class="gold-divider"></div>
+    <p>Reserve your table for an exceptional culinary journey at Savoir.</p>
+  </div>
+</section>
+
+<!-- ===== RESERVATION SECTION ===== -->
+<section class="reservation-section" id="reservation-section">
+  <div class="container">
+    <div class="reservation-layout">
+
+      <!-- Left Column: Info & Policies -->
+      <div class="res-info-column fade-in">
+        
+        <div class="res-info-card">
+          <h3><i class="fas fa-calendar-alt"></i> Dining Hours</h3>
+          <p>We welcome guests for lunch and dinner service 7 days a week.</p>
+          <ul class="res-policy-list">
+            <li><i class="fas fa-clock"></i> Lunch: 12:00 PM – 2:30 PM</li>
+            <li><i class="fas fa-moon"></i> Dinner: 6:00 PM – 11:00 PM</li>
+            <li><i class="fas fa-glass-cheers"></i> Weekend Late Lounge until 12:00 AM</li>
+          </ul>
+        </div>
+
+        <div class="res-info-card">
+          <h3><i class="fas fa-info-circle"></i> Dining Guidelines</h3>
+          <ul class="res-policy-list">
+            <li><i class="fas fa-check"></i> <strong>Smart Casual Attire:</strong> We kindly request smart casual attire for all dinner services.</li>
+            <li><i class="fas fa-check"></i> <strong>Grace Period:</strong> Tables will be held for 15 minutes past reservation time.</li>
+            <li><i class="fas fa-check"></i> <strong>Large Parties (8+):</strong> Please contact our events team at <a href="mailto:events@savoir.dining" style="color:var(--gold)">events@savoir.dining</a>.</li>
+            <li><i class="fas fa-check"></i> <strong>Dietaries:</strong> Please inform us of any severe allergies when booking.</li>
+          </ul>
+        </div>
+
+        <div class="res-info-card">
+          <h3><i class="fas fa-phone-alt"></i> Need Immediate Assistance?</h3>
+          <p>For last-minute modifications or special arrangements, please call our Maître d' directly:</p>
+          <p><a href="tel:+12125550192" style="font-size: 1.1rem; font-weight:600; color:var(--gold)"><i class="fas fa-phone"></i> +1 (212) 555-0192</a></p>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Booking Form -->
+      <div class="res-form-wrap fade-in" style="transition-delay: 0.15s">
+        <div class="res-form-header">
+          <h2>Book Your Table</h2>
+          <p>Instant confirmation • Reserved for Members</p>
+        </div>
+
+        {% if not user.is_authenticated %}
+        <div style="background:rgba(201,168,76,0.1); border:1px solid var(--gold); border-radius:var(--radius); padding:1rem 1.25rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.8rem; font-size:0.88rem; color:var(--cream);">
+          <i class="fas fa-lock" style="font-size:1.4rem; color:var(--gold)"></i>
+          <div>
+            <strong>Login Required to Confirm Reservation</strong>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.2rem;">Please sign in to your account or register to finalize your table booking.</div>
+          </div>
+        </div>
+        {% endif %}
+
+        <form method="post" id="reservation-form" action="{% url 'reservation' %}" novalidate>
+          {% csrf_token %}
+
+          <div class="form-grid-2">
+            <!-- Full Name -->
+            <div class="form-group" id="group-res-name">
+              <label class="form-label" for="res-name">Full Name <span style="color:var(--gold)">*</span></label>
+              {{ form.name }}
+              {% for err in form.name.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-group" id="group-res-email">
+              <label class="form-label" for="res-email">Email Address <span style="color:var(--gold)">*</span></label>
+              {{ form.email }}
+              {% for err in form.email.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group" id="group-res-phone">
+              <label class="form-label" for="res-phone">Phone Number <span style="color:var(--gold)">*</span></label>
+              {{ form.phone }}
+              {% for err in form.phone.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Guest Count -->
+            <div class="form-group" id="group-res-guests">
+              <label class="form-label" for="res-guests">Number of Guests <span style="color:var(--gold)">*</span></label>
+              {{ form.guests }}
+              {% for err in form.guests.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Reservation Date -->
+            <div class="form-group" id="group-res-date">
+              <label class="form-label" for="res-date">Date <span style="color:var(--gold)">*</span></label>
+              {{ form.date }}
+              {% for err in form.date.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Reservation Time -->
+            <div class="form-group" id="group-res-time">
+              <label class="form-label" for="res-time">Time Slot <span style="color:var(--gold)">*</span></label>
+              <div class="form-select-wrap">
+                {{ form.time }}
+              </div>
+              {% for err in form.time.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Occasion -->
+            <div class="form-group" id="group-res-occasion">
+              <label class="form-label" for="res-occasion">Occasion</label>
+              <div class="form-select-wrap">
+                {{ form.occasion }}
+              </div>
+              {% for err in form.occasion.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Seating Preference -->
+            <div class="form-group" id="group-res-seating">
+              <label class="form-label" for="res-seating">Seating Preference</label>
+              <div class="form-select-wrap">
+                {{ form.seating_preference }}
+              </div>
+              {% for err in form.seating_preference.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+
+            <!-- Special Requests -->
+            <div class="form-group full" id="group-res-special">
+              <label class="form-label" for="res-special-req">Special Requests & Dietary Notes</label>
+              {{ form.special_requests }}
+              {% for err in form.special_requests.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+          <div class="form-error" style="margin-bottom: 1rem">
+            {% for err in form.non_field_errors %}{{ err }}{% endfor %}
+          </div>
+          {% endif %}
+
+          {% if user.is_authenticated %}
+            <button type="submit" class="res-submit-btn" id="res-submit-btn">
+              <i class="fas fa-check-circle"></i> Confirm Table Reservation
+            </button>
+          {% else %}
+            <a href="{% url 'login' %}?next={% url 'reservation' %}&tab=login" class="res-submit-btn" style="text-decoration:none; justify-content:center;">
+              <i class="fas fa-lock"></i> Sign In to Confirm Reservation
+            </a>
+          {% endif %}
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Form submission loading state
+  const resForm = document.getElementById('reservation-form');
+  const resBtn  = document.getElementById('res-submit-btn');
+
+  if (resForm) {
+    resForm.addEventListener('submit', function() {
+      resBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Reservation...';
+      resBtn.disabled = true;
+    });
+  }
+</script>
+{% endblock %}

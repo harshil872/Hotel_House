@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout Details — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Enter your delivery address, pickup schedule, and special chef requests for your Savoir food pre-order.{% endblock %}
+
+{% block extra_css %}
+<style>
+  .checkout-section {
+    padding: 7rem 0 6rem;
+    background: var(--bg-section);
+    min-height: 85vh;
+  }
+
+  /* Checkout Step Bar */
+  .checkout-step-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .step-item.active { color: var(--gold); }
+  .step-item.completed { color: var(--cream); }
+
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+  }
+
+  .step-item.active .step-num {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    border-color: var(--gold);
+  }
+
+  .step-item.completed .step-num {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .step-arrow { color: var(--border); }
+
+  /* Grid Layout */
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .checkout-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+  }
+
+  .checkout-card h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--cream);
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .checkout-card h2 i { color: var(--gold); }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group.full { grid-column: span 2; }
+
+  .form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    background: var(--bg-dark);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .form-input:focus, .form-textarea:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .form-textarea { resize: vertical; min-height: 80px; }
+
+  /* Summary Box */
+  .summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .summary-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-items-list {
+    margin-bottom: 1.5rem;
+    max-height: 220px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .summary-item-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: var(--cream);
+  }
+
+  .summary-item-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .summary-row.total {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--cream);
+    border-top: 1px dashed var(--gold);
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .summary-row.total span:last-child { color: var(--gold); }
+
+  .proceed-btn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .proceed-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(201,168,76,0.35);
+  }
+
+  @media (max-width: 900px) {
+    .checkout-grid { grid-template-columns: 1fr; }
+    .summary-card { position: static; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: span 1; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="checkout-section">
+  <div class="container">
+
+    <!-- Step Progress Bar -->
+    <div class="checkout-step-bar fade-in">
+      <div class="step-item completed">
+        <div class="step-num"><i class="fas fa-check"></i></div>
+        <span>Shopping Bag</span>
+      </div>
+      <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="step-item active">
+        <div class="step-num">2</div>
+        <span>Delivery Info</span>
+      </div>
+      <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <span>Payment</span>
+      </div>
+      <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <span>Confirmation</span>
+      </div>
+    </div>
+
+    <!-- Form & Summary -->
+    <form id="checkout-form" onsubmit="saveCheckoutInfo(event)">
+      <div class="checkout-grid">
+
+        <!-- Left: Form -->
+        <div class="checkout-card fade-in">
+          <h2><i class="fas fa-map-marker-alt"></i> Contact & Delivery Details</h2>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="chk-name" class="form-input" value="{{ user.first_name }} {{ user.last_name }}" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" id="chk-email" class="form-input" value="{{ user.email }}" required />
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" id="chk-phone" class="form-input" value="{{ profile.phone }}" placeholder="+1 (555) 000-0000" required />
+            </div>
+
+            <!-- Delivery Address (shows if order method is Delivery) -->
+            <div class="form-group full" id="delivery-address-group">
+              <label class="form-label">Delivery Address *</label>
+              <textarea id="chk-address" class="form-textarea" placeholder="Street address, Apartment / Suite number, City, Zip Code">{{ profile.address }}</textarea>
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label">Special Cooking Instructions & Chef Notes</label>
+              <textarea id="chk-notes" class="form-textarea" placeholder="E.g. Extra truffle oil, dressing on the side, no onions..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Order Summary Sidebar -->
+        <div class="summary-card fade-in" style="transition-delay:0.15s">
+          <div class="summary-title">Order Items</div>
+
+          <div class="summary-items-list" id="checkout-items-list">
+            <!-- Items rendered via JS -->
+          </div>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="chk-subtotal">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax (8.875%)</span>
+            <span id="chk-tax">$0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span id="chk-total">$0.00</span>
+          </div>
+
+          <button type="submit" class="proceed-btn">
+            Proceed to Payment <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function renderCheckoutSummary() {
+    const list = document.getElementById('checkout-items-list');
+    if (!list) return;
+
+    if (!cart || cart.length === 0) {
+      window.location.href = "{% url 'cart' %}";
+      return;
+    }
+
+    let subtotal = 0;
+    list.innerHTML = cart.map(item => {
+      const itemTotal = item.price * item.qty;
+      subtotal += itemTotal;
+      return `
+        <div class="summary-item-row">
+          <div>
+            <strong>${item.name}</strong>
+            <div class="summary-item-sub">Qty: ${item.qty} × $${item.price.toFixed(2)}</div>
+          </div>
+          <div style="font-weight:600; color:var(--gold);">$${itemTotal.toFixed(2)}</div>
+        </div>
+      `;
+    }).join('');
+
+    const tax = subtotal * 0.08875;
+    const total = subtotal + tax;
+
+    document.getElementById('chk-subtotal').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('chk-tax').textContent = '$' + tax.toFixed(2);
+    document.getElementById('chk-total').textContent = '$' + total.toFixed(2);
+  }
+
+  function saveCheckoutInfo(e) {
+    e.preventDefault();
+    const info = {
+      name: document.getElementById('chk-name').value,
+      email: document.getElementById('chk-email').value,
+      phone: document.getElementById('chk-phone').value,
+      address: document.getElementById('chk-address').value,
+      notes: document.getElementById('chk-notes').value,
+    };
+    localStorage.setItem('savoir_checkout_info', JSON.stringify(info));
+    window.location.href = "{% url 'payment' %}";
+  }
+
+  document.addEventListener('DOMContentLoaded', renderCheckoutSummary);
+</script>
+{% endblock %}

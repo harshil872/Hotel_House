@@ -1,116 +1,395 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Savoria</title>
+{% block title %}Guest Portal — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Sign in or create your Savoir dining account to manage table reservations, dietary preferences, and guest privileges.{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% block extra_css %}
+<style>
+  .auth-section {
+    padding: 8rem 0 6rem;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%),
+      var(--bg-dark);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+  }
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+  .auth-card {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.75rem 2.25rem;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+  }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
+  /* Switcher Tabs */
+  .auth-tabs-wrap {
+    display: flex;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 4px;
+    margin-bottom: 2.25rem;
+    position: relative;
+  }
 
-<body>
+  .auth-tab-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 50px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 2;
+  }
 
-    <div class="login-container">
+  .auth-tab-btn.active {
+    color: var(--bg-dark);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+  }
 
-        <div class="login-image">
+  .auth-form-panel {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
 
-            <div class="overlay">
-                <h1>Savoria</h1>
-                <p>Where Every Meal Becomes A Memory.</p>
-            </div>
+  .auth-form-panel.active {
+    display: block;
+  }
 
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .auth-header h1 {
+    font-family: var(--font-heading);
+    font-size: 2.1rem;
+    color: var(--cream);
+    margin-bottom: 0.4rem;
+  }
+
+  .auth-header p {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .form-group.full { grid-column: span 2; }
+
+  .form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .form-input-wrap { position: relative; }
+
+  .form-input {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    background: var(--bg-dark);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .password-toggle:hover { color: var(--gold); }
+
+  .auth-flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.82rem;
+  }
+
+  .auth-flex-row label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .auth-link { color: var(--gold); transition: color 0.2s; }
+  .auth-link:hover { color: var(--gold-light); text-decoration: underline; }
+
+  .auth-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+
+  .auth-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(201,168,76,0.35);
+  }
+
+  .form-error {
+    font-size: 0.78rem;
+    color: #e87070;
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: 600px) {
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: span 1; }
+    .auth-card { padding: 2rem 1.25rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-section">
+  <div class="container">
+    <div class="auth-card fade-in">
+      
+      <!-- Interactive Switcher Tabs -->
+      <div class="auth-tabs-wrap">
+        <button class="auth-tab-btn {% if active_tab != 'register' %}active{% endif %}" id="tab-btn-login" onclick="switchAuthTab('login')">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+        <button class="auth-tab-btn {% if active_tab == 'register' %}active{% endif %}" id="tab-btn-register" onclick="switchAuthTab('register')">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+      </div>
+
+      <!-- ════ PANEL 1: LOGIN ════ -->
+      <div class="auth-form-panel {% if active_tab != 'register' %}active{% endif %}" id="panel-login">
+        <div class="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to access your reservations & guest profile.</p>
         </div>
 
-        <div class="login-form">
+        <form method="post" id="login-form" novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="login" />
 
-            <a href="{% url 'index' %}" class="back-home">
-                <i class="fas fa-arrow-left"></i> Back to Home
-            </a>
+          <div class="form-group">
+            <label class="form-label" for="login-username">Username or Email</label>
+            {{ login_form.username }}
+            {% for err in login_form.username.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+          </div>
 
-            <h2>Welcome Back</h2>
-
-            <p class="subtitle">
-                Sign in to manage your reservations.
-            </p>
-
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert">
-                {{ message }}
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <div class="form-input-wrap">
+              {{ login_form.password }}
+              <button type="button" class="password-toggle" onclick="togglePass('login-password', this)">
+                <i class="fas fa-eye"></i>
+              </button>
             </div>
-            {% endfor %}
-            {% endif %}
+            {% for err in login_form.password.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+          </div>
 
-    
+          <div class="auth-flex-row">
+            <label>
+              <input type="checkbox" name="remember" style="accent-color:var(--gold)" /> Remember Me
+            </label>
+            <a href="{% url 'forgot_password' %}" class="auth-link">Forgot Password?</a>
+          </div>
 
-            <form method="POST">
+          {% if active_tab != 'register' and login_form.non_field_errors %}
+          <div class="form-error" style="margin-bottom:1rem; text-align:center;">
+            {% for err in login_form.non_field_errors %}{{ err }}{% endfor %}
+          </div>
+          {% endif %}
 
-                {% csrf_token %}
-                {{ form.as_p}}
-                <div class="input-group">
+          <button type="submit" class="auth-submit-btn" id="login-submit-btn">
+            <i class="fas fa-sign-in-alt"></i> Sign In to Account
+          </button>
+        </form>
+      </div>
 
-                    <label>Username</label>
+      <!-- ════ PANEL 2: REGISTER ════ -->
+      <div class="auth-form-panel {% if active_tab == 'register' %}active{% endif %}" id="panel-register">
+        <div class="auth-header">
+          <h1>Create Account</h1>
+          <p>Join our dining membership for instant reservations & rewards.</p>
+        </div>
 
-                    <div class="input-box">
-                        <input type="text" name="username" placeholder="Enter your username" required>
-                    </div>
+        <form method="post" id="register-form" novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="register" />
 
-                </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="reg-fname">First Name <span style="color:var(--gold)">*</span></label>
+              {{ register_form.first_name }}
+              {% for err in register_form.first_name.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
 
-                <div class="input-group">
+            <div class="form-group">
+              <label class="form-label" for="reg-lname">Last Name <span style="color:var(--gold)">*</span></label>
+              {{ register_form.last_name }}
+              {% for err in register_form.last_name.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
 
-                    <label>Password</label>
+            <div class="form-group full">
+              <label class="form-label" for="reg-username">Username <span style="color:var(--gold)">*</span></label>
+              {{ register_form.username }}
+              {% for err in register_form.username.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
 
-                    <div class="input-box">
+            <div class="form-group full">
+              <label class="form-label" for="reg-email">Email Address <span style="color:var(--gold)">*</span></label>
+              {{ register_form.email }}
+              {% for err in register_form.email.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
 
-                        <input type="password" name="password" placeholder="Enter your password" required>
-                    </div>
-
-                </div>
-
-                <div class="options">
-
-                    <label>
-
-                        <input type="checkbox">
-
-                        Remember me
-
-                    </label>
-
-                    <a href="#">Forgot Password?</a>
-
-                </div>
-
-                <button class="btn-primary" type="submit">
-
-                    Login
-
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Password <span style="color:var(--gold)">*</span></label>
+              <div class="form-input-wrap">
+                {{ register_form.password }}
+                <button type="button" class="password-toggle" onclick="togglePass('reg-password', this)">
+                  <i class="fas fa-eye"></i>
                 </button>
-
-            </form>
-
-            <div class="register">
-
-                Don't have an account?
-
-                <a href="{% url 'register' %}">Create One</a>
-
+              </div>
+              {% for err in register_form.password.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
             </div>
 
-        </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-confirm-password">Confirm Password <span style="color:var(--gold)">*</span></label>
+              <div class="form-input-wrap">
+                {{ register_form.confirm_password }}
+                <button type="button" class="password-toggle" onclick="togglePass('reg-confirm-password', this)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              {% for err in register_form.confirm_password.errors %}<div class="form-error">{{ err }}</div>{% endfor %}
+            </div>
+          </div>
+
+          {% if active_tab == 'register' and register_form.non_field_errors %}
+          <div class="form-error" style="margin-bottom:1rem; text-align:center;">
+            {% for err in register_form.non_field_errors %}{{ err }}{% endfor %}
+          </div>
+          {% endif %}
+
+          <button type="submit" class="auth-submit-btn" id="register-submit-btn">
+            <i class="fas fa-user-plus"></i> Create Guest Account
+          </button>
+        </form>
+      </div>
 
     </div>
+  </div>
+</section>
 
-</body>
+{% endblock %}
 
-</html>
+{% block extra_js %}
+<script>
+  function switchAuthTab(tabName) {
+    const btnLogin  = document.getElementById('tab-btn-login');
+    const btnReg    = document.getElementById('tab-btn-register');
+    const panelLogin = document.getElementById('panel-login');
+    const panelReg   = document.getElementById('panel-register');
+
+    if (tabName === 'register') {
+      btnLogin.classList.remove('active');
+      btnReg.classList.add('active');
+      panelLogin.classList.remove('active');
+      panelReg.classList.add('active');
+    } else {
+      btnReg.classList.remove('active');
+      btnLogin.classList.add('active');
+      panelReg.classList.remove('active');
+      panelLogin.classList.add('active');
+    }
+  }
+
+  function togglePass(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fas fa-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'fas fa-eye';
+    }
+  }
+
+  // Handle URL query parameter ?tab=register or ?tab=login
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('tab') === 'register') {
+    switchAuthTab('register');
+  }
+</script>
+{% endblock %}

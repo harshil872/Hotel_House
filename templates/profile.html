@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile Settings — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Manage your Savoir guest profile, dietary requirements, personal preferences, and contact details.{% endblock %}
+
+{% block extra_css %}
+<style>
+  .dash-section {
+    padding: 7rem 0 6rem;
+    background: var(--bg-section);
+    min-height: 85vh;
+  }
+
+  .dash-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* Sidebar Navigation */
+  .dash-sidebar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .dash-user-card {
+    text-align: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dash-avatar {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 auto 0.8rem;
+    border: 2px solid var(--gold);
+    overflow: hidden;
+  }
+
+  .dash-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .dash-user-name {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--cream);
+  }
+
+  .dash-user-role {
+    font-size: 0.75rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .dash-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .dash-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .dash-nav a i { width: 20px; color: var(--gold); text-align: center; }
+
+  .dash-nav a:hover, .dash-nav a.active {
+    background: var(--gold-dim);
+    color: var(--cream);
+    border-left: 3px solid var(--gold);
+  }
+
+  /* Main Profile Settings Card */
+  .profile-settings-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+  }
+
+  .profile-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .profile-header-flex h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .profile-header-flex h2 i { color: var(--gold); }
+
+  .vip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group.full { grid-column: span 2; }
+
+  .form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .form-input, .form-textarea {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    background: var(--bg-dark);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .form-input:focus, .form-textarea:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .form-textarea { resize: vertical; min-height: 90px; }
+
+  .profile-save-btn {
+    padding: 0.9rem 2rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .profile-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(201,168,76,0.35);
+  }
+
+  @media (max-width: 900px) {
+    .dash-layout { grid-template-columns: 1fr; }
+    .dash-sidebar { position: static; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: span 1; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="dash-section">
+  <div class="container">
+    <div class="dash-layout">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="dash-sidebar fade-in">
+        <div class="dash-user-card">
+          <div class="dash-avatar">
+            {% if profile.profile_photo %}
+              <img src="{{ profile.profile_photo.url }}" alt="{{ user.first_name }}" />
+            {% else %}
+              {{ user.first_name|default:user.username|slice:":1"|upper }}
+            {% endif %}
+          </div>
+          <div class="dash-user-name">{{ user.first_name }} {{ user.last_name }}</div>
+          <div class="dash-user-role"><i class="fas fa-crown"></i> VIP Member</div>
+        </div>
+
+        <ul class="dash-nav">
+          <li><a href="{% url 'dashboard' %}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="{% url 'my_reservations' %}"><i class="fas fa-calendar-check"></i> My Reservations</a></li>
+          <li><a href="{% url 'my_orders' %}"><i class="fas fa-shopping-bag"></i> My Pre-Orders</a></li>
+          <li><a href="{% url 'profile' %}" class="active"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+          <li style="margin-top:1rem; border-top:1px solid var(--border); padding-top:0.75rem;">
+            <a href="{% url 'logout' %}" style="color:#e87070"><i class="fas fa-sign-out-alt" style="color:#e87070"></i> Logout</a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- RIGHT MAIN CONTENT -->
+      <main class="profile-settings-card fade-in">
+        
+        <div class="profile-header-flex">
+          <h2><i class="fas fa-user-cog"></i> Guest Account Settings</h2>
+          <div class="vip-badge">
+            <i class="fas fa-crown"></i> VIP Member
+          </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              {{ user_form.first_name }}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              {{ user_form.last_name }}
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label">Email Address</label>
+              {{ user_form.email }}
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label">Phone Number</label>
+              {{ profile_form.phone }}
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label">Dietary Requirements & Allergies</label>
+              {{ profile_form.dietary_preferences }}
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label">Table Preferences & Dining Notes</label>
+              {{ profile_form.favorite_table_notes }}
+            </div>
+          </div>
+
+          <button type="submit" class="profile-save-btn">
+            <i class="fas fa-save"></i> Save Profile Settings
+          </button>
+        </form>
+
+      </main>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

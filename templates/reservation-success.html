@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Reservation Confirmed — Savoir Fine Dining{% endblock %}
+{% block meta_description %}Your table reservation at Savoir Restaurant has been confirmed. Reference: {{ reservation.booking_ref }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .success-section {
+    padding: 10rem 0 7rem;
+    background: var(--bg-dark);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .success-card {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3.5rem 3rem;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+
+  .success-icon-wrap {
+    width: 90px; height: 90px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-dark);
+    font-size: 2.8rem;
+    box-shadow: 0 0 40px rgba(201,168,76,0.5);
+    animation: scaleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .success-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .success-subtitle {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+  }
+
+  .ref-pill {
+    display: inline-block;
+    padding: 0.6rem 1.8rem;
+    background: var(--gold-dim);
+    border: 1.5px dashed var(--gold);
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+  }
+
+  .res-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2.5rem;
+    text-align: left;
+    background: var(--bg-dark);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .res-details-table tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .res-details-table tr:last-child { border-bottom: none; }
+
+  .res-details-table td {
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .res-details-table td.label {
+    color: var(--text-muted);
+    font-weight: 500;
+    width: 40%;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .res-details-table td.val {
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  .success-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media print {
+    body * { visibility: hidden; }
+    .success-card, .success-card * { visibility: visible; }
+    .success-card { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; }
+    .success-actions { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .success-card { padding: 2rem 1.5rem; }
+    .res-details-table td { padding: 0.75rem 0.9rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="success-section">
+  <div class="container">
+    <div class="success-card fade-in">
+      
+      <div class="success-icon-wrap">
+        <i class="fas fa-check"></i>
+      </div>
+
+      <h1 class="success-title">Reservation Confirmed!</h1>
+      <p class="success-subtitle">We look forward to welcoming you to Savoir Restaurant.</p>
+
+      <div class="ref-pill">
+        Reference: {{ reservation.booking_ref }}
+      </div>
+
+      <table class="res-details-table">
+        <tr>
+          <td class="label"><i class="fas fa-user"></i> Guest Name</td>
+          <td class="val">{{ reservation.name }}</td>
+        </tr>
+        <tr>
+          <td class="label"><i class="fas fa-calendar"></i> Date</td>
+          <td class="val">{{ reservation.date|date:"F d, Y" }}</td>
+        </tr>
+        <tr>
+          <td class="label"><i class="fas fa-clock"></i> Time</td>
+          <td class="val">{{ reservation.get_time_display }}</td>
+        </tr>
+        <tr>
+          <td class="label"><i class="fas fa-users"></i> Party Size</td>
+          <td class="val">{{ reservation.guests }} {% if reservation.guests == 1 %}Guest{% else %}Guests{% endif %}</td>
+        </tr>
+        <tr>
+          <td class="label"><i class="fas fa-chair"></i> Seating Area</td>
+          <td class="val">{{ reservation.get_seating_preference_display }}</td>
+        </tr>
+        {% if reservation.occasion %}
+        <tr>
+          <td class="label"><i class="fas fa-glass-cheers"></i> Occasion</td>
+          <td class="val">{{ reservation.get_occasion_display }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td class="label"><i class="fas fa-envelope"></i> Confirmation Email</td>
+          <td class="val">{{ reservation.email }}</td>
+        </tr>
+        <tr>
+          <td class="label"><i class="fas fa-phone"></i> Phone</td>
+          <td class="val">{{ reservation.phone }}</td>
+        </tr>
+        {% if reservation.special_requests %}
+        <tr>
+          <td class="label"><i class="fas fa-comment-alt"></i> Special Requests</td>
+          <td class="val">{{ reservation.special_requests }}</td>
+        </tr>
+        {% endif %}
+      </table>
+
+      <div class="success-actions">
+        <button onclick="window.print()" class="btn btn-gold" id="print-res-btn">
+          <i class="fas fa-print"></i> Print Confirmation
+        </button>
+        <a href="{% url 'menu' %}" class="btn btn-outline">
+          <i class="fas fa-utensils"></i> View Menu
+        </a>
+        <a href="{% url 'index' %}" class="btn btn-outline">
+          <i class="fas fa-home"></i> Return Home
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

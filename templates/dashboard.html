@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Guest account dashboard for Savoir Restaurant. Manage table reservations, view order history, and update personal preferences.{% endblock %}
+
+{% block extra_css %}
+<style>
+  .dash-section {
+    padding: 7rem 0 6rem;
+    background: var(--bg-section);
+    min-height: 85vh;
+  }
+
+  .dash-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* Sidebar Navigation */
+  .dash-sidebar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .dash-user-card {
+    text-align: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dash-avatar {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 auto 0.8rem;
+    border: 2px solid var(--gold);
+    overflow: hidden;
+  }
+
+  .dash-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .dash-user-name {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--cream);
+  }
+
+  .dash-user-role {
+    font-size: 0.75rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .dash-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .dash-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .dash-nav a i { width: 20px; color: var(--gold); text-align: center; }
+
+  .dash-nav a:hover, .dash-nav a.active {
+    background: var(--gold-dim);
+    color: var(--cream);
+    border-left: 3px solid var(--gold);
+  }
+
+  /* Main Content Area */
+  .dash-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+  }
+
+  /* Welcome Banner */
+  .dash-welcome {
+    background:
+      radial-gradient(ellipse at 100% 0%, rgba(201,168,76,0.15) 0%, transparent 60%),
+      var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .dash-welcome h1 {
+    font-size: 2rem;
+    color: var(--cream);
+    margin-bottom: 0.4rem;
+  }
+
+  .dash-welcome p {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+  }
+
+  .dash-quick-btns {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  /* Stat Cards Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+  }
+
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  .stat-number {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* Content Cards */
+  .content-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+  }
+
+  .content-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .content-card-header h3 {
+    font-size: 1.3rem;
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .content-card-header h3 i { color: var(--gold); }
+
+  .view-all-link {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .view-all-link:hover { text-decoration: underline; }
+
+  /* Tables */
+  .dash-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .dash-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dash-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--cream);
+  }
+
+  .dash-table tr:last-child td { border-bottom: none; }
+
+  .status-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+  }
+
+  .status-pending   { background: rgba(230,180,50,0.15); color: #E6B432; border: 1px solid rgba(230,180,50,0.3); }
+  .status-confirmed, .status-ready { background: rgba(80,200,100,0.15); color: #6BCB77; border: 1px solid rgba(80,200,100,0.3); }
+  .status-preparing { background: rgba(100,180,240,0.15); color: #60B5FF; border: 1px solid rgba(100,180,240,0.3); }
+  .status-completed { background: rgba(150,150,150,0.15); color: #AAA; border: 1px solid rgba(150,150,150,0.3); }
+  .status-cancelled { background: rgba(220,80,80,0.15); color: #FF6B6B; border: 1px solid rgba(220,80,80,0.3); }
+
+  .empty-dash-box {
+    text-align: center;
+    padding: 2.5rem;
+    color: var(--text-muted);
+    font-family: var(--font-elegant);
+    font-style: italic;
+    font-size: 1.05rem;
+  }
+
+  @media (max-width: 900px) {
+    .dash-layout { grid-template-columns: 1fr; }
+    .dash-sidebar { position: static; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 500px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .dash-welcome { flex-direction: column; text-align: center; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="dash-section" id="dash-section">
+  <div class="container">
+    <div class="dash-layout">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="dash-sidebar fade-in">
+        <div class="dash-user-card">
+          <div class="dash-avatar">
+            {% if profile.profile_photo %}
+              <img src="{{ profile.profile_photo.url }}" alt="{{ user.first_name }}" />
+            {% else %}
+              {{ user.first_name|default:user.username|slice:":1"|upper }}
+            {% endif %}
+          </div>
+          <div class="dash-user-name">{{ user.first_name }} {{ user.last_name }}</div>
+          <div class="dash-user-role"><i class="fas fa-crown"></i> VIP Member</div>
+        </div>
+
+        <ul class="dash-nav">
+          <li><a href="{% url 'dashboard' %}" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="{% url 'my_reservations' %}"><i class="fas fa-calendar-check"></i> My Reservations</a></li>
+          <li><a href="{% url 'my_orders' %}"><i class="fas fa-shopping-bag"></i> My Pre-Orders</a></li>
+          <li><a href="{% url 'profile' %}"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+          <li style="margin-top:1rem; border-top:1px solid var(--border); padding-top:0.75rem;">
+            <a href="{% url 'logout' %}" style="color:#e87070"><i class="fas fa-sign-out-alt" style="color:#e87070"></i> Logout</a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- RIGHT MAIN CONTENT -->
+      <main class="dash-main">
+        
+        <!-- Welcome Card -->
+        <div class="dash-welcome fade-in">
+          <div>
+            <h1>Welcome Back, {{ user.first_name|default:user.username }}!</h1>
+            <p>Your fine dining portal for reservations, pre-orders & preferences.</p>
+          </div>
+          <div class="dash-quick-btns">
+            <a href="{% url 'reservation' %}" class="btn btn-gold" style="padding:0.6rem 1.2rem; font-size:0.75rem;">
+              <i class="fas fa-calendar-plus"></i> Book Table
+            </a>
+            <a href="{% url 'menu' %}" class="btn btn-outline" style="padding:0.6rem 1.2rem; font-size:0.75rem;">
+              <i class="fas fa-utensils"></i> Order Food
+            </a>
+          </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-grid fade-in">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-number">{{ total_reservations }}</div>
+            <div class="stat-label">Total Bookings</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+            <div class="stat-number">{{ upcoming_res }}</div>
+            <div class="stat-label">Upcoming Dining</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+            <div class="stat-number">{{ total_orders }}</div>
+            <div class="stat-label">Pre-Orders</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-award"></i></div>
+            <div class="stat-number">VIP</div>
+            <div class="stat-label">Guest Status</div>
+          </div>
+        </div>
+
+        <!-- Recent Reservations Card -->
+        <div class="content-card fade-in">
+          <div class="content-card-header">
+            <h3><i class="fas fa-calendar-alt"></i> Recent Reservations</h3>
+            <a href="{% url 'my_reservations' %}" class="view-all-link">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          {% if recent_reservations %}
+            <div style="overflow-x:auto;">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Ref</th>
+                    <th>Date & Time</th>
+                    <th>Guests</th>
+                    <th>Seating</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for res in recent_reservations %}
+                  <tr>
+                    <td style="font-weight:700; color:var(--gold);">{{ res.booking_ref }}</td>
+                    <td>{{ res.date|date:"M d, Y" }} @ {{ res.get_time_display }}</td>
+                    <td>{{ res.guests }} Guests</td>
+                    <td>{{ res.get_seating_preference_display }}</td>
+                    <td><span class="status-tag status-{{ res.status }}">{{ res.get_status_display }}</span></td>
+                    <td>
+                      <a href="{% url 'reservation_details' ref=res.booking_ref %}" class="view-all-link" style="font-size:0.75rem;">Details</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="empty-dash-box">
+              No recent table reservations found.<br>
+              <a href="{% url 'reservation' %}" style="color:var(--gold); text-decoration:underline;">Reserve your table today</a>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Recent Orders Card -->
+        <div class="content-card fade-in">
+          <div class="content-card-header">
+            <h3><i class="fas fa-shopping-bag"></i> Recent Pre-Orders</h3>
+            <a href="{% url 'my_orders' %}" class="view-all-link">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          {% if recent_orders %}
+            <div style="overflow-x:auto;">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Ref</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ord in recent_orders %}
+                  <tr>
+                    <td style="font-weight:700; color:var(--gold);">{{ ord.order_ref }}</td>
+                    <td>{{ ord.created_at|date:"M d, Y" }}</td>
+                    <td>{{ ord.get_order_type_display }}</td>
+                    <td style="font-weight:600; color:var(--gold);">${{ ord.total_price }}</td>
+                    <td><span class="status-tag status-{{ ord.status }}">{{ ord.get_status_display }}</span></td>
+                    <td>
+                      <a href="{% url 'order_details' ref=ord.order_ref %}" class="view-all-link" style="font-size:0.75rem;">Receipt</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="empty-dash-box">
+              No pre-orders placed yet.<br>
+              <a href="{% url 'menu' %}" style="color:var(--gold); text-decoration:underline;">Explore menu and order online</a>
+            </div>
+          {% endif %}
+        </div>
+
+      </main>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

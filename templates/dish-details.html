@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dish.name }} — Savoir Fine Dining{% endblock %}
+{% block meta_description %}{{ dish.name }} at Savoir Restaurant. {{ dish.description|truncatewords:25 }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .dish-detail-section {
+    padding: 9rem 0 6rem;
+    background: var(--bg-dark);
+  }
+
+  .breadcrumb-nav {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb-nav a { color: var(--gold); }
+  .breadcrumb-nav a:hover { text-decoration: underline; }
+
+  .dish-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  /* Image Column */
+  .dish-visual {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    aspect-ratio: 4/3;
+  }
+
+  .dish-visual img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .dish-placeholder-visual {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7rem;
+    background: linear-gradient(135deg, #141414, #221a0d);
+  }
+
+  .dish-featured-badge {
+    position: absolute;
+    top: 1.25rem; left: 1.25rem;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.9rem;
+    border-radius: 50px;
+  }
+
+  /* Info Column */
+  .dish-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .dish-cat-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .dish-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .dish-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--cream);
+    line-height: 1.1;
+  }
+
+  .dish-price-tag {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    color: var(--gold);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .dish-badge-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .badge-veg, .badge-vegan, .badge-gf, .badge-spice {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-veg   { background: rgba(80,200,100,0.15); color: #6BCB77; border: 1px solid rgba(80,200,100,0.3); }
+  .badge-vegan { background: rgba(100,220,120,0.12); color: #5CBD6A; border: 1px solid rgba(100,220,120,0.3); }
+  .badge-gf    { background: rgba(200,160,80,0.12); color: var(--gold); border: 1px solid rgba(200,160,80,0.3); }
+  .badge-spice { background: rgba(220,80,80,0.15); color: #FF6B6B; border: 1px solid rgba(220,80,80,0.3); }
+
+  .dish-description-full {
+    font-family: var(--font-elegant);
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    font-style: italic;
+  }
+
+  /* Key Specs Card */
+  .dish-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .spec-item {
+    text-align: center;
+  }
+
+  .spec-item i {
+    color: var(--gold);
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .spec-val {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  .spec-lbl {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* Ingredients & Chef Note */
+  .detail-block h4 {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .ingredients-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .ing-tag {
+    font-size: 0.82rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--border);
+    color: var(--cream);
+  }
+
+  .chef-note-box {
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--gold);
+    background: var(--gold-dim);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  .chef-note-box p {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--cream);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  /* Similar Dishes Section */
+  .similar-section {
+    padding: 5rem 0;
+    background: var(--bg-section);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 900px) {
+    .dish-detail-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="dish-detail-section" id="dish-detail-section">
+  <div class="container">
+    
+    <!-- Breadcrumbs -->
+    <div class="breadcrumb-nav">
+      <a href="{% url 'index' %}">Home</a> &nbsp;/&nbsp;
+      <a href="{% url 'menu' %}">Menu</a> &nbsp;/&nbsp;
+      <a href="{% url 'menu' %}?category={{ dish.category.slug }}">{{ dish.category.name }}</a> &nbsp;/&nbsp;
+      {{ dish.name }}
+    </div>
+
+    <div class="dish-detail-grid">
+      <!-- Image Column -->
+      <div class="dish-visual fade-in">
+        {% if dish.image %}
+          <img src="{{ dish.image.url }}" alt="{{ dish.name }}" />
+        {% else %}
+          <div class="dish-placeholder-visual">🍽️</div>
+        {% endif %}
+        {% if dish.is_featured %}
+          <div class="dish-featured-badge"><i class="fas fa-star"></i> Featured Creation</div>
+        {% endif %}
+      </div>
+
+      <!-- Info Column -->
+      <div class="dish-info-box fade-in" style="transition-delay: 0.15s">
+        <div>
+          <span class="dish-cat-name">{{ dish.category.name }}</span>
+          <div class="dish-title-row">
+            <h1 class="dish-title">{{ dish.name }}</h1>
+            <div class="dish-price-tag">${{ dish.price }}</div>
+          </div>
+        </div>
+
+        <div class="dish-badge-row">
+          {% if dish.is_vegetarian %}<span class="badge-veg">🌱 Vegetarian</span>{% endif %}
+          {% if dish.is_vegan %}<span class="badge-vegan">🌿 Vegan</span>{% endif %}
+          {% if dish.is_gluten_free %}<span class="badge-gf">🌾 Gluten-Free</span>{% endif %}
+          {% if dish.spice_level != 'none' %}<span class="badge-spice"><i class="fas fa-pepper-hot"></i> {{ dish.get_spice_level_display }}</span>{% endif %}
+        </div>
+
+        <p class="dish-description-full">{{ dish.description }}</p>
+
+        <!-- Key Specs -->
+        <div class="dish-specs-grid">
+          <div class="spec-item">
+            <i class="fas fa-clock"></i>
+            <div class="spec-val">{{ dish.prep_time }} mins</div>
+            <div class="spec-lbl">Prep Time</div>
+          </div>
+          <div class="spec-item">
+            <i class="fas fa-fire"></i>
+            <div class="spec-val">{% if dish.calories %}{{ dish.calories }} kcal{% else %}N/A{% endif %}</div>
+            <div class="spec-lbl">Calories</div>
+          </div>
+          <div class="spec-item">
+            <i class="fas fa-utensils"></i>
+            <div class="spec-val">{{ dish.get_spice_level_display }}</div>
+            <div class="spec-lbl">Spice Level</div>
+          </div>
+        </div>
+
+        <!-- Ingredients -->
+        {% if dish.get_ingredients_list %}
+        <div class="detail-block">
+          <h4>Key Ingredients</h4>
+          <div class="ingredients-tags">
+            {% for ing in dish.get_ingredients_list %}
+              <span class="ing-tag">{{ ing }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Chef's Note -->
+        {% if dish.chef_notes %}
+        <div class="detail-block">
+          <h4>Chef's Pairing Note</h4>
+          <div class="chef-note-box">
+            <p>"{{ dish.chef_notes }}"</p>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Action Row -->
+        <div class="action-row" style="flex-wrap:wrap;">
+          <button onclick="addToCart('{{ dish.name|escapejs }}', {{ dish.price }})" class="btn btn-gold" id="add-to-bag-btn">
+            <i class="fas fa-plus"></i> Add to Pre-Order Bag
+          </button>
+          <a href="{% url 'reservation' %}" class="btn btn-outline" id="reserve-dish-btn">
+            <i class="fas fa-calendar-check"></i> Reserve Table
+          </a>
+          <a href="{% url 'menu' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Menu
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SIMILAR DISHES ===== -->
+{% if similar_dishes %}
+<section class="similar-section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">More from {{ dish.category.name }}</span>
+      <h2 class="section-title">You Might Also Enjoy</h2>
+      <div class="gold-divider"></div>
+    </div>
+
+    <div class="dishes-grid">
+      {% for item in similar_dishes %}
+      <article class="dish-card fade-in">
+        <div class="dish-img-wrap">
+          {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.name }}" />
+          {% else %}<div class="dish-no-img">🍽️</div>{% endif %}
+        </div>
+        <div class="dish-body">
+          <div class="dish-header">
+            <h3 class="dish-name">{{ item.name }}</h3>
+            <div class="dish-price">${{ item.price }}</div>
+          </div>
+          <p class="dish-desc">{{ item.description }}</p>
+          <div class="dish-footer">
+            <a href="{% url 'dish_detail' pk=item.pk %}" class="btn-detail">View Details <i class="fas fa-chevron-right"></i></a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

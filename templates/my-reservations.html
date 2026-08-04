@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+
+{% block title %}My Table Reservations — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}View and manage all your upcoming & past table reservations at Savoir Restaurant.{% endblock %}
+
+{% block extra_css %}
+<style>
+  .dash-section {
+    padding: 7rem 0 6rem;
+    background: var(--bg-section);
+    min-height: 85vh;
+  }
+
+  .dash-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .dash-sidebar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .dash-user-card {
+    text-align: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dash-avatar {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 auto 0.8rem;
+    border: 2px solid var(--gold);
+    overflow: hidden;
+  }
+
+  .dash-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .dash-user-name {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--cream);
+  }
+
+  .dash-user-role {
+    font-size: 0.75rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .dash-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .dash-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .dash-nav a i { width: 20px; color: var(--gold); text-align: center; }
+
+  .dash-nav a:hover, .dash-nav a.active {
+    background: var(--gold-dim);
+    color: var(--cream);
+    border-left: 3px solid var(--gold);
+  }
+
+  /* Main Card */
+  .res-card-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem;
+  }
+
+  .res-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .res-header h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .res-header h2 i { color: var(--gold); }
+
+  /* Status Filter Tabs */
+  .status-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .status-tab-btn {
+    padding: 0.45rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: var(--bg-dark);
+    color: var(--text-muted);
+    transition: all 0.25s ease;
+    text-decoration: none;
+  }
+
+  .status-tab-btn:hover, .status-tab-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .status-tab-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    border-color: transparent;
+  }
+
+  /* Reservation Cards */
+  .res-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .res-item-box {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .res-item-box:hover {
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .res-box-ref {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25rem;
+  }
+
+  .res-box-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--cream);
+    margin-bottom: 0.4rem;
+  }
+
+  .res-box-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .res-box-meta span { display: flex; align-items: center; gap: 0.3rem; }
+  .res-box-meta i { color: var(--gold); }
+
+  .status-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+  }
+
+  .status-pending   { background: rgba(230,180,50,0.15); color: #E6B432; border: 1px solid rgba(230,180,50,0.3); }
+  .status-confirmed { background: rgba(80,200,100,0.15); color: #6BCB77; border: 1px solid rgba(80,200,100,0.3); }
+  .status-completed { background: rgba(150,150,150,0.15); color: #AAA; border: 1px solid rgba(150,150,150,0.3); }
+  .status-cancelled { background: rgba(220,80,80,0.15); color: #FF6B6B; border: 1px solid rgba(220,80,80,0.3); }
+
+  .empty-res-box {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+    font-family: var(--font-elegant);
+    font-style: italic;
+    font-size: 1.15rem;
+  }
+
+  @media (max-width: 900px) {
+    .dash-layout { grid-template-columns: 1fr; }
+    .dash-sidebar { position: static; }
+    .res-item-box { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="dash-section">
+  <div class="container">
+    <div class="dash-layout">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="dash-sidebar fade-in">
+        <div class="dash-user-card">
+          <div class="dash-avatar">
+            {% if user.profile.profile_photo %}
+              <img src="{{ user.profile.profile_photo.url }}" alt="{{ user.first_name }}" />
+            {% else %}
+              {{ user.first_name|default:user.username|slice:":1"|upper }}
+            {% endif %}
+          </div>
+          <div class="dash-user-name">{{ user.first_name }} {{ user.last_name }}</div>
+          <div class="dash-user-role"><i class="fas fa-crown"></i> VIP Member</div>
+        </div>
+
+        <ul class="dash-nav">
+          <li><a href="{% url 'dashboard' %}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="{% url 'my_reservations' %}" class="active"><i class="fas fa-calendar-check"></i> My Reservations</a></li>
+          <li><a href="{% url 'my_orders' %}"><i class="fas fa-shopping-bag"></i> My Pre-Orders</a></li>
+          <li><a href="{% url 'profile' %}"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+          <li style="margin-top:1rem; border-top:1px solid var(--border); padding-top:0.75rem;">
+            <a href="{% url 'logout' %}" style="color:#e87070"><i class="fas fa-sign-out-alt" style="color:#e87070"></i> Logout</a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- RIGHT MAIN CONTENT -->
+      <main class="res-card-panel fade-in">
+        
+        <div class="res-header">
+          <h2><i class="fas fa-calendar-alt"></i> My Table Reservations</h2>
+          <a href="{% url 'reservation' %}" class="btn btn-gold" style="padding:0.55rem 1.2rem; font-size:0.75rem;">
+            + Reserve Table
+          </a>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="status-tabs">
+          <a href="{% url 'my_reservations' %}?status=all" class="status-tab-btn {% if status_filter == 'all' %}active{% endif %}">All Bookings</a>
+          <a href="{% url 'my_reservations' %}?status=upcoming" class="status-tab-btn {% if status_filter == 'upcoming' %}active{% endif %}">Upcoming</a>
+          <a href="{% url 'my_reservations' %}?status=completed" class="status-tab-btn {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
+          <a href="{% url 'my_reservations' %}?status=cancelled" class="status-tab-btn {% if status_filter == 'cancelled' %}active{% endif %}">Cancelled</a>
+        </div>
+
+        {% if reservations %}
+          <div class="res-card-list">
+            {% for res in reservations %}
+            <article class="res-item-box">
+              <div>
+                <div class="res-box-ref">{{ res.booking_ref }}</div>
+                <div class="res-box-title">{{ res.date|date:"l, F d, Y" }} at {{ res.get_time_display }}</div>
+                <div class="res-box-meta">
+                  <span><i class="fas fa-users"></i> {{ res.guests }} Guests</span>
+                  <span><i class="fas fa-chair"></i> {{ res.get_seating_preference_display }}</span>
+                  {% if res.occasion %}<span><i class="fas fa-glass-cheers"></i> {{ res.get_occasion_display }}</span>{% endif %}
+                </div>
+              </div>
+
+              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem;">
+                <span class="status-tag status-{{ res.status }}">{{ res.get_status_display }}</span>
+                <div style="display:flex; gap:0.5rem;">
+                  <a href="{% url 'reservation_details' ref=res.booking_ref %}" class="btn btn-outline" style="padding:0.4rem 0.85rem; font-size:0.72rem;">
+                    Details <i class="fas fa-eye"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+
+        {% else %}
+          <div class="empty-res-box">
+            <i class="fas fa-calendar-times" style="font-size:3rem; color:var(--gold); opacity:0.4; margin-bottom:1rem; display:block;"></i>
+            No table reservations found in this category.<br>
+            <a href="{% url 'reservation' %}" style="color:var(--gold); text-decoration:underline; font-style:normal; font-size:0.95rem; margin-top:0.5rem; display:inline-block;">
+              Reserve your dining table now
+            </a>
+          </div>
+        {% endif %}
+
+      </main>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

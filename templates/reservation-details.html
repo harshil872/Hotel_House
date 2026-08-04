@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Reservation {{ reservation.booking_ref }} — Savoir Fine Dining{% endblock %}
+{% block meta_description %}Official table reservation details and receipt for {{ reservation.booking_ref }} at Savoir Restaurant.{% endblock %}
+
+{% block extra_css %}
+<style>
+  .res-detail-section {
+    padding: 8rem 0 6rem;
+    background: var(--bg-dark);
+    min-height: 85vh;
+  }
+
+  .res-detail-card {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3.5rem 3rem;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+
+  .res-detail-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .res-detail-logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--cream);
+    font-weight: 700;
+  }
+
+  .res-detail-sub {
+    font-family: var(--font-elegant);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-style: italic;
+    margin-bottom: 1.25rem;
+  }
+
+  .ref-pill {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background: var(--gold-dim);
+    border: 1.5px dashed var(--gold);
+    border-radius: 50px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+  }
+
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+  }
+
+  .info-table tr { border-bottom: 1px solid var(--border); }
+  .info-table td { padding: 1rem 0; color: var(--cream); }
+  .info-table td:first-child {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    width: 35%;
+  }
+
+  .status-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+  }
+
+  .status-pending   { background: rgba(230,180,50,0.15); color: #E6B432; border: 1px solid rgba(230,180,50,0.3); }
+  .status-confirmed { background: rgba(80,200,100,0.15); color: #6BCB77; border: 1px solid rgba(80,200,100,0.3); }
+  .status-completed { background: rgba(150,150,150,0.15); color: #AAA; border: 1px solid rgba(150,150,150,0.3); }
+  .status-cancelled { background: rgba(220,80,80,0.15); color: #FF6B6B; border: 1px solid rgba(220,80,80,0.3); }
+
+  .actions-flex {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media print {
+    body * { visibility: hidden; }
+    .res-detail-card, .res-detail-card * { visibility: visible; }
+    .res-detail-card { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; }
+    .actions-flex { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .res-detail-card { padding: 2rem 1.25rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="res-detail-section">
+  <div class="container">
+    <div class="res-detail-card fade-in">
+
+      <div class="res-detail-header">
+        <div class="res-detail-logo">Savoir Restaurant</div>
+        <div class="res-detail-sub">Table Reservation Voucher</div>
+        <div class="ref-pill">{{ reservation.booking_ref }}</div>
+      </div>
+
+      <table class="info-table">
+        <tr>
+          <td>Booking Status</td>
+          <td><span class="status-tag status-{{ reservation.status }}">{{ reservation.get_status_display }}</span></td>
+        </tr>
+        <tr>
+          <td>Guest Name</td>
+          <td style="font-weight:600;">{{ reservation.name }}</td>
+        </tr>
+        <tr>
+          <td>Email & Phone</td>
+          <td>{{ reservation.email }} • {{ reservation.phone }}</td>
+        </tr>
+        <tr>
+          <td>Reservation Date</td>
+          <td style="font-weight:700; color:var(--gold);">{{ reservation.date|date:"l, F d, Y" }}</td>
+        </tr>
+        <tr>
+          <td>Dining Time</td>
+          <td style="font-weight:700; color:var(--cream);">{{ reservation.get_time_display }}</td>
+        </tr>
+        <tr>
+          <td>Party Size</td>
+          <td>{{ reservation.guests }} Guests</td>
+        </tr>
+        <tr>
+          <td>Seating Preference</td>
+          <td>{{ reservation.get_seating_preference_display }}</td>
+        </tr>
+        {% if reservation.occasion %}
+        <tr>
+          <td>Occasion</td>
+          <td>{{ reservation.get_occasion_display }}</td>
+        </tr>
+        {% endif %}
+        {% if reservation.special_requests %}
+        <tr>
+          <td>Special Requests</td>
+          <td style="font-style:italic; color:var(--text-muted);">"{{ reservation.special_requests }}"</td>
+        </tr>
+        {% endif %}
+      </table>
+
+      <div class="actions-flex">
+        <button onclick="window.print()" class="btn btn-gold" id="print-res-btn">
+          <i class="fas fa-print"></i> Print Dining Pass
+        </button>
+
+        {% if reservation.status in 'pending,confirmed' %}
+        <form method="post" action="{% url 'cancel_reservation' ref=reservation.booking_ref %}" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline" style="border-color:#FF6B6B; color:#FF6B6B;">
+            <i class="fas fa-times-circle"></i> Cancel Reservation
+          </button>
+        </form>
+        {% endif %}
+
+        <a href="{% url 'my_reservations' %}" class="btn btn-outline">
+          <i class="fas fa-arrow-left"></i> My Reservations
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

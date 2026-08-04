@@ -1,0 +1,493 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Secure payment options for your Savoir fine dining food pre-order.{% endblock %}
+
+{% block extra_css %}
+<style>
+  .payment-section {
+    padding: 7rem 0 6rem;
+    background: var(--bg-section);
+    min-height: 85vh;
+  }
+
+  /* Checkout Step Bar */
+  .checkout-step-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .step-item.active { color: var(--gold); }
+  .step-item.completed { color: var(--cream); }
+
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+  }
+
+  .step-item.active .step-num {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    border-color: var(--gold);
+  }
+
+  .step-item.completed .step-num {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .step-arrow { color: var(--border); }
+
+  /* Payment Grid */
+  .payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .payment-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+  }
+
+  .payment-card h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--cream);
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .payment-card h2 i { color: var(--gold); }
+
+  /* Credit Card Graphic */
+  .credit-card-preview {
+    background: linear-gradient(135deg, #222, #111, #2a200e);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    color: var(--cream);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-chip {
+    width: 40px; height: 30px;
+    background: linear-gradient(135deg, #d4af37, #f3e5ab);
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-number-display {
+    font-family: monospace;
+    font-size: 1.3rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    color: var(--gold);
+  }
+
+  .card-flex {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .card-flex span { color: var(--cream); }
+
+  /* Payment Method Tabs */
+  .pay-method-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .pay-tab-btn {
+    flex: 1;
+    padding: 0.85rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-dark);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .pay-tab-btn.active {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  /* Tip Selector */
+  .tip-options {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tip-btn {
+    flex: 1;
+    padding: 0.6rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-dark);
+    color: var(--cream);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .tip-btn.active {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: var(--bg-dark);
+  }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group.full { grid-column: span 2; }
+
+  .form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    background: var(--bg-dark);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+  }
+
+  .form-input:focus { border-color: var(--gold); }
+
+  /* Summary Box */
+  .summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .summary-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .summary-row.total {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--cream);
+    border-top: 1px dashed var(--gold);
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .summary-row.total span:last-child { color: var(--gold); }
+
+  .pay-now-btn {
+    width: 100%;
+    padding: 1.1rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+  }
+
+  .pay-now-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(201,168,76,0.4);
+  }
+
+  @media (max-width: 900px) {
+    .payment-grid { grid-template-columns: 1fr; }
+    .summary-card { position: static; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="payment-section">
+  <div class="container">
+
+    <!-- Step Progress Bar -->
+    <div class="checkout-step-bar fade-in">
+      <div class="step-item completed">
+        <div class="step-num"><i class="fas fa-check"></i></div>
+        <span>Shopping Bag</span>
+      </div>
+      <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="step-item completed">
+        <div class="step-num"><i class="fas fa-check"></i></div>
+        <span>Delivery Info</span>
+      </div>
+      <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="step-item active">
+        <div class="step-num">3</div>
+        <span>Payment</span>
+      </div>
+      <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <span>Confirmation</span>
+      </div>
+    </div>
+
+    <!-- Payment Main Form -->
+    <form method="post" action="{% url 'process_payment' %}" id="payment-form" onsubmit="submitFinalOrder(event)">
+      {% csrf_token %}
+      
+      <!-- Hidden POST Fields -->
+      <input type="hidden" name="cart_data" id="post-cart-data" />
+      <input type="hidden" name="name" id="post-name" />
+      <input type="hidden" name="email" id="post-email" />
+      <input type="hidden" name="phone" id="post-phone" />
+      <input type="hidden" name="order_type" id="post-order-type" />
+      <input type="hidden" name="address" id="post-address" />
+      <input type="hidden" name="notes" id="post-notes" />
+      <input type="hidden" name="tip" id="post-tip" value="0.00" />
+
+      <div class="payment-grid">
+
+        <!-- Left: Payment Details -->
+        <div class="payment-card fade-in">
+          <h2><i class="fas fa-credit-card"></i> Payment Method</h2>
+
+          <!-- Payment Method Selector -->
+          <div class="pay-method-tabs">
+            <div class="pay-tab-btn active" id="pay-card" onclick="selectPayMethod('card')">
+              <i class="fas fa-credit-card"></i> Credit / Debit
+            </div>
+            <div class="pay-tab-btn" id="pay-apple" onclick="selectPayMethod('apple')">
+              <i class="fab fa-apple"></i> Apple / Google Pay
+            </div>
+            <div class="pay-tab-btn" id="pay-cash" onclick="selectPayMethod('cash')">
+              <i class="fas fa-money-bill-wave"></i> Cash
+            </div>
+          </div>
+
+          <!-- Card Preview Graphic -->
+          <div class="credit-card-preview" id="card-preview-box">
+            <div class="card-chip"></div>
+            <div class="card-number-display" id="card-num-disp">•••• •••• •••• 4242</div>
+            <div class="card-flex">
+              <div>Cardholder<br><span id="card-name-disp">ALEXANDER WRIGHT</span></div>
+              <div>Expires<br><span id="card-exp-disp">12/28</span></div>
+            </div>
+          </div>
+
+          <!-- Card Input Fields -->
+          <div id="card-inputs-panel">
+            <div class="form-group full">
+              <label class="form-label">Card Number</label>
+              <input type="text" class="form-input" placeholder="4242 4242 4242 4242" maxlength="19" oninput="updateCardNum(this)" required />
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Expiry Date</label>
+                <input type="text" class="form-input" placeholder="MM/YY" maxlength="5" oninput="updateCardExp(this)" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVC / CVV</label>
+                <input type="text" class="form-input" placeholder="123" maxlength="4" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Staff Tip Selector -->
+          <h3 style="font-family:var(--font-heading); color:var(--cream); margin:2rem 0 1rem; font-size:1.2rem;">
+            <i class="fas fa-heart" style="color:var(--gold)"></i> Add Chef & Staff Gratuity
+          </h3>
+          <div class="tip-options">
+            <button type="button" class="tip-btn" onclick="applyTip(0.00, this)">No Tip</button>
+            <button type="button" class="tip-btn active" onclick="applyTip(10, this)">10%</button>
+            <button type="button" class="tip-btn" onclick="applyTip(15, this)">15%</button>
+            <button type="button" class="tip-btn" onclick="applyTip(20, this)">20%</button>
+          </div>
+        </div>
+
+        <!-- Right: Final Summary -->
+        <div class="summary-card fade-in" style="transition-delay:0.15s">
+          <div class="summary-title">Final Summary</div>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="pay-subtotal">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax (8.875%)</span>
+            <span id="pay-tax">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Gratuity (Tip)</span>
+            <span id="pay-tip-display">$0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total to Pay</span>
+            <span id="pay-grand-total">$0.00</span>
+          </div>
+
+          <button type="submit" class="pay-now-btn" id="pay-submit-btn">
+            <i class="fas fa-lock"></i> Authorize & Pay Now
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let currentSubtotal = 0;
+  let tipAmount = 0;
+
+  function loadPaymentData() {
+    if (!cart || cart.length === 0) {
+      window.location.href = "{% url 'cart' %}";
+      return;
+    }
+
+    const info = JSON.parse(localStorage.getItem('savoir_checkout_info') || '{}');
+    const type = localStorage.getItem('savoir_order_type') || 'pickup';
+
+    document.getElementById('post-cart-data').value = JSON.stringify(cart);
+    document.getElementById('post-name').value = info.name || "{{ user.first_name }} {{ user.last_name }}";
+    document.getElementById('post-email').value = info.email || "{{ user.email }}";
+    document.getElementById('post-phone').value = info.phone || "";
+    document.getElementById('post-order-type').value = type;
+    document.getElementById('post-address').value = info.address || "";
+    document.getElementById('post-notes').value = info.notes || "";
+
+    currentSubtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    applyTip(10); // default 10% tip
+  }
+
+  function applyTip(percentage, btn) {
+    if (btn) {
+      document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    tipAmount = (currentSubtotal * (percentage / 100));
+    document.getElementById('post-tip').value = tipAmount.toFixed(2);
+
+    const tax = currentSubtotal * 0.08875;
+    const total = currentSubtotal + tax + tipAmount;
+
+    document.getElementById('pay-subtotal').textContent = '$' + currentSubtotal.toFixed(2);
+    document.getElementById('pay-tax').textContent = '$' + tax.toFixed(2);
+    document.getElementById('pay-tip-display').textContent = '$' + tipAmount.toFixed(2);
+    document.getElementById('pay-grand-total').textContent = '$' + total.toFixed(2);
+  }
+
+  function selectPayMethod(method) {
+    document.querySelectorAll('.pay-tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('pay-' + method).classList.add('active');
+  }
+
+  function updateCardNum(input) {
+    document.getElementById('card-num-disp').textContent = input.value || '•••• •••• •••• 4242';
+  }
+
+  function updateCardExp(input) {
+    document.getElementById('card-exp-disp').textContent = input.value || '12/28';
+  }
+
+  function submitFinalOrder(e) {
+    const btn = document.getElementById('pay-submit-btn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authorizing Payment...';
+    localStorage.removeItem('savoir_cart');
+    localStorage.removeItem('savoir_checkout_info');
+  }
+
+  document.addEventListener('DOMContentLoaded', loadPaymentData);
+</script>
+{% endblock %}
