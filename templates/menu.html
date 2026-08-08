@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Our Menu — Savoir Fine Dining Restaurant{% endblock %}
-{% block meta_description %}Explore our exquisite seasonal menu featuring artisan appetizers, gourmet mains, hand-crafted desserts, and signature cocktails.{% endblock %}
+{% block title %}Carte du Jour — Savoir Fine Dining Restaurant{% endblock %}
+{% block meta_description %}Explore our Michelin-recommended seasonal menu featuring artisan starters, Wagyu mains, fresh ocean seafood, and sommelier reserve wines.{% endblock %}
 
 {% block extra_css %}
 <style>
   /* ===== PAGE HERO ===== */
   .page-hero {
-    padding: 10rem 0 5rem;
+    padding: 9rem 0 4rem;
     text-align: center;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%),
-      var(--bg-dark);
+      radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.15) 0%, transparent 65%),
+      linear-gradient(180deg, #070707 0%, var(--bg-dark) 100%);
     position: relative;
     overflow: hidden;
   }
@@ -22,60 +22,131 @@
     bottom: 0; left: 0; right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0.3;
+    opacity: 0.4;
   }
 
   .page-hero-breadcrumb {
     font-size: 0.72rem;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-weight: 600;
   }
 
-  .page-hero-breadcrumb a { color: var(--gold); }
-
-  .page-hero h1 { font-size: clamp(3rem, 6vw, 5rem); color: var(--cream); margin-bottom: 1.25rem; }
+  .page-hero h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    color: var(--cream);
+    margin-bottom: 0.75rem;
+    font-weight: 400;
+  }
 
   .page-hero p {
     font-family: var(--font-elegant);
     font-style: italic;
     color: var(--text-muted);
-    font-size: 1.2rem;
-    max-width: 550px;
+    font-size: 1.15rem;
+    max-width: 580px;
     margin: 0 auto;
   }
 
-  /* ===== MENU SECTION ===== */
-  .menu-section {
-    padding: 5rem 0 7rem;
-    background: var(--bg-section);
+  /* ===== TASTING MENU HIGHLIGHT BANNER ===== */
+  .tasting-menu-card {
+    background: linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(15,15,15,0.95) 100%);
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem 2.5rem;
+    margin-bottom: 3.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px);
   }
 
-  /* Filter Controls */
-  .menu-controls {
+  .tasting-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--bg-dark);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    padding: 0.35rem 0.9rem;
+    border-radius: 50px;
+    margin-bottom: 0.75rem;
+  }
+
+  .tasting-title {
+    font-family: var(--font-heading);
+    font-size: 1.65rem;
+    color: var(--cream);
+    margin-bottom: 0.4rem;
+  }
+
+  .tasting-desc {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.98rem;
+    max-width: 620px;
+  }
+
+  .tasting-price-box {
+    text-align: right;
+  }
+
+  .tasting-price {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .tasting-price-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== CONTROLS BAR ===== */
+  .menu-controls-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin-bottom: 3.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 4rem;
+    gap: 1.25rem;
+  }
+
+  .controls-top-row {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
   }
 
   .menu-search-box {
     position: relative;
-    max-width: 500px;
-    width: 100%;
+    flex: 1;
+    min-width: 280px;
   }
 
   .menu-search-input {
     width: 100%;
-    padding: 0.9rem 1.25rem 0.9rem 3rem;
-    background: var(--bg-card);
-    border: 1.5px solid var(--border);
+    padding: 0.8rem 1.25rem 0.8rem 2.8rem;
+    background: #090909;
+    border: 1px solid var(--border);
     border-radius: 50px;
     color: var(--cream);
     font-family: var(--font-body);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     outline: none;
     transition: all 0.3s ease;
   }
@@ -87,100 +158,240 @@
 
   .menu-search-icon {
     position: absolute;
-    left: 1.25rem;
+    left: 1.1rem;
     top: 50%;
     transform: translateY(-50%);
     color: var(--gold);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
-  .menu-tabs {
+  /* Layout Switcher */
+  .view-mode-toggle {
     display: flex;
-    gap: 0.75rem;
+    background: #090909;
+    padding: 4px;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+  }
+
+  .mode-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .mode-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+  }
+
+  /* Category Nav Tabs */
+  .category-nav-tabs {
+    display: flex;
+    gap: 0.6rem;
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  .tab-btn {
-    padding: 0.6rem 1.5rem;
+  .cat-tab-link {
+    padding: 0.55rem 1.3rem;
     border-radius: 50px;
     font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
-    border: 1.5px solid var(--border);
+    border: 1px solid var(--border);
     background: transparent;
     color: var(--text-muted);
     transition: all 0.3s ease;
     text-decoration: none;
   }
 
-  .tab-btn:hover, .tab-btn.active {
+  .cat-tab-link:hover, .cat-tab-link.active {
     border-color: var(--gold);
     color: var(--gold);
     background: var(--gold-dim);
   }
 
-  .tab-btn.active {
+  .cat-tab-link.active {
     background: linear-gradient(135deg, var(--gold), var(--gold-light));
     color: var(--bg-dark);
     border-color: transparent;
   }
 
-  .dietary-filters {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
+  /* ===== CLASSIC RESTAURANT MENU VIEW WITH INLINE DISH IMAGES ===== */
+  .classic-menu-container {
+    max-width: 980px;
+    margin: 0 auto 4rem;
   }
 
-  .diet-btn {
-    font-size: 0.72rem;
-    padding: 0.35rem 0.9rem;
-    border-radius: 50px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    background: var(--bg-card);
-    transition: all 0.25s ease;
-    text-decoration: none;
+  .classic-category-block {
+    margin-bottom: 4.5rem;
   }
 
-  .diet-btn:hover, .diet-btn.active {
-    border-color: var(--gold);
-    color: var(--cream);
-    background: var(--gold-dim);
+  .classic-cat-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
   }
 
-  /* Category Heading */
-  .category-group {
-    margin-bottom: 5rem;
-  }
-
-  .category-title {
+  .classic-cat-title {
     font-family: var(--font-heading);
-    font-size: 2rem;
-    color: var(--cream);
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .category-title i {
+    font-size: 2.2rem;
     color: var(--gold);
-    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    display: inline-block;
+    padding: 0 1.5rem;
+    background: var(--bg-section);
+    position: relative;
+    z-index: 1;
   }
 
-  .category-desc {
+  .classic-cat-header::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    z-index: 0;
+  }
+
+  .classic-cat-desc {
     font-family: var(--font-elegant);
     font-style: italic;
     color: var(--text-muted);
     font-size: 1.05rem;
-    margin-bottom: 2rem;
+    margin-top: 0.5rem;
   }
 
-  /* Dish Grid */
+  .classic-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .classic-item-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius-lg);
+    background: rgba(18,18,18,0.85);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.35s ease;
+  }
+
+  .classic-item-row:hover {
+    background: rgba(25,25,25,0.95);
+    border-color: rgba(201,168,76,0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateY(-2px);
+  }
+
+  .classic-item-img-box {
+    width: 110px;
+    height: 110px;
+    min-width: 110px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #15100a;
+    position: relative;
+  }
+
+  .classic-item-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .classic-item-row:hover .classic-item-img-box img {
+    transform: scale(1.08);
+  }
+
+  .classic-item-no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #18120c, #261a10);
+  }
+
+  .classic-item-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .classic-item-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .classic-item-name {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: var(--cream);
+    font-weight: 500;
+  }
+
+  .classic-dots {
+    flex-grow: 1;
+    border-bottom: 2px dotted rgba(201,168,76,0.35);
+    margin: 0 0.75rem;
+    height: 1px;
+    align-self: center;
+  }
+
+  .classic-item-price {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: var(--gold);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .classic-item-desc {
+    font-family: var(--font-elegant);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  .classic-item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.6rem;
+  }
+
+  .classic-badges {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  /* ===== VISUAL SHOWCASE GRID VIEW ===== */
   .dishes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -311,13 +522,6 @@
     border-top: 1px solid var(--border);
   }
 
-  .dish-meta-info {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    display: flex;
-    gap: 0.8rem;
-  }
-
   .btn-detail {
     font-size: 0.75rem;
     font-weight: 600;
@@ -331,8 +535,13 @@
 
   .btn-detail:hover { color: var(--gold-light); }
 
-  @media (max-width: 600px) {
-    .dishes-grid { grid-template-columns: 1fr; }
+  @media (max-width: 650px) {
+    .classic-item-row { flex-direction: column; align-items: stretch; }
+    .classic-item-img-box { width: 100%; height: 180px; min-width: auto; }
+    .classic-item-header { flex-wrap: wrap; }
+    .classic-dots { display: none; }
+    .tasting-menu-card { flex-direction: column; text-align: center; }
+    .tasting-price-box { text-align: center; }
   }
 </style>
 {% endblock %}
@@ -343,185 +552,231 @@
 <section class="page-hero" id="menu-hero" aria-label="Menu page header">
   <div class="container">
     <div class="page-hero-breadcrumb">
-      <a href="{% url 'index' %}">Home</a> &nbsp;/&nbsp; Menu
+      <a href="{% url 'index' %}">Home</a> &nbsp;/&nbsp; Carte du Jour
     </div>
-    <h1>Culinary <em>Menu</em></h1>
+    <h1>La Carte du <em>Jour</em></h1>
     <div class="gold-divider"></div>
-    <p>A harmony of taste, seasonal ingredients, and master craftsmanship.</p>
+    <p>Artfully curated seasonal gastronomy crafted with local organic produce and global culinary mastery.</p>
   </div>
 </section>
 
-<!-- ===== MENU SECTION ===== -->
-<section class="menu-section" id="menu-section" aria-label="Restaurant menu">
+<!-- ===== MAIN MENU SECTION ===== -->
+<section class="menu-section" id="menu-section" style="padding: 4rem 0 7rem; background: var(--bg-section);">
   <div class="container">
 
-    <!-- Search & Filter Controls -->
-    <div class="menu-controls fade-in">
-      <form method="get" action="{% url 'menu' %}" class="menu-search-box">
-        <i class="fas fa-search menu-search-icon"></i>
-        <input type="text" name="q" class="menu-search-input" placeholder="Search dishes, ingredients..." value="{{ search_query }}" />
-        {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}" />{% endif %}
-        {% if active_dietary %}<input type="hidden" name="dietary" value="{{ active_dietary }}" />{% endif %}
-      </form>
+    <!-- ===== TASTING MENU HIGHLIGHT ===== -->
+    <div class="tasting-menu-card fade-in">
+      <div>
+        <span class="tasting-badge"><i class="fas fa-crown"></i> Chef's Degustation</span>
+        <h2 class="tasting-title">The Grand Savoir 7-Course Tasting Experience</h2>
+        <p class="tasting-desc">A subterranean gastronomic journey featuring A5 Miyazaki Wagyu, Périgord Black Truffles, Maine Lobster, and artisanal dessert parfaits.</p>
+      </div>
+      <div class="tasting-price-box">
+        <div class="tasting-price">$195</div>
+        <div class="tasting-price-sub">Per Person • Sommelier Pairings +$125</div>
+        <a href="{% url 'reservation' %}" class="btn btn-gold" style="margin-top: 0.75rem; padding: 0.6rem 1.4rem; font-size: 0.78rem;">
+          <i class="fas fa-calendar-check"></i> Reserve Experience
+        </a>
+      </div>
+    </div>
 
-      <!-- Category Tabs -->
-      <div class="menu-tabs">
-        <a href="{% url 'menu' %}{% if active_dietary %}?dietary={{ active_dietary }}{% endif %}" class="tab-btn {% if not active_category %}active{% endif %}">
+    <!-- ===== CONTROLS BAR ===== -->
+    <div class="menu-controls-wrapper fade-in">
+      <div class="controls-top-row">
+        <!-- Search Box -->
+        <form method="get" action="{% url 'menu' %}" class="menu-search-box">
+          <i class="fas fa-search menu-search-icon"></i>
+          <input type="text" name="q" class="menu-search-input" placeholder="Search dishes, ingredients (e.g. Wagyu, Truffle, Salmon)..." value="{{ search_query }}" />
+          {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}" />{% endif %}
+          {% if active_dietary %}<input type="hidden" name="dietary" value="{{ active_dietary }}" />{% endif %}
+        </form>
+
+        <!-- View Mode Switcher -->
+        <div class="view-mode-toggle">
+          <button type="button" class="mode-btn active" id="btn-mode-classic" onclick="switchViewMode('classic')">
+            <i class="fas fa-list"></i> Menu List View
+          </button>
+          <button type="button" class="mode-btn" id="btn-mode-grid" onclick="switchViewMode('grid')">
+            <i class="fas fa-th-large"></i> Photo Grid View
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Navigation Tabs -->
+      <div class="category-nav-tabs">
+        <a href="{% url 'menu' %}{% if active_dietary %}?dietary={{ active_dietary }}{% endif %}" class="cat-tab-link {% if not active_category %}active{% endif %}">
           All Categories
         </a>
         {% for cat in categories %}
-        <a href="{% url 'menu' %}?category={{ cat.slug }}{% if active_dietary %}&dietary={{ active_dietary }}{% endif %}" class="tab-btn {% if active_category == cat.slug %}active{% endif %}">
+        <a href="{% url 'menu' %}?category={{ cat.slug }}{% if active_dietary %}&dietary={{ active_dietary }}{% endif %}" class="cat-tab-link {% if active_category == cat.slug %}active{% endif %}">
           {{ cat.name }}
         </a>
         {% endfor %}
       </div>
 
       <!-- Dietary Filters -->
-      <div class="dietary-filters">
-        <a href="{% url 'menu' %}{% if active_category %}?category={{ active_category }}{% endif %}" class="diet-btn {% if not active_dietary %}active{% endif %}">
+      <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'menu' %}{% if active_category %}?category={{ active_category }}{% endif %}" class="cat-tab-link {% if not active_dietary %}active{% endif %}" style="padding: 0.35rem 0.9rem; font-size: 0.72rem;">
           All Diets
         </a>
-        <a href="{% url 'menu' %}?dietary=veg{% if active_category %}&category={{ active_category }}{% endif %}" class="diet-btn {% if active_dietary == 'veg' %}active{% endif %}">
+        <a href="{% url 'menu' %}?dietary=veg{% if active_category %}&category={{ active_category }}{% endif %}" class="cat-tab-link {% if active_dietary == 'veg' %}active{% endif %}" style="padding: 0.35rem 0.9rem; font-size: 0.72rem;">
           🌱 Vegetarian
         </a>
-        <a href="{% url 'menu' %}?dietary=vegan{% if active_category %}&category={{ active_category }}{% endif %}" class="diet-btn {% if active_dietary == 'vegan' %}active{% endif %}">
+        <a href="{% url 'menu' %}?dietary=vegan{% if active_category %}&category={{ active_category }}{% endif %}" class="cat-tab-link {% if active_dietary == 'vegan' %}active{% endif %}" style="padding: 0.35rem 0.9rem; font-size: 0.72rem;">
           🌿 Vegan
         </a>
-        <a href="{% url 'menu' %}?dietary=gf{% if active_category %}&category={{ active_category }}{% endif %}" class="diet-btn {% if active_dietary == 'gf' %}active{% endif %}">
+        <a href="{% url 'menu' %}?dietary=gf{% if active_category %}&category={{ active_category }}{% endif %}" class="cat-tab-link {% if active_dietary == 'gf' %}active{% endif %}" style="padding: 0.35rem 0.9rem; font-size: 0.72rem;">
           🌾 Gluten-Free
         </a>
       </div>
     </div>
 
-    <!-- Category Groups -->
-    {% if grouped_menu %}
-      {% for category, items in grouped_menu.items %}
-      <div class="category-group fade-in" id="cat-{{ category.slug }}">
-        <h2 class="category-title">
-          {% if category.icon %}<i class="fas {{ category.icon }}"></i>{% endif %}
-          {{ category.name }}
-        </h2>
-        {% if category.description %}
-        <p class="category-desc">{{ category.description }}</p>
-        {% endif %}
+    <!-- ===== MODE 1: CLASSIC RESTAURANT MENU VIEW WITH INLINE DISH IMAGES ===== -->
+    <div id="view-classic-container" class="classic-menu-container fade-in">
+      {% if grouped_menu %}
+        {% for category, items in grouped_menu.items %}
+        <div class="classic-category-block" id="classic-cat-{{ category.slug }}">
+          <div class="classic-cat-header">
+            <h2 class="classic-cat-title">
+              {% if category.icon %}<i class="fas {{ category.icon }}" style="font-size: 1.6rem; color: var(--gold); margin-right: 0.5rem;"></i>{% endif %}
+              {{ category.name }}
+            </h2>
+            {% if category.description %}
+              <div class="classic-cat-desc">{{ category.description }}</div>
+            {% endif %}
+          </div>
 
-        <div class="dishes-grid">
-          {% for item in items %}
-          <article class="dish-card">
-            <div class="dish-img-wrap">
-              {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy" />
-              {% else %}
-                <div class="dish-no-img">🍽️</div>
-              {% endif %}
-              {% if item.is_featured %}<div class="dish-badge">Featured</div>{% endif %}
-            </div>
-            <div class="dish-body">
-              <div class="dish-header">
-                <a href="{% url 'dish_detail' pk=item.pk %}">
+          <div class="classic-menu-list">
+            {% for item in items %}
+            <article class="classic-item-row">
+              <!-- Inline Dish Photo Thumbnail -->
+              <div class="classic-item-img-box">
+                {% if item.image %}
+                  <img src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy" />
+                {% else %}
+                  <div class="classic-item-no-img">🍽️</div>
+                {% endif %}
+              </div>
+
+              <!-- Dish Details & Price Leader -->
+              <div class="classic-item-content">
+                <div class="classic-item-header">
+                  <h3 class="classic-item-name">{{ item.name }}</h3>
+                  <span class="classic-dots"></span>
+                  <span class="classic-item-price">${{ item.price }}</span>
+                </div>
+
+                <div class="classic-item-desc">{{ item.description }}</div>
+
+                <div class="classic-item-footer">
+                  <div class="classic-badges">
+                    {% if item.is_vegetarian %}<span class="badge-veg">🌱 Veg</span>{% endif %}
+                    {% if item.is_vegan %}<span class="badge-vegan">🌿 Vegan</span>{% endif %}
+                    {% if item.is_gluten_free %}<span class="badge-gf">🌾 GF</span>{% endif %}
+                    {% if item.is_featured %}<span style="font-size:0.65rem; background:rgba(201,168,76,0.15); color:var(--gold); border:1px solid rgba(201,168,76,0.3); padding:0.2rem 0.55rem; border-radius:50px; font-weight:600;">👑 Chef Choice</span>{% endif %}
+                  </div>
+
+                  <div style="display: flex; gap: 0.6rem; align-items: center;">
+                    <button onclick="addToCart('{{ item.name|escapejs }}', {{ item.price }})" class="btn btn-outline" style="padding: 0.35rem 0.85rem; font-size: 0.74rem;">
+                      <i class="fas fa-plus"></i> Add
+                    </button>
+                    <a href="{% url 'dish_detail' pk=item.pk %}" class="btn-detail" style="font-size: 0.74rem;">
+                      Details <i class="fas fa-chevron-right"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <!-- ===== MODE 2: VISUAL SHOWCASE GRID VIEW ===== -->
+    <div id="view-grid-container" style="display: none;" class="fade-in">
+      {% if grouped_menu %}
+        {% for category, items in grouped_menu.items %}
+        <div class="category-group" id="grid-cat-{{ category.slug }}" style="margin-bottom: 4rem;">
+          <h2 class="category-title" style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--cream); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+            {% if category.icon %}<i class="fas {{ category.icon }}" style="color: var(--gold);"></i>{% endif %}
+            {{ category.name }}
+          </h2>
+          {% if category.description %}<p class="category-desc" style="font-family: var(--font-elegant); font-style: italic; color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem;">{{ category.description }}</p>{% endif %}
+
+          <div class="dishes-grid">
+            {% for item in items %}
+            <article class="dish-card">
+              <div class="dish-img-wrap">
+                {% if item.image %}
+                  <img src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy" />
+                {% else %}
+                  <div class="dish-no-img">🍽️</div>
+                {% endif %}
+                {% if item.is_featured %}<div class="dish-badge">Featured</div>{% endif %}
+              </div>
+              <div class="dish-body">
+                <div class="dish-header">
                   <h3 class="dish-name">{{ item.name }}</h3>
-                </a>
-                <div class="dish-price">${{ item.price }}</div>
-              </div>
-
-              <div class="dish-badges">
-                {% if item.is_vegetarian %}<span class="badge-veg">Veg</span>{% endif %}
-                {% if item.is_vegan %}<span class="badge-vegan">Vegan</span>{% endif %}
-                {% if item.is_gluten_free %}<span class="badge-gf">GF</span>{% endif %}
-              </div>
-
-              <p class="dish-desc">{{ item.description }}</p>
-
-              <div class="dish-footer" style="flex-wrap:wrap; gap:0.5rem;">
-                <div class="dish-meta-info">
-                  {% if item.prep_time %}<span><i class="fas fa-clock"></i> {{ item.prep_time }}m</span>{% endif %}
-                  {% if item.spice_level != 'none' %}<span><i class="fas fa-pepper-hot"></i> {{ item.get_spice_level_display }}</span>{% endif %}
+                  <div class="dish-price">${{ item.price }}</div>
                 </div>
-                <div style="display:flex; gap:0.5rem; margin-left:auto;">
-                  <button onclick="addToCart('{{ item.name|escapejs }}', {{ item.price }})" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.72rem;">
-                    <i class="fas fa-plus"></i> Add
-                  </button>
-                  <a href="{% url 'dish_detail' pk=item.pk %}" class="btn-detail">
-                    Details <i class="fas fa-chevron-right"></i>
-                  </a>
+
+                <div class="dish-badges">
+                  {% if item.is_vegetarian %}<span class="badge-veg">Veg</span>{% endif %}
+                  {% if item.is_vegan %}<span class="badge-vegan">Vegan</span>{% endif %}
+                  {% if item.is_gluten_free %}<span class="badge-gf">GF</span>{% endif %}
+                </div>
+
+                <p class="dish-desc">{{ item.description }}</p>
+
+                <div class="dish-footer" style="flex-wrap:wrap; gap:0.5rem;">
+                  <div class="dish-meta-info" style="font-size:0.75rem; color:var(--text-muted); display:flex; gap:0.8rem;">
+                    {% if item.prep_time %}<span><i class="fas fa-clock"></i> {{ item.prep_time }}m</span>{% endif %}
+                    {% if item.spice_level != 'none' %}<span><i class="fas fa-pepper-hot"></i> {{ item.get_spice_level_display }}</span>{% endif %}
+                  </div>
+                  <div style="display:flex; gap:0.5rem; margin-left:auto;">
+                    <button onclick="addToCart('{{ item.name|escapejs }}', {{ item.price }})" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.72rem;">
+                      <i class="fas fa-plus"></i> Add
+                    </button>
+                    <a href="{% url 'dish_detail' pk=item.pk %}" class="btn-detail">
+                      Details <i class="fas fa-chevron-right"></i>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
-          {% endfor %}
+            </article>
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      {% endfor %}
-
-    {% else %}
-      <!-- Demo menu if no items in DB yet -->
-      <div class="category-group fade-in">
-        <h2 class="category-title"><i class="fas fa-utensils"></i> Chef's Specials</h2>
-        <p class="category-desc">A selection of our signature creations</p>
-
-        <div class="dishes-grid">
-          <!-- Demo Dish 1 -->
-          <article class="dish-card">
-            <div class="dish-img-wrap">
-              <div class="dish-no-img">🥩</div>
-              <div class="dish-badge">Featured</div>
-            </div>
-            <div class="dish-body">
-              <div class="dish-header">
-                <h3 class="dish-name">A5 Wagyu Beef Tenderloin</h3>
-                <div class="dish-price">$89</div>
-              </div>
-              <div class="dish-badges"><span class="badge-gf">GF</span></div>
-              <p class="dish-desc">Pan-seared A5 Miyazaki Wagyu, truffle pomme purée, charred shallots, 24-hour red wine demi-glace.</p>
-              <div class="dish-footer">
-                <div class="dish-meta-info"><span><i class="fas fa-clock"></i> 25m</span></div>
-                <a href="{% url 'reservation' %}" class="btn-detail">Reserve Table <i class="fas fa-chevron-right"></i></a>
-              </div>
-            </div>
-          </article>
-
-          <!-- Demo Dish 2 -->
-          <article class="dish-card">
-            <div class="dish-img-wrap">
-              <div class="dish-no-img">🍝</div>
-            </div>
-            <div class="dish-body">
-              <div class="dish-header">
-                <h3 class="dish-name">Périgord Black Truffle Pasta</h3>
-                <div class="dish-price">$42</div>
-              </div>
-              <div class="dish-badges"><span class="badge-veg">Veg</span></div>
-              <p class="dish-desc">Handmade tagliolini pasta, shaved fresh Périgord black truffle, 36-month aged Parmigiano Reggiano crema.</p>
-              <div class="dish-footer">
-                <div class="dish-meta-info"><span><i class="fas fa-clock"></i> 20m</span></div>
-                <a href="{% url 'reservation' %}" class="btn-detail">Reserve Table <i class="fas fa-chevron-right"></i></a>
-              </div>
-            </div>
-          </article>
-
-          <!-- Demo Dish 3 -->
-          <article class="dish-card">
-            <div class="dish-img-wrap">
-              <div class="dish-no-img">🦞</div>
-            </div>
-            <div class="dish-body">
-              <div class="dish-header">
-                <h3 class="dish-name">Butter-Poached Maine Lobster</h3>
-                <div class="dish-price">$74</div>
-              </div>
-              <div class="dish-badges"><span class="badge-gf">GF</span></div>
-              <p class="dish-desc">Fresh Maine lobster tail, saffron velouté, oscietra caviar, braised fennel bulb, baby leeks.</p>
-              <div class="dish-footer">
-                <div class="dish-meta-info"><span><i class="fas fa-clock"></i> 22m</span></div>
-                <a href="{% url 'reservation' %}" class="btn-detail">Reserve Table <i class="fas fa-chevron-right"></i></a>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
 
   </div>
 </section>
+
+{% block extra_js %}
+<script>
+  function switchViewMode(mode) {
+    const classicBox = document.getElementById('view-classic-container');
+    const gridBox = document.getElementById('view-grid-container');
+    const btnClassic = document.getElementById('btn-mode-classic');
+    const btnGrid = document.getElementById('btn-mode-grid');
+
+    if (mode === 'classic') {
+      classicBox.style.display = 'block';
+      gridBox.style.display = 'none';
+      btnClassic.classList.add('active');
+      btnGrid.classList.remove('active');
+    } else {
+      classicBox.style.display = 'none';
+      gridBox.style.display = 'block';
+      btnGrid.classList.add('active');
+      btnClassic.classList.remove('active');
+    }
+  }
+</script>
+{% endblock %}
 
 {% endblock %}

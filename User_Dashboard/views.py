@@ -98,7 +98,7 @@ def menu(request):
 
 
 def dish_detail(request, pk):
-    dish = get_object_or_404(MenuItem, pk=pk, is_available=True)
+    dish = get_object_or_404(MenuItem, pk=pk)
     similar_dishes = MenuItem.objects.filter(category=dish.category, is_available=True).exclude(pk=dish.pk)[:3]
     return render(request, 'dish-details.html', {
         'dish':           dish,

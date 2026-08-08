@@ -1,0 +1,113 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Kitchen KDS Screen — Savoir Admin{% endblock %}
+{% block page_title %}🔥 Live Kitchen Display System (KDS){% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom:2rem; display:flex; justify-content:space-between; align-items:center;">
+  <div style="font-size:0.9rem; color:var(--text-muted);">
+    Real-time active tickets in prep kitchen. Auto-refresh enabled.
+  </div>
+  <a href="javascript:location.reload();" class="btn-admin btn-admin-outline">
+    <i class="fas fa-sync"></i> Refresh Tickets
+  </a>
+</div>
+
+<!-- Active Tickets Grid -->
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1.75rem;">
+  {% for order in active_orders %}
+  <div class="admin-card" style="margin:0; border-top:4px solid {% if order.status == 'pending' %}#f1c40f{% elif order.status == 'preparing' %}var(--gold){% else %}#2ecc71{% endif %};">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <div style="font-family:var(--font-heading); font-size:1.4rem; color:var(--gold);">#{{ order.order_ref }}</div>
+      <span class="badge-status badge-{{ order.status }}"><i class="fas fa-clock"></i> {{ order.get_status_display }}</span>
+    </div>
+
+    <div style="font-size:0.85rem; color:var(--cream); margin-bottom:1rem;">
+      Guest: <strong>{{ order.customer_name }}</strong> • <span style="color:var(--gold); font-weight:600;">{{ order.get_order_type_display }}</span>
+    </div>
+
+    <!-- Items -->
+    <div style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1rem 0; margin-bottom:1rem;">
+      {% for item in order.items.all %}
+      <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:600; color:var(--cream); margin-bottom:0.4rem;">
+        <span>{{ item.quantity }}x {{ item.item_name }}</span>
+        <span style="font-size:0.85rem; color:var(--text-muted);">${{ item.unit_price }}</span>
+      </div>
+      {% empty %}
+      <div style="color:var(--text-muted); font-size:0.85rem;">Itemized breakdown pending.</div>
+      {% endfor %}
+    </div>
+
+    {% if order.notes %}
+    <div style="font-size:0.8rem; color:#f1c40f; background:rgba(241,196,15,0.1); padding:0.6rem; border-radius:var(--radius); margin-bottom:1rem; border:1px solid rgba(241,196,15,0.3);">
+      <strong>Kitchen Notes:</strong> {{ order.notes }}
+    </div>
+    {% endif %}
+
+    <div style="display:flex; gap:0.5rem;">
+      {% if order.status == 'pending' %}
+      <form method="post" style="flex:1;">
+        {% csrf_token %}
+        <input type="hidden" name="order_ref" value="{{ order.order_ref }}" />
+        <input type="hidden" name="next_status" value="preparing" />
+        <button type="submit" class="btn-admin btn-admin-gold" style="width:100%; justify-content:center;">
+          <i class="fas fa-fire"></i> Start Preparing
+        </button>
+      </form>
+      {% elif order.status == 'preparing' %}
+      <form method="post" style="flex:1;">
+        {% csrf_token %}
+        <input type="hidden" name="order_ref" value="{{ order.order_ref }}" />
+        <input type="hidden" name="next_status" value="ready" />
+        <button type="submit" class="btn-admin btn-admin-gold" style="width:100%; justify-content:center;">
+          <i class="fas fa-check"></i> Mark Ticket Ready
+        </button>
+      </form>
+      {% elif order.status == 'ready' %}
+      <form method="post" style="flex:1;">
+        {% csrf_token %}
+        <input type="hidden" name="order_ref" value="{{ order.order_ref }}" />
+        <input type="hidden" name="next_status" value="completed" />
+        <button type="submit" class="btn-admin btn-admin-outline" style="width:100%; justify-content:center;">
+          <i class="fas fa-box-check"></i> Complete Ticket
+        </button>
+      </form>
+      {% endif %}
+    </div>
+
+  </div>
+  {% empty %}
+  <div class="admin-card" style="grid-column:1/-1; text-align:center; padding:4rem;">
+    <i class="fas fa-glass-cheers" style="font-size:3rem; color:var(--gold); margin-bottom:1rem;"></i>
+    <h3>Kitchen Order Rail Empty</h3>
+    <p style="color:var(--text-muted);">All food pre-orders have been prepared and dispatched.</p>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+  (function() {
+    let lastOrderCount = null;
+    function checkLiveOrders() {
+      fetch("{% url 'admin_kitchen_api' %}")
+        .then(res => res.json())
+        .then(data => {
+          if (lastOrderCount !== null && data.count > lastOrderCount) {
+            // New ticket arrived! Flash indicator or reload
+            console.log("New order detected!");
+            location.reload();
+          } else if (lastOrderCount !== null && data.count !== lastOrderCount) {
+            location.reload();
+          }
+          lastOrderCount = data.count;
+        })
+        .catch(err => console.log('KDS polling error:', err));
+    }
+    // Poll every 5 seconds
+    setInterval(checkLiveOrders, 5000);
+    checkLiveOrders();
+  })();
+</script>
+
+{% endblock %}

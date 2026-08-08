@@ -1,0 +1,91 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Menu Dishes Management — Savoir Admin{% endblock %}
+{% block page_title %}Food Menu Catalog Management{% endblock %}
+
+{% block content %}
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <div class="admin-card-title"><i class="fas fa-utensils" style="color:var(--gold)"></i> All Menu Dishes ({{ dishes|length }})</div>
+    <a href="{% url 'admin_add_dish' %}" class="btn-admin btn-admin-gold">
+      <i class="fas fa-plus-circle"></i> Add New Dish
+    </a>
+  </div>
+
+  {% if dishes %}
+  <div style="overflow-x:auto;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Dish Image</th>
+          <th>Dish Name & Description</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Dietary Tags</th>
+          <th>Availability</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dish in dishes %}
+        <tr>
+          <td style="width:70px;">
+            {% if dish.image %}
+              <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="width:55px; height:55px; border-radius:var(--radius); object-fit:cover; border:1px solid var(--border);" />
+            {% else %}
+              <div style="width:55px; height:55px; border-radius:var(--radius); background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; color:var(--gold); border:1px solid var(--border);">
+                <i class="fas fa-utensils"></i>
+              </div>
+            {% endif %}
+          </td>
+          <td>
+            <div style="font-weight:700; color:var(--cream);">{{ dish.name }}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">{{ dish.description|truncatewords:8 }}</div>
+          </td>
+          <td><span class="badge-status badge-preparing">{{ dish.category.name }}</span></td>
+          <td style="font-weight:700; color:var(--gold);">${{ dish.price }}</td>
+          <td>
+            {% if dish.is_vegetarian %}<span class="badge-status badge-completed" style="font-size:0.7rem;">Veg</span>{% endif %}
+            {% if dish.is_gluten_free %}<span class="badge-status badge-preparing" style="font-size:0.7rem;">GF</span>{% endif %}
+            {% if dish.spice_level != 'none' %}<span class="badge-status badge-pending" style="font-size:0.7rem;">🌶️ {{ dish.get_spice_level_display }}</span>{% endif %}
+          </td>
+          <td>
+            <form method="post" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="toggle_available" />
+              <input type="hidden" name="dish_id" value="{{ dish.id }}" />
+              <button type="submit" class="badge-status {% if dish.is_available %}badge-completed{% else %}badge-cancelled{% endif %}" style="border:none; cursor:pointer;">
+                {% if dish.is_available %}In Stock{% else %}Sold Out{% endif %}
+              </button>
+            </form>
+          </td>
+          <td>
+            <div style="display:flex; gap:0.4rem;">
+              <a href="{% url 'admin_edit_dish' pk=dish.pk %}" class="btn-admin btn-admin-outline" style="padding:0.3rem 0.6rem; font-size:0.75rem;">
+                <i class="fas fa-edit"></i> Edit
+              </a>
+
+              <form method="post" style="display:inline;" onsubmit="return confirm('Delete this menu dish?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete" />
+                <input type="hidden" name="dish_id" value="{{ dish.id }}" />
+                <button type="submit" class="btn-admin" style="background:#e74c3c; color:#fff; padding:0.3rem 0.6rem; font-size:0.75rem; border:none; cursor:pointer;">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center; color:var(--text-muted); padding:3rem; font-style:italic;">
+    No dishes currently in database. Click "+ Add New Dish" above.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

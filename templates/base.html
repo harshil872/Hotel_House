@@ -902,6 +902,14 @@
 
   // Initialize cart on load
   updateCartUI();
+
+  // Sync cart across tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'savoir_cart') {
+      cart = JSON.parse(e.newValue || '[]');
+      updateCartUI();
+    }
+  });
 </script>
 
 {% block extra_js %}{% endblock %}

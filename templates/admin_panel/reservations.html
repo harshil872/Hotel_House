@@ -1,0 +1,92 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Reservations Management — Savoir Admin{% endblock %}
+{% block page_title %}Table Reservations Management{% endblock %}
+
+{% block content %}
+
+<!-- Filters -->
+<div class="admin-card">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+      <a href="{% url 'admin_reservations' %}" class="btn-admin {% if not status_filter %}btn-admin-gold{% else %}btn-admin-outline{% endif %}">All Bookings</a>
+      <a href="{% url 'admin_reservations' %}?status=pending" class="btn-admin {% if status_filter == 'pending' %}btn-admin-gold{% else %}btn-admin-outline{% endif %}">Pending</a>
+      <a href="{% url 'admin_reservations' %}?status=confirmed" class="btn-admin {% if status_filter == 'confirmed' %}btn-admin-gold{% else %}btn-admin-outline{% endif %}">Confirmed</a>
+      <a href="{% url 'admin_reservations' %}?status=completed" class="btn-admin {% if status_filter == 'completed' %}btn-admin-gold{% else %}btn-admin-outline{% endif %}">Completed</a>
+      <a href="{% url 'admin_reservations' %}?status=cancelled" class="btn-admin {% if status_filter == 'cancelled' %}btn-admin-gold{% else %}btn-admin-outline{% endif %}">Cancelled</a>
+    </div>
+  </div>
+</div>
+
+<!-- Table list -->
+<div class="admin-card">
+  {% if reservations %}
+  <div style="overflow-x:auto;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Booking Ref</th>
+          <th>Guest Details</th>
+          <th>Party Size</th>
+          <th>Date & Time</th>
+          <th>Seating Area</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for res in reservations %}
+        <tr>
+          <td style="font-weight:700; color:var(--gold);">
+            <a href="{% url 'admin_reservation_details' ref=res.booking_ref %}" style="color:var(--gold);">#{{ res.booking_ref }}</a>
+          </td>
+          <td>
+            <div style="font-weight:600; color:var(--cream);">{{ res.name }}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">{{ res.email }}{% if res.phone %} • {{ res.phone }}{% endif %}</div>
+          </td>
+          <td><i class="fas fa-users" style="color:var(--gold)"></i> {{ res.guests }} Guests</td>
+          <td>{{ res.date|date:"M d, Y" }} at {{ res.time }}</td>
+          <td><span class="badge-status badge-preparing">{{ res.get_seating_preference_display|default:res.seating_preference }}</span></td>
+          <td>
+            <span class="badge-status badge-{{ res.status }}">
+              {{ res.get_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex; gap:0.4rem;">
+              <a href="{% url 'admin_reservation_details' ref=res.booking_ref %}" class="btn-admin btn-admin-outline" style="padding:0.3rem 0.6rem; font-size:0.75rem;">
+                <i class="fas fa-edit"></i>
+              </a>
+
+              {% if res.status == 'pending' %}
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="confirm" />
+                <input type="hidden" name="booking_ref" value="{{ res.booking_ref }}" />
+                <button type="submit" class="btn-admin btn-admin-gold" style="padding:0.3rem 0.6rem; font-size:0.75rem;">Confirm</button>
+              </form>
+              {% endif %}
+
+              <form method="post" style="display:inline;" onsubmit="return confirm('Delete this reservation?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete" />
+                <input type="hidden" name="booking_ref" value="{{ res.booking_ref }}" />
+                <button type="submit" class="btn-admin" style="background:#e74c3c; color:#fff; padding:0.3rem 0.6rem; font-size:0.75rem; border:none; cursor:pointer;">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center; color:var(--text-muted); padding:3rem; font-style:italic;">
+    No reservations match the selected filter.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

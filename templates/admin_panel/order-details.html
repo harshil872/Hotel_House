@@ -1,0 +1,95 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Order Details #{{ order.order_ref }} — Savoir Admin{% endblock %}
+{% block page_title %}Order Management #{{ order.order_ref }}{% endblock %}
+
+{% block content %}
+
+<div style="display:grid; grid-template-columns:1.6fr 1fr; gap:2rem;">
+
+  <!-- Order Line Items Breakdown -->
+  <div class="admin-card">
+    <div class="admin-card-header">
+      <div class="admin-card-title">Ordered Line Items</div>
+      <span class="badge-status badge-{{ order.status }}">{{ order.get_status_display }}</span>
+    </div>
+
+    {% if order.items.all %}
+    <table class="admin-table" style="margin-bottom:1.5rem;">
+      <thead>
+        <tr>
+          <th>Dish</th>
+          <th style="text-align:center;">Qty</th>
+          <th style="text-align:right;">Unit Price</th>
+          <th style="text-align:right;">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td style="font-weight:600; color:var(--cream);">{{ item.item_name }}</td>
+          <td style="text-align:center;">{{ item.quantity }}</td>
+          <td style="text-align:right;">${{ item.unit_price }}</td>
+          <td style="text-align:right; font-weight:700; color:var(--gold);">${{ item.get_total }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="text-align:center; padding:2rem; color:var(--text-muted); font-style:italic;">
+      No itemized dishes logged for this order.
+    </div>
+    {% endif %}
+
+    <div style="background:var(--bg-dark); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem; font-size:0.9rem; line-height:1.8;">
+      <div style="display:flex; justify-content:space-between;"><span>Subtotal:</span><span>${{ order.subtotal }}</span></div>
+      <div style="display:flex; justify-content:space-between;"><span>Sales Tax (8.875%):</span><span>${{ order.tax }}</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:700; color:var(--gold); border-top:1px dashed var(--gold); padding-top:0.5rem; margin-top:0.5rem;">
+        <span>Grand Total:</span><span>${{ order.total_price }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Info & Kitchen Status Updater -->
+  <div>
+    <div class="admin-card">
+      <div class="admin-card-title" style="margin-bottom:1rem;"><i class="fas fa-truck" style="color:var(--gold)"></i> Customer & Delivery Details</div>
+      <div style="line-height:1.8; font-size:0.9rem; color:var(--cream);">
+        <div><strong>Customer:</strong> {{ order.customer_name }}</div>
+        <div><strong>Email:</strong> {{ order.customer_email }}</div>
+        <div><strong>Phone:</strong> {{ order.customer_phone }}</div>
+        <div><strong>Order Type:</strong> {{ order.get_order_type_display }}</div>
+        {% if order.delivery_address %}
+          <div style="margin-top:0.5rem;"><strong>Address:</strong><br>{{ order.delivery_address }}</div>
+        {% endif %}
+        {% if order.notes %}
+          <div style="margin-top:0.5rem; color:#f1c40f;"><strong>Notes:</strong><br>{{ order.notes }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Kitchen Status Form -->
+    <div class="admin-card">
+      <div class="admin-card-title" style="margin-bottom:1rem;"><i class="fas fa-fire" style="color:var(--gold)"></i> Kitchen Dispatcher</div>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Dispatch Status</label>
+          <select name="status" class="form-control">
+            <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending Order</option>
+            <option value="preparing" {% if order.status == 'preparing' %}selected{% endif %}>Kitchen Preparing (Cooking)</option>
+            <option value="ready" {% if order.status == 'ready' %}selected{% endif %}>Ready for Delivery / Pickup</option>
+            <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Completed</option>
+            <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-admin btn-admin-gold" style="width:100%; justify-content:center;">
+          <i class="fas fa-sync-alt"></i> Update Status
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

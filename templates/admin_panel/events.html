@@ -1,0 +1,124 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Culinary Events Manager — Savoir Admin{% endblock %}
+{% block page_title %}Culinary Events & Wine Tasting Nights{% endblock %}
+
+{% block content %}
+
+<!-- Create Event Card Form -->
+<div class="admin-card" style="margin-bottom:2rem;">
+  <div class="admin-card-header">
+    <div class="admin-card-title"><i class="fas fa-plus-circle" style="color:var(--gold)"></i> Schedule New Culinary Event</div>
+  </div>
+  <form method="post" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1.25rem;">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="create" />
+
+    <div>
+      <label class="form-label">Event Title *</label>
+      <input type="text" name="title" class="form-control" placeholder="e.g. Bordeaux Wine Gala" required />
+    </div>
+
+    <div>
+      <label class="form-label">Date *</label>
+      <input type="date" name="date" class="form-control" required />
+    </div>
+
+    <div>
+      <label class="form-label">Time</label>
+      <input type="text" name="time" class="form-control" value="7:00 PM" required />
+    </div>
+
+    <div>
+      <label class="form-label">Ticket Price ($)</label>
+      <input type="number" step="0.01" name="price" class="form-control" value="150.00" required />
+    </div>
+
+    <div>
+      <label class="form-label">Guest Capacity</label>
+      <input type="number" name="capacity" class="form-control" value="30" required />
+    </div>
+
+    <div style="grid-column: 1 / -1;">
+      <label class="form-label">Description / Tasting Menu Notes</label>
+      <textarea name="description" class="form-control" rows="2" placeholder="Highlight special dishes, chefs, or sommelier pairings..."></textarea>
+    </div>
+
+    <div style="grid-column: 1 / -1;">
+      <button type="submit" class="btn-admin btn-admin-gold">
+        <i class="fas fa-plus"></i> Publish Event
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Events Table -->
+<div class="admin-card">
+  <div class="admin-card-header">
+    <div class="admin-card-title"><i class="fas fa-wine-glass-alt" style="color:var(--gold)"></i> Scheduled Special Events</div>
+  </div>
+
+  {% if events %}
+  <div style="overflow-x:auto;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Event Title</th>
+          <th>Date & Time</th>
+          <th>Ticket Price</th>
+          <th>Capacity</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ev in events %}
+        <tr>
+          <td style="font-weight:700; color:var(--cream);">
+            {{ ev.title }}
+            {% if ev.description %}
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:400; margin-top:0.2rem;">{{ ev.description|truncatewords:8 }}</div>
+            {% endif %}
+          </td>
+          <td>{{ ev.date|date:"M d, Y" }} at {{ ev.time }}</td>
+          <td style="color:var(--gold); font-weight:700;">${{ ev.price }} / Person</td>
+          <td>{{ ev.capacity }} Seats Max</td>
+          <td>
+            <span class="badge-status {% if ev.is_active %}badge-completed{% else %}badge-cancelled{% endif %}">
+              {% if ev.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex; gap:0.4rem;">
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="toggle_active" />
+                <input type="hidden" name="event_id" value="{{ ev.id }}" />
+                <button type="submit" class="btn-admin btn-admin-outline" style="padding:0.3rem 0.6rem; font-size:0.75rem;">
+                  {% if ev.is_active %}Hide{% else %}Publish{% endif %}
+                </button>
+              </form>
+
+              <form method="post" style="display:inline;" onsubmit="return confirm('Delete this event?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete" />
+                <input type="hidden" name="event_id" value="{{ ev.id }}" />
+                <button type="submit" class="btn-admin" style="background:#e74c3c; color:#fff; padding:0.3rem 0.6rem; font-size:0.75rem; border:none; cursor:pointer;">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center; padding:3rem; color:var(--text-muted); font-style:italic;">
+    No special events currently scheduled. Use the form above to publish a new culinary event.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

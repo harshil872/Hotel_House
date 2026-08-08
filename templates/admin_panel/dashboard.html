@@ -1,0 +1,115 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Dashboard Overview — Savoir Admin{% endblock %}
+{% block page_title %}Executive Dashboard Overview{% endblock %}
+
+{% block content %}
+
+<!-- Top Stats Grid -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.5rem; margin-bottom:2rem;">
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">Total Sales Revenue</div>
+    <div style="font-family:var(--font-heading); font-size:2rem; font-weight:700; color:var(--gold);">${{ total_revenue }}</div>
+    <div style="font-size:0.75rem; color:#2ecc71; margin-top:0.3rem;"><i class="fas fa-arrow-up"></i> +14.2% from last week</div>
+  </div>
+
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">Total Orders</div>
+    <div style="font-family:var(--font-heading); font-size:2rem; font-weight:700; color:var(--cream);">{{ total_orders }}</div>
+    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">Pre-orders & delivery</div>
+  </div>
+
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">Pending Bookings</div>
+    <div style="font-family:var(--font-heading); font-size:2rem; font-weight:700; color:#f1c40f;">{{ pending_reservations }}</div>
+    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">Requires staff confirmation</div>
+  </div>
+
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">Active Dishes</div>
+    <div style="font-family:var(--font-heading); font-size:2rem; font-weight:700; color:var(--cream);">{{ total_dishes }}</div>
+    <div style="font-size:0.75rem; color:var(--gold); margin-top:0.3rem;"><i class="fas fa-utensils"></i> Live on menu</div>
+  </div>
+</div>
+
+<!-- Quick Action Triggers -->
+<div class="admin-card">
+  <div class="admin-card-title" style="margin-bottom:1rem;"><i class="fas fa-bolt" style="color:var(--gold)"></i> Quick Actions</div>
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    <a href="{% url 'admin_add_dish' %}" class="btn-admin btn-admin-gold"><i class="fas fa-plus-circle"></i> Add New Dish</a>
+    <a href="{% url 'admin_kitchen' %}" class="btn-admin btn-admin-outline"><i class="fas fa-fire"></i> Open Kitchen KDS Screen</a>
+    <a href="{% url 'admin_reservations' %}" class="btn-admin btn-admin-outline"><i class="fas fa-calendar-alt"></i> Manage Reservations</a>
+    <a href="{% url 'admin_orders' %}" class="btn-admin btn-admin-outline"><i class="fas fa-receipt"></i> Process Orders</a>
+  </div>
+</div>
+
+<!-- Two Column Recent Activity Grid -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.75rem;">
+  
+  <!-- Recent Food Orders -->
+  <div class="admin-card" style="margin:0;">
+    <div class="admin-card-header">
+      <div class="admin-card-title"><i class="fas fa-shopping-bag" style="color:var(--gold)"></i> Recent Orders</div>
+      <a href="{% url 'admin_orders' %}" style="font-size:0.8rem; color:var(--gold);">View All</a>
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Ref</th>
+          <th>Customer</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in recent_orders %}
+        <tr>
+          <td style="font-weight:700; color:var(--gold);">
+            <a href="{% url 'admin_order_details' ref=order.order_ref %}">{{ order.order_ref }}</a>
+          </td>
+          <td>{{ order.customer_name }}</td>
+          <td>${{ order.total_price }}</td>
+          <td><span class="badge badge-gold">{{ order.get_status_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No recent orders found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recent Table Reservations -->
+  <div class="admin-card" style="margin:0;">
+    <div class="admin-card-header">
+      <div class="admin-card-title"><i class="fas fa-calendar-check" style="color:var(--gold)"></i> Recent Bookings</div>
+      <a href="{% url 'admin_reservations' %}" style="font-size:0.8rem; color:var(--gold);">View All</a>
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Ref</th>
+          <th>Guest</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for res in recent_reservations %}
+        <tr>
+          <td style="font-weight:700; color:var(--gold);">
+            <a href="{% url 'admin_reservation_details' ref=res.booking_ref %}">{{ res.booking_ref }}</a>
+          </td>
+          <td>{{ res.name }}</td>
+          <td>{{ res.date|date:"M d" }} at {{ res.time }}</td>
+          <td><span class="badge-status badge-{{ res.status }}">{{ res.get_status_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No recent reservations found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Savoir Fine Dining Management</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: #141414;
+      --border: #262626;
+      --gold: #C9A84C;
+      --gold-light: #E8D399;
+      --gold-dim: rgba(201, 168, 76, 0.12);
+      --cream: #F5E8C7;
+      --text-muted: #8E8E8E;
+      --font-body: 'Inter', sans-serif;
+      --font-heading: 'Playfair Display', serif;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%), var(--bg-dark);
+      color: var(--cream);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .brand-logo {
+      font-size: 2.2rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      color: var(--cream);
+      letter-spacing: 0.05em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 0.3rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      border-radius: var(--radius);
+      border: none;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--bg-dark);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.75rem;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(201,168,76,0.3);
+    }
+
+    .messages-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .alert-error {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.4);
+      color: #e74c3c;
+    }
+
+    .alert-success {
+      background: rgba(46, 204, 113, 0.15);
+      border: 1px solid rgba(46, 204, 113, 0.4);
+      color: #2ecc71;
+    }
+
+    .alert-warning {
+      background: rgba(241, 196, 15, 0.15);
+      border: 1px solid rgba(241, 196, 15, 0.4);
+      color: #f1c40f;
+    }
+
+    .footer-link {
+      text-align: center;
+      margin-top: 1.75rem;
+      font-size: 0.8rem;
+    }
+
+    .footer-link a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-link a:hover {
+      color: var(--gold);
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+
+  <div class="brand-header">
+    <div class="brand-logo"><i class="fas fa-crown"></i></div>
+    <h1 class="brand-title">Savoir Restaurant</h1>
+    <div class="brand-subtitle">Staff Administrator Portal</div>
+  </div>
+
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'error' }}">
+      <i class="fas fa-exclamation-circle"></i> {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Administrator Username or Email</label>
+      <div style="position:relative;">
+        <input type="text" name="username" class="form-control" placeholder="Enter staff ID or email..." required autofocus />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Enter password..." required />
+    </div>
+
+    <button type="submit" class="btn-login">
+      <i class="fas fa-lock"></i> Log In to Admin Panel
+    </button>
+  </form>
+
+  <div class="footer-link">
+    <a href="{% url 'index' %}"><i class="fas fa-arrow-left"></i> Return to Main Public Website</a>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Categories Management — Savoir Admin{% endblock %}
+{% block page_title %}Food & Wine Menu Categories{% endblock %}
+
+{% block content %}
+
+<div style="display:grid; grid-template-columns:1fr 1.5fr; gap:2rem;">
+
+  <!-- Add Category Form -->
+  <div class="admin-card">
+    <div class="admin-card-title" style="margin-bottom:1.5rem;"><i class="fas fa-folder-plus" style="color:var(--gold)"></i> Add New Category</div>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="create" />
+
+      <div class="form-group">
+        <label class="form-label">Category Name *</label>
+        <input type="text" name="name" class="form-control" placeholder="e.g. Artisanal Cocktails" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Icon Class (Font Awesome)</label>
+        <input type="text" name="icon" class="form-control" placeholder="e.g. fa-cocktail" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea name="description" rows="3" class="form-control" placeholder="Short summary of this category..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-admin btn-admin-gold" style="width:100%; justify-content:center;">
+        <i class="fas fa-plus"></i> Create Category
+      </button>
+    </form>
+  </div>
+
+  <!-- Categories Table -->
+  <div class="admin-card">
+    <div class="admin-card-title" style="margin-bottom:1.5rem;"><i class="fas fa-layer-group" style="color:var(--gold)"></i> Existing Categories</div>
+    {% if categories %}
+    <div style="overflow-x:auto;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Category Name</th>
+            <th>Description</th>
+            <th>Dishes Count</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cat in categories %}
+          <tr>
+            <td style="font-weight:700; color:var(--gold);">
+              {% if cat.icon %}<i class="fas {{ cat.icon }}" style="margin-right:0.3rem;"></i>{% endif %}
+              {{ cat.name }}
+            </td>
+            <td style="color:var(--text-muted); font-size:0.85rem;">{{ cat.description|default:"—" }}</td>
+            <td><span class="badge-status badge-completed">{{ cat.items.count }} Dishes</span></td>
+            <td>
+              <form method="post" style="display:inline;" onsubmit="return confirm('Delete this category? Associated menu dishes may be deleted.');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete" />
+                <input type="hidden" name="category_id" value="{{ cat.id }}" />
+                <button type="submit" class="btn-admin" style="background:#e74c3c; color:#fff; padding:0.3rem 0.6rem; font-size:0.75rem; border:none; cursor:pointer;">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; color:var(--text-muted); padding:3rem; font-style:italic;">
+      No categories created yet.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

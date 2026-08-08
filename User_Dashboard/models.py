@@ -297,3 +297,80 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity}x {self.item_name} @ ${self.unit_price}"
+
+
+# ─────────────────────────────────────────
+# DINING TABLE / FLOOR PLAN
+# ─────────────────────────────────────────
+class Table(models.Model):
+    LOCATION_CHOICES = [
+        ('main',    'Main Dining Room'),
+        ('window',  'Window Area'),
+        ('terrace', 'Outdoor Terrace'),
+        ('private', 'Private Dining'),
+    ]
+
+    table_number = models.PositiveIntegerField(unique=True)
+    capacity     = models.PositiveIntegerField(default=4)
+    location     = models.CharField(max_length=20, choices=LOCATION_CHOICES, default='main')
+    is_occupied  = models.BooleanField(default=False)
+    is_active    = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Table #{self.table_number} ({self.get_location_display()} - {self.capacity} Seats)"
+
+    class Meta:
+        ordering = ['table_number']
+
+
+# ─────────────────────────────────────────
+# PROMO OFFER / COUPON
+# ─────────────────────────────────────────
+class Offer(models.Model):
+    code             = models.CharField(max_length=50, unique=True)
+    title            = models.CharField(max_length=200)
+    discount_percent = models.PositiveIntegerField(default=10)
+    valid_until      = models.DateField(null=True, blank=True)
+    is_active        = models.BooleanField(default=True)
+    created_at       = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.code} ({self.discount_percent}% OFF)"
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+# ─────────────────────────────────────────
+# CULINARY EVENT
+# ─────────────────────────────────────────
+class CulinaryEvent(models.Model):
+    title       = models.CharField(max_length=200)
+    date        = models.DateField()
+    time        = models.CharField(max_length=50, default='7:00 PM')
+    price       = models.DecimalField(max_digits=8, decimal_places=2, default=150.00)
+    capacity    = models.PositiveIntegerField(default=30)
+    description = models.TextField(blank=True)
+    is_active   = models.BooleanField(default=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.date})"
+
+    class Meta:
+        ordering = ['date']
+
+
+# ─────────────────────────────────────────
+# RESTAURANT SYSTEM SETTINGS
+# ─────────────────────────────────────────
+class RestaurantSetting(models.Model):
+    brand_name    = models.CharField(max_length=200, default='Savoir Fine Dining')
+    phone         = models.CharField(max_length=50, default='+1 (212) 555-0192')
+    email         = models.EmailField(default='reservations@savoir-dining.com')
+    tax_rate      = models.DecimalField(max_digits=5, decimal_places=3, default=8.875)
+    address       = models.TextField(default='42 Gourmet Avenue, Manhattan, New York, NY 10001')
+    opening_hours = models.TextField(default='Mon-Thu: 5PM - 10PM | Fri-Sat: 5PM - 11PM | Sun: 4PM - 9:30PM')
+
+    def __str__(self):
+        return self.brand_name

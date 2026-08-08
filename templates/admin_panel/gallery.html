@@ -1,0 +1,94 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Gallery Assets Manager — Savoir Admin{% endblock %}
+{% block page_title %}Ambiance & Food Photo Gallery Manager{% endblock %}
+
+{% block content %}
+
+<div class="admin-card" style="margin-bottom:2rem;">
+  <div class="admin-card-header">
+    <div class="admin-card-title"><i class="fas fa-images" style="color:var(--gold)"></i> Upload Gallery Image Asset</div>
+  </div>
+  <form method="post" enctype="multipart/form-data" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1.25rem;">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="upload" />
+
+    <div>
+      <label class="form-label">Photo Image File *</label>
+      <input type="file" name="image" accept="image/*" class="form-control" required />
+    </div>
+
+    <div>
+      <label class="form-label">Caption / Description</label>
+      <input type="text" name="caption" class="form-control" placeholder="e.g. Wagyu Steak & Truffles" />
+    </div>
+
+    <div>
+      <label class="form-label">Category Tag</label>
+      <select name="category" class="form-control">
+        <option value="food">Food & Dishes</option>
+        <option value="ambiance">Ambiance & Interior</option>
+        <option value="events">Events & Celebrations</option>
+        <option value="chefs">Our Chefs</option>
+        <option value="exterior">Exterior</option>
+      </select>
+    </div>
+
+    <div style="grid-column: 1 / -1;">
+      <button type="submit" class="btn-admin btn-admin-gold">
+        <i class="fas fa-upload"></i> Upload to Gallery
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Current Gallery Assets Grid -->
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:1.5rem;">
+  {% if images %}
+    {% for img in images %}
+    <div class="admin-card" style="margin:0; padding:0.75rem; display:flex; flex-direction:column; justify-space-between;">
+      {% if img.image %}
+        <img src="{{ img.image.url }}" alt="{{ img.caption }}" style="width:100%; height:150px; object-fit:cover; border-radius:var(--radius); margin-bottom:0.75rem;" />
+      {% else %}
+        <div style="width:100%; height:150px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:2rem; border-radius:var(--radius); margin-bottom:0.75rem;">
+          <i class="fas fa-image"></i>
+        </div>
+      {% endif %}
+
+      <div style="font-size:0.85rem; font-weight:600; color:var(--cream); margin-bottom:0.2rem;">
+        {{ img.caption|default:img.get_category_display }}
+      </div>
+      <div style="font-size:0.75rem; color:var(--gold); margin-bottom:0.75rem;">
+        {{ img.get_category_display }}
+      </div>
+
+      <div style="display:flex; gap:0.4rem; margin-top:auto;">
+        <form method="post" style="flex:1;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="toggle_active" />
+          <input type="hidden" name="image_id" value="{{ img.id }}" />
+          <button type="submit" class="btn-admin btn-admin-outline" style="width:100%; justify-content:center; padding:0.3rem; font-size:0.75rem;">
+            {% if img.is_active %}Visible{% else %}Hidden{% endif %}
+          </button>
+        </form>
+
+        <form method="post" style="flex:1;" onsubmit="return confirm('Delete this image asset?');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete" />
+          <input type="hidden" name="image_id" value="{{ img.id }}" />
+          <button type="submit" class="btn-admin" style="background:#e74c3c; color:#fff; width:100%; justify-content:center; padding:0.3rem; font-size:0.75rem; border:none; cursor:pointer;">
+            <i class="fas fa-trash"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+    {% endfor %}
+  {% else %}
+    <div style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--text-muted); font-style:italic;">
+      No gallery photos uploaded yet. Use the upload form above to add image assets.
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

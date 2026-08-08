@@ -1,0 +1,61 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Customer CRM Database — Savoir Admin{% endblock %}
+{% block page_title %}Customer Relationship Database (CRM){% endblock %}
+
+{% block content %}
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <div class="admin-card-title"><i class="fas fa-users" style="color:var(--gold)"></i> Registered Guests ({{ customers|length }})</div>
+  </div>
+
+  {% if customers %}
+  <div style="overflow-x:auto;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Customer Profile</th>
+          <th>Contact Email</th>
+          <th>Phone</th>
+          <th>Dietary Notes</th>
+          <th>Bookings / Orders</th>
+          <th>Date Joined</th>
+          <th>Membership Tier</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cust in customers %}
+        <tr>
+          <td style="font-weight:700; color:var(--cream);">
+            <i class="fas fa-user-circle" style="color:var(--gold)"></i> {{ cust.first_name }} {{ cust.last_name|default:"" }}
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:400;">@{{ cust.username }}</div>
+          </td>
+          <td>{{ cust.email|default:"No Email" }}</td>
+          <td>{{ cust.profile.phone|default:"—" }}</td>
+          <td style="font-size:0.85rem; color:var(--text-muted);">{{ cust.profile.dietary_preferences|default:"None specified" }}</td>
+          <td>
+            <span style="font-weight:600; color:var(--gold);">{{ cust.reservations.count }} Bookings</span> • 
+            <span style="font-weight:600; color:var(--cream);">{{ cust.orders.count }} Orders</span>
+          </td>
+          <td style="font-size:0.8rem; color:var(--text-muted);">{{ cust.date_joined|date:"M d, Y" }}</td>
+          <td>
+            {% if cust.orders.count >= 3 or cust.reservations.count >= 3 %}
+              <span class="badge-status badge-completed"><i class="fas fa-crown"></i> VIP Gold Guest</span>
+            {% else %}
+              <span class="badge-status badge-pending">Standard Member</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center; color:var(--text-muted); padding:3rem; font-style:italic;">
+    No registered guest accounts found in database.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

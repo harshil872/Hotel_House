@@ -1,0 +1,176 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Sales Analytics & Reports — Savoir Admin{% endblock %}
+{% block page_title %}Sales Performance & Revenue Analytics{% endblock %}
+
+{% block content %}
+
+<!-- Top Stats Grid -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem; margin-bottom:2rem;">
+  
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem;">
+      <i class="fas fa-dollar-sign" style="color:var(--gold); margin-right:0.3rem;"></i> Gross Revenue
+    </div>
+    <div style="font-family:var(--font-heading); font-size:2.2rem; color:var(--gold); font-weight:700;">${{ total_revenue }}</div>
+    <div style="font-size:0.75rem; color:#2ecc71; margin-top:0.3rem;"><i class="fas fa-chart-line"></i> Total calculated sales</div>
+  </div>
+
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem;">
+      <i class="fas fa-shopping-bag" style="color:var(--gold); margin-right:0.3rem;"></i> Orders Processed
+    </div>
+    <div style="font-family:var(--font-heading); font-size:2.2rem; color:var(--cream); font-weight:700;">{{ total_orders }}</div>
+    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">Avg Order Value: ${{ avg_order_value }}</div>
+  </div>
+
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem;">
+      <i class="fas fa-utensils" style="color:var(--gold); margin-right:0.3rem;"></i> Table Bookings
+    </div>
+    <div style="font-family:var(--font-heading); font-size:2.2rem; color:var(--gold); font-weight:700;">{{ total_reservations }}</div>
+    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">Reservations logged</div>
+  </div>
+
+  <div class="admin-card" style="margin:0;">
+    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem;">
+      <i class="fas fa-users" style="color:var(--gold); margin-right:0.3rem;"></i> Registered Guests
+    </div>
+    <div style="font-family:var(--font-heading); font-size:2.2rem; color:var(--cream); font-weight:700;">{{ total_customers }}</div>
+    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">Active CRM accounts</div>
+  </div>
+
+</div>
+
+<!-- Analytics & CSV Download Action Bar -->
+<div class="admin-card">
+  <div class="admin-card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <div class="admin-card-title"><i class="fas fa-file-invoice-dollar" style="color:var(--gold)"></i> Export Financial Statements</div>
+      <div style="color:var(--text-muted); font-size:0.85rem; margin-top:0.2rem;">
+        Generate comprehensive itemized statements and order breakdowns for accounting compliance.
+      </div>
+    </div>
+    <a href="?export=csv" class="btn-admin btn-admin-gold" style="text-decoration:none;">
+      <i class="fas fa-download"></i> Export CSV Report
+    </a>
+  </div>
+</div>
+
+<!-- Order Channel Breakdown & Top Items Grid -->
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin-bottom:2rem;">
+
+  <!-- Order Distribution -->
+  <div class="admin-card" style="margin:0;">
+    <div class="admin-card-title" style="margin-bottom:1.25rem;">
+      <i class="fas fa-pie-chart" style="color:var(--gold)"></i> Fulfillment Channel Distribution
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1rem;">
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.3rem;">
+          <span><i class="fas fa-store" style="color:var(--gold)"></i> Takeaway / Pickup</span>
+          <span style="color:var(--gold); font-weight:600;">{{ pickup_count }} Orders</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden;">
+          <div style="background:var(--gold); height:100%; width:{% if total_orders %}{% widthratio pickup_count total_orders 100 %}{% else %}0{% endif %}%;"></div>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.3rem;">
+          <span><i class="fas fa-motorcycle" style="color:var(--gold)"></i> Home Delivery</span>
+          <span style="color:var(--gold); font-weight:600;">{{ delivery_count }} Orders</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden;">
+          <div style="background:#e74c3c; height:100%; width:{% if total_orders %}{% widthratio delivery_count total_orders 100 %}{% else %}0{% endif %}%;"></div>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.3rem;">
+          <span><i class="fas fa-chair" style="color:var(--gold)"></i> Dine-In Pre-Orders</span>
+          <span style="color:var(--gold); font-weight:600;">{{ dinein_count }} Orders</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden;">
+          <div style="background:#2ecc71; height:100%; width:{% if total_orders %}{% widthratio dinein_count total_orders 100 %}{% else %}0{% endif %}%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Dishes Leaderboard -->
+  <div class="admin-card" style="margin:0;">
+    <div class="admin-card-title" style="margin-bottom:1.25rem;">
+      <i class="fas fa-trophy" style="color:var(--gold)"></i> Best Selling Dishes
+    </div>
+    {% if top_items %}
+    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+      {% for item in top_items %}
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.8rem; background:rgba(255,255,255,0.02); border-radius:6px; border:1px solid var(--border);">
+        <div style="font-size:0.9rem; font-weight:500; color:var(--cream);">
+          <span style="color:var(--gold); margin-right:0.4rem;">#{{ forloop.counter }}</span> {{ item.item_name }}
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.85rem; font-weight:600; color:var(--gold);">{{ item.total_qty }} Sold</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:2rem; color:var(--text-muted); font-style:italic;">
+      No item sales data logged yet.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- Recent Orders Statement Log Table -->
+<div class="admin-card">
+  <div class="admin-card-header">
+    <div class="admin-card-title"><i class="fas fa-list-alt" style="color:var(--gold)"></i> Recent Financial Transactions</div>
+  </div>
+
+  {% if recent_orders %}
+  <div style="overflow-x:auto;">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Order Ref</th>
+          <th>Customer</th>
+          <th>Type</th>
+          <th>Subtotal</th>
+          <th>Tax</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ord in recent_orders %}
+        <tr>
+          <td style="font-weight:600; color:var(--gold);">#{{ ord.order_ref }}</td>
+          <td>{{ ord.customer_name }}</td>
+          <td style="text-transform:capitalize;">{{ ord.order_type }}</td>
+          <td>${{ ord.subtotal }}</td>
+          <td>${{ ord.tax }}</td>
+          <td style="font-weight:700; color:var(--cream);">${{ ord.total_price }}</td>
+          <td>
+            <span class="badge-status badge-{{ ord.status }}">
+              {{ ord.get_status_display|default:ord.status }}
+            </span>
+          </td>
+          <td style="font-size:0.8rem; color:var(--text-muted);">{{ ord.created_at|date:"M d, Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center; padding:3rem; color:var(--text-muted); font-style:italic;">
+    No transactions registered in the database yet.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

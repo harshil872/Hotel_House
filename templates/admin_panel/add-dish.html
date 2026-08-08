@@ -1,0 +1,90 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Add New Dish — Savoir Admin{% endblock %}
+{% block page_title %}Create New Menu Item{% endblock %}
+
+{% block content %}
+
+<div class="admin-card" style="max-width:850px;">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+      <div class="form-group">
+        <label class="form-label">Dish Name *</label>
+        <input type="text" name="name" class="form-control" required placeholder="e.g. Pan-Seared Duck Breast" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select name="category" class="form-control" required>
+          {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Price ($ USD) *</label>
+        <input type="number" step="0.01" name="price" class="form-control" required placeholder="e.g. 42.00" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Spice Level</label>
+        <select name="spice_level" class="form-control">
+          <option value="none">Not Spicy</option>
+          <option value="mild">Mild</option>
+          <option value="medium">Medium</option>
+          <option value="hot">Hot</option>
+          <option value="extra">Extra Hot</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Dish Image File</label>
+      <input type="file" name="image" accept="image/*" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Description *</label>
+      <textarea name="description" rows="3" class="form-control" placeholder="Detailed dish description..." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Key Ingredients (Comma-separated)</label>
+      <input type="text" name="ingredients" class="form-control" placeholder="e.g. Wagyu Beef, Black Truffle, Rosemary" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Chef's Pairing Notes</label>
+      <textarea name="chef_notes" rows="2" class="form-control" placeholder="Wine or cocktail pairing recommendation..."></textarea>
+    </div>
+
+    <div style="display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap;">
+      <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+        <input type="checkbox" name="is_vegetarian" style="accent-color:var(--gold);" /> Vegetarian
+      </label>
+
+      <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+        <input type="checkbox" name="is_gluten_free" style="accent-color:var(--gold);" /> Gluten-Free
+      </label>
+
+      <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+        <input type="checkbox" name="is_featured" style="accent-color:var(--gold);" /> Featured Dish
+      </label>
+
+      <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+        <input type="checkbox" name="is_available" checked style="accent-color:var(--gold);" /> In Stock / Available
+      </label>
+    </div>
+
+    <div style="display:flex; gap:1rem;">
+      <button type="submit" class="btn-admin btn-admin-gold"><i class="fas fa-save"></i> Save & Publish Dish</button>
+      <a href="{% url 'admin_menu' %}" class="btn-admin btn-admin-outline">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

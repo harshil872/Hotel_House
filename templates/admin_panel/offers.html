@@ -1,0 +1,100 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Offers & Promo Coupons — Savoir Admin{% endblock %}
+{% block page_title %}Promo Coupons & Discount Campaigns{% endblock %}
+
+{% block content %}
+
+<div style="display:grid; grid-template-columns:1fr 1.5fr; gap:2rem;">
+
+  <!-- Create Coupon Form -->
+  <div class="admin-card">
+    <div class="admin-card-title" style="margin-bottom:1.5rem;"><i class="fas fa-ticket-alt" style="color:var(--gold)"></i> Create Promo Code</div>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="create" />
+
+      <div class="form-group">
+        <label class="form-label">Coupon Code *</label>
+        <input type="text" name="code" class="form-control" placeholder="e.g. SAVOIR20" required style="text-transform:uppercase;" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Campaign Title / Description *</label>
+        <input type="text" name="title" class="form-control" placeholder="e.g. 20% Off Fine Dining Pre-Order" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Discount Percentage (%) *</label>
+        <input type="number" name="discount_percent" class="form-control" placeholder="10" value="10" min="1" max="100" required />
+      </div>
+
+      <button type="submit" class="btn-admin btn-admin-gold" style="width:100%; justify-content:center;">
+        <i class="fas fa-plus"></i> Save Promo Code
+      </button>
+    </form>
+  </div>
+
+  <!-- Active Coupons List -->
+  <div class="admin-card">
+    <div class="admin-card-title" style="margin-bottom:1.5rem;"><i class="fas fa-list-alt" style="color:var(--gold)"></i> Active Coupons</div>
+    {% if offers %}
+    <div style="overflow-x:auto;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Coupon Code</th>
+            <th>Title & Discount</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for offer in offers %}
+          <tr>
+            <td style="font-weight:700; color:var(--gold); font-size:1.05rem;">{{ offer.code }}</td>
+            <td>
+              <div style="font-weight:500; color:var(--cream);">{{ offer.title }}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">{{ offer.discount_percent }}% OFF</div>
+            </td>
+            <td>
+              <span class="badge-status {% if offer.is_active %}badge-completed{% else %}badge-cancelled{% endif %}">
+                {% if offer.is_active %}Active{% else %}Inactive{% endif %}
+              </span>
+            </td>
+            <td>
+              <div style="display:flex; gap:0.4rem;">
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="toggle_active" />
+                  <input type="hidden" name="offer_id" value="{{ offer.id }}" />
+                  <button type="submit" class="btn-admin btn-admin-outline" style="padding:0.3rem 0.6rem; font-size:0.75rem;">
+                    {% if offer.is_active %}Disable{% else %}Enable{% endif %}
+                  </button>
+                </form>
+
+                <form method="post" style="display:inline;" onsubmit="return confirm('Delete this offer?');">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="delete" />
+                  <input type="hidden" name="offer_id" value="{{ offer.id }}" />
+                  <button type="submit" class="btn-admin" style="background:#e74c3c; color:#fff; padding:0.3rem 0.6rem; font-size:0.75rem; border:none; cursor:pointer;">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:3rem; color:var(--text-muted); font-style:italic;">
+      No promo offers added yet. Use the form on the left to create a coupon code.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}
