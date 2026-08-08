@@ -235,7 +235,7 @@
       <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
       <div class="step-item active">
         <div class="step-num">2</div>
-        <span>Delivery Info</span>
+        <span id="chk-step2-label">Delivery Info</span>
       </div>
       <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
       <div class="step-item">
@@ -255,7 +255,7 @@
 
         <!-- Left: Form -->
         <div class="checkout-card fade-in">
-          <h2><i class="fas fa-map-marker-alt"></i> Contact & Delivery Details</h2>
+          <h2><i id="chk-card-icon" class="fas fa-map-marker-alt"></i> <span id="chk-card-heading">Contact & Delivery Details</span></h2>
 
           <div class="form-grid-2">
             <div class="form-group">
@@ -277,6 +277,72 @@
             <div class="form-group full" id="delivery-address-group">
               <label class="form-label">Delivery Address *</label>
               <textarea id="chk-address" class="form-textarea" placeholder="Street address, Apartment / Suite number, City, Zip Code">{{ profile.address }}</textarea>
+            </div>
+
+            <!-- Dine-In Details Group (shows if order method is Dine-In) -->
+            <div class="form-group full" id="dinein-details-group" style="display:none;">
+              <div style="background:var(--bg-dark); border:1px solid var(--gold-dim); border-radius:var(--radius); padding:1.25rem; margin-bottom:0.5rem;">
+                <h4 style="color:var(--gold); font-family:var(--font-heading); margin-bottom:1rem; font-size:1.1rem;">
+                  <i class="fas fa-utensils"></i> Dine-In Table Selection
+                </h4>
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">Select Table *</label>
+                    <select id="chk-table-num" class="form-select">
+                      <option value="Table #1 (Main Room)">Table #1 — Main Dining Room (2 Seats)</option>
+                      <option value="Table #2 (Window Area)">Table #2 — Window Area (4 Seats)</option>
+                      <option value="Table #3 (Outdoor Terrace)">Table #3 — Outdoor Terrace (4 Seats)</option>
+                      <option value="Table #4 (Private Booth)">Table #4 — Private Booth (6 Seats)</option>
+                      <option value="Table #5 (Chef Counter)">Table #5 — Chef's Counter (2 Seats)</option>
+                      <option value="Table #6 (Garden View)">Table #6 — Garden View (4 Seats)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Dine-In / Arrival Time *</label>
+                    <select id="chk-dine-time" class="form-select">
+                      <option value="ASAP / Right Now">ASAP / Serving Now</option>
+                      <option value="6:00 PM">6:00 PM (Dinner)</option>
+                      <option value="6:30 PM">6:30 PM (Dinner)</option>
+                      <option value="7:00 PM">7:00 PM (Dinner)</option>
+                      <option value="7:30 PM">7:30 PM (Dinner)</option>
+                      <option value="8:00 PM">8:00 PM (Dinner)</option>
+                      <option value="8:30 PM">8:30 PM (Dinner)</option>
+                    </select>
+                  </div>
+                  <div class="form-group full">
+                    <label class="form-label">Number of Guests *</label>
+                    <select id="chk-diners" class="form-select">
+                      <option value="1 Guest">1 Guest</option>
+                      <option value="2 Guests" selected>2 Guests</option>
+                      <option value="3 Guests">3 Guests</option>
+                      <option value="4 Guests">4 Guests</option>
+                      <option value="5+ Guests">5+ Guests (Party)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pickup Details Group (shows if order method is Pickup) -->
+            <div class="form-group full" id="pickup-details-group" style="display:none;">
+              <div style="background:var(--bg-dark); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem; margin-bottom:0.5rem;">
+                <h4 style="color:var(--gold); font-family:var(--font-heading); margin-bottom:1rem; font-size:1.1rem;">
+                  <i class="fas fa-store"></i> Store Pickup Location
+                </h4>
+                <div class="form-group">
+                  <label class="form-label">Pickup Location</label>
+                  <input type="text" class="form-input" value="Savoir Fine Dining Counter — 42 Gourmet Ave, Manhattan, NY" readonly style="opacity:0.8; cursor:not-allowed;" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Estimated Pickup Schedule *</label>
+                  <select id="chk-pickup-time" class="form-select">
+                    <option value="ASAP (In 20-25 mins)">ASAP (Ready in 20-25 mins)</option>
+                    <option value="30 mins from now">30 minutes from now</option>
+                    <option value="45 mins from now">45 minutes from now</option>
+                    <option value="1 hour from now">1 hour from now</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div class="form-group full">
@@ -322,7 +388,53 @@
 
 {% block extra_js %}
 <script>
+  let orderType = localStorage.getItem('savoir_order_type') || 'pickup';
+
+  function setupCheckoutFormUI() {
+    orderType = localStorage.getItem('savoir_order_type') || 'pickup';
+    const step2Label = document.getElementById('chk-step2-label');
+    const cardIcon = document.getElementById('chk-card-icon');
+    const cardHeading = document.getElementById('chk-card-heading');
+
+    const delGrp = document.getElementById('delivery-address-group');
+    const dineGrp = document.getElementById('dinein-details-group');
+    const pickGrp = document.getElementById('pickup-details-group');
+
+    const addressInput = document.getElementById('chk-address');
+
+    if (orderType === 'dine_in') {
+      if (step2Label) step2Label.textContent = 'Dine-In Details';
+      if (cardIcon) cardIcon.className = 'fas fa-utensils';
+      if (cardHeading) cardHeading.textContent = 'Contact & Dine-In Table Details';
+      
+      if (dineGrp) dineGrp.style.display = 'block';
+      if (delGrp) delGrp.style.display = 'none';
+      if (pickGrp) pickGrp.style.display = 'none';
+      if (addressInput) addressInput.removeAttribute('required');
+    } else if (orderType === 'pickup') {
+      if (step2Label) step2Label.textContent = 'Pickup Details';
+      if (cardIcon) cardIcon.className = 'fas fa-store';
+      if (cardHeading) cardHeading.textContent = 'Contact & Store Pickup Details';
+
+      if (pickGrp) pickGrp.style.display = 'block';
+      if (delGrp) delGrp.style.display = 'none';
+      if (dineGrp) dineGrp.style.display = 'none';
+      if (addressInput) addressInput.removeAttribute('required');
+    } else {
+      if (step2Label) step2Label.textContent = 'Delivery Info';
+      if (cardIcon) cardIcon.className = 'fas fa-motorcycle';
+      if (cardHeading) cardHeading.textContent = 'Contact & Delivery Address Details';
+
+      if (delGrp) delGrp.style.display = 'block';
+      if (dineGrp) dineGrp.style.display = 'none';
+      if (pickGrp) pickGrp.style.display = 'none';
+      if (addressInput) addressInput.setAttribute('required', 'required');
+    }
+  }
+
   function renderCheckoutSummary() {
+    setupCheckoutFormUI();
+
     const list = document.getElementById('checkout-items-list');
     if (!list) return;
 
@@ -356,12 +468,27 @@
 
   function saveCheckoutInfo(e) {
     e.preventDefault();
+    let formattedAddress = '';
+
+    if (orderType === 'dine_in') {
+      const tbl = document.getElementById('chk-table-num').value;
+      const tm = document.getElementById('chk-dine-time').value;
+      const gsts = document.getElementById('chk-diners').value;
+      formattedAddress = `Dine-In Table: ${tbl} | Time: ${tm} | Diners: ${gsts}`;
+    } else if (orderType === 'pickup') {
+      const ptm = document.getElementById('chk-pickup-time').value;
+      formattedAddress = `Store Pickup at Savoir Main Counter | Time: ${ptm}`;
+    } else {
+      formattedAddress = document.getElementById('chk-address').value;
+    }
+
     const info = {
       name: document.getElementById('chk-name').value,
       email: document.getElementById('chk-email').value,
       phone: document.getElementById('chk-phone').value,
-      address: document.getElementById('chk-address').value,
+      address: formattedAddress,
       notes: document.getElementById('chk-notes').value,
+      order_type: orderType,
     };
     localStorage.setItem('savoir_checkout_info', JSON.stringify(info));
     window.location.href = "{% url 'payment' %}";

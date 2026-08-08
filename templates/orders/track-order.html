@@ -198,13 +198,25 @@
         <h1>Live Order Tracking</h1>
       </div>
       <div class="eta-pill">
-        <i class="fas fa-motorcycle"></i> Estimated Arrival: 25 mins
+        {% if order.order_type == 'dine_in' %}
+          <i class="fas fa-chair"></i> Estimated Service: 15-20 mins
+        {% elif order.order_type == 'pickup' %}
+          <i class="fas fa-store"></i> Ready for Pickup: ~20 mins
+        {% else %}
+          <i class="fas fa-motorcycle"></i> Estimated Arrival: 25 mins
+        {% endif %}
       </div>
     </div>
 
     <!-- Live 4-Stage Progress Tracker Bar -->
     <div class="tracker-card fade-in">
-      <h3><i class="fas fa-tasks"></i> Kitchen & Delivery Status</h3>
+      <h3>
+        <i class="{% if order.order_type == 'dine_in' %}fas fa-utensils{% elif order.order_type == 'pickup' %}fas fa-store{% else %}fas fa-tasks{% endif %}"></i> 
+        {% if order.order_type == 'dine_in' %}Dine-In Kitchen & Table Service Status
+        {% elif order.order_type == 'pickup' %}Kitchen & Store Pickup Status
+        {% else %}Kitchen & Delivery Status
+        {% endif %}
+      </h3>
 
       <div class="track-timeline">
         <div class="track-step done">
@@ -220,44 +232,69 @@
         </div>
 
         <div class="track-step">
-          <div class="track-step-icon"><i class="fas fa-box"></i></div>
-          <div class="track-step-title">Quality Pack</div>
+          <div class="track-step-icon"><i class="fas fa-concierge-bell"></i></div>
+          <div class="track-step-title">Plated & Inspected</div>
           <div class="track-step-time">Upcoming</div>
         </div>
 
         <div class="track-step">
-          <div class="track-step-icon"><i class="fas fa-motorcycle"></i></div>
-          <div class="track-step-title">Out for Delivery</div>
+          <div class="track-step-icon">
+            <i class="{% if order.order_type == 'dine_in' %}fas fa-utensils{% elif order.order_type == 'pickup' %}fas fa-store{% else %}fas fa-motorcycle{% endif %}"></i>
+          </div>
+          <div class="track-step-title">
+            {% if order.order_type == 'dine_in' %}Served at Table
+            {% elif order.order_type == 'pickup' %}Ready for Pickup
+            {% else %}Out for Delivery
+            {% endif %}
+          </div>
           <div class="track-step-time">Upcoming</div>
         </div>
       </div>
     </div>
 
-    <!-- Courier & Delivery Location Grid -->
+    <!-- Courier / Table Details Grid -->
     <div class="courier-grid fade-in">
       
-      <!-- Courier Info -->
+      <!-- Info Card -->
       <div class="courier-card">
         <h4 style="font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:1.25rem;">
-          Assigned Delivery Specialist
+          {% if order.order_type == 'dine_in' %}Dine-In Service Captain
+          {% elif order.order_type == 'pickup' %}Front Desk & Pickup Counter
+          {% else %}Assigned Delivery Specialist
+          {% endif %}
         </h4>
         <div class="courier-info">
           <div class="courier-avatar">
-            <i class="fas fa-user-shield"></i>
+            <i class="{% if order.order_type == 'dine_in' %}fas fa-concierge-bell{% elif order.order_type == 'pickup' %}fas fa-store{% else %}fas fa-user-shield{% endif %}"></i>
           </div>
           <div>
-            <div style="font-family:var(--font-heading); font-size:1.2rem; color:var(--cream);">Marcus Vance</div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Savoir Executive Courier #4</div>
+            <div style="font-family:var(--font-heading); font-size:1.2rem; color:var(--cream);">
+              {% if order.order_type == 'dine_in' %}Chef Jean-Pierre & Table Server Team
+              {% elif order.order_type == 'pickup' %}Front Desk Host Expediter
+              {% else %}Marcus Vance
+              {% endif %}
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">
+              {% if order.order_type == 'dine_in' %}Savoir Main Room Floor Staff
+              {% elif order.order_type == 'pickup' %}Main Entrance Reception
+              {% else %}Savoir Executive Courier #4
+              {% endif %}
+            </div>
           </div>
         </div>
 
         <div style="font-size:0.88rem; color:var(--cream); line-height:1.6; margin-bottom:1.5rem;">
-          <strong>Delivery Destination:</strong><br>
-          {{ order.delivery_address|default:"Pickup at Restaurant — 42 Gourmet Ave, NY" }}
+          <strong>
+            {% if order.order_type == 'dine_in' %}Table & Seating Info:
+            {% elif order.order_type == 'pickup' %}Pickup Instructions:
+            {% else %}Delivery Destination:
+            {% endif %}
+          </strong><br>
+          {{ order.delivery_address|default:"Dine-In Pre-Order Table" }}
         </div>
 
         <a href="tel:+12125550192" class="btn btn-gold" style="width:100%; justify-content:center; padding:0.75rem;">
-          <i class="fas fa-phone-alt"></i> Contact Courier / Restaurant
+          <i class="fas fa-phone-alt"></i> Contact Restaurant / Host
         </a>
       </div>
 

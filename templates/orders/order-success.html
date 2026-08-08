@@ -201,7 +201,7 @@
       <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
       <div class="step-item completed">
         <div class="step-num"><i class="fas fa-check"></i></div>
-        <span>Delivery Info</span>
+        <span>{% if order.order_type == 'dine_in' %}Dine-In Details{% elif order.order_type == 'pickup' %}Pickup Details{% else %}Delivery Info{% endif %}</span>
       </div>
       <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
       <div class="step-item completed">
@@ -225,14 +225,47 @@
       <p>Thank you, {{ order.customer_name }}! Our chefs are preparing your meal.</p>
       <div class="order-ref-badge">{{ order.order_ref }}</div>
 
+      <div style="margin-bottom: 1.5rem;">
+        {% if order.order_type == 'dine_in' %}
+          <span class="btn btn-outline" style="padding: 0.35rem 1rem; font-size: 0.8rem; border-color: var(--gold); color: var(--gold);">
+            <i class="fas fa-utensils"></i> Pre-Order for Dine-In Table
+          </span>
+        {% elif order.order_type == 'pickup' %}
+          <span class="btn btn-outline" style="padding: 0.35rem 1rem; font-size: 0.8rem; border-color: var(--gold); color: var(--gold);">
+            <i class="fas fa-store"></i> Store Pickup
+          </span>
+        {% else %}
+          <span class="btn btn-outline" style="padding: 0.35rem 1rem; font-size: 0.8rem; border-color: var(--gold); color: var(--gold);">
+            <i class="fas fa-motorcycle"></i> Home Delivery
+          </span>
+        {% endif %}
+      </div>
+
+      {% if order.delivery_address %}
+      <div style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; text-align: left; font-size: 0.88rem;">
+        <strong style="color: var(--gold); display: block; margin-bottom: 0.25rem;">
+          {% if order.order_type == 'dine_in' %}<i class="fas fa-chair"></i> Dining & Table Details:
+          {% elif order.order_type == 'pickup' %}<i class="fas fa-store"></i> Pickup Instructions:
+          {% else %}<i class="fas fa-map-marker-alt"></i> Delivery Destination:
+          {% endif %}
+        </strong>
+        <span style="color: var(--cream);">{{ order.delivery_address }}</span>
+      </div>
+      {% endif %}
+
       <!-- Live Estimated Timer -->
       <div class="countdown-box">
         <div>
           <i class="fas fa-clock" style="font-size:1.8rem; color:var(--gold)"></i>
         </div>
         <div style="text-align:left;">
-          <div class="timer-num">35:00</div>
-          <div class="timer-label">Estimated Preparation & Delivery Time</div>
+          <div class="timer-num">25:00</div>
+          <div class="timer-label">
+            {% if order.order_type == 'dine_in' %}Estimated Kitchen Prep Time (Served at Table)
+            {% elif order.order_type == 'pickup' %}Estimated Kitchen Prep Time (Ready for Pickup)
+            {% else %}Estimated Preparation & Delivery Time
+            {% endif %}
+          </div>
         </div>
       </div>
 
@@ -263,7 +296,7 @@
 
       <div class="success-actions">
         <a href="{% url 'track_order' ref=order.order_ref %}" class="btn btn-gold" id="track-order-btn">
-          <i class="fas fa-motorcycle"></i> Track Order Live
+          <i class="{% if order.order_type == 'dine_in' %}fas fa-utensils{% elif order.order_type == 'pickup' %}fas fa-store{% else %}fas fa-motorcycle{% endif %}"></i> Track Order Status
         </a>
         <button onclick="window.print()" class="btn btn-outline">
           <i class="fas fa-print"></i> Print Receipt

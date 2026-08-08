@@ -303,7 +303,7 @@
       <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
       <div class="step-item completed">
         <div class="step-num"><i class="fas fa-check"></i></div>
-        <span>Delivery Info</span>
+        <span id="pay-step2-label">Delivery Info</span>
       </div>
       <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
       <div class="step-item active">
@@ -350,33 +350,95 @@
             </div>
           </div>
 
-          <!-- Card Preview Graphic -->
-          <div class="credit-card-preview" id="card-preview-box">
-            <div class="card-chip"></div>
-            <div class="card-number-display" id="card-num-disp">•••• •••• •••• 4242</div>
-            <div class="card-flex">
-              <div>Cardholder<br><span id="card-name-disp">ALEXANDER WRIGHT</span></div>
-              <div>Expires<br><span id="card-exp-disp">12/28</span></div>
+          <!-- 1. Credit / Debit Panel -->
+          <div id="panel-card">
+            <!-- Card Preview Graphic -->
+            <div class="credit-card-preview" id="card-preview-box">
+              <div class="card-chip"></div>
+              <div class="card-number-display" id="card-num-disp">•••• •••• •••• 4242</div>
+              <div class="card-flex">
+                <div>Cardholder<br><span id="card-name-disp">ALEXANDER WRIGHT</span></div>
+                <div>Expires<br><span id="card-exp-disp">12/28</span></div>
+              </div>
+            </div>
+
+            <!-- Card Input Fields -->
+            <div id="card-inputs-panel">
+              <div class="form-group full">
+                <label class="form-label">Card Number</label>
+                <input type="text" id="card-num-input" class="form-input" placeholder="4242 4242 4242 4242" maxlength="19" oninput="updateCardNum(this)" required />
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Expiry Date</label>
+                  <input type="text" id="card-exp-input" class="form-input" placeholder="MM/YY" maxlength="5" oninput="updateCardExp(this)" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CVC / CVV</label>
+                  <input type="text" id="card-cvc-input" class="form-input" placeholder="123" maxlength="4" required />
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Card Input Fields -->
-          <div id="card-inputs-panel">
-            <div class="form-group full">
-              <label class="form-label">Card Number</label>
-              <input type="text" class="form-input" placeholder="4242 4242 4242 4242" maxlength="19" oninput="updateCardNum(this)" required />
+          <!-- 2. Apple / Google Pay Panel (QR Code) -->
+          <div id="panel-apple" style="display:none; text-align:center; padding:1.5rem; background:var(--bg-dark); border:1px solid var(--gold); border-radius:var(--radius-lg); margin-bottom:1.5rem;">
+            <div style="font-size:1.6rem; color:var(--cream); margin-bottom:0.4rem;">
+              <i class="fab fa-apple"></i> Apple Pay &nbsp;|&nbsp; <i class="fab fa-google"></i> Google Pay
             </div>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem;">
+              Scan this QR code with your mobile device camera for instant TouchID / FaceID wallet authorization.
+            </p>
+            <!-- Generated QR Code Container -->
+            <div style="background:#ffffff; padding:1rem; display:inline-block; border-radius:16px; border:2px solid var(--gold); box-shadow:0 10px 30px rgba(0,0,0,0.5); margin-bottom:1rem;">
+              <svg width="170" height="170" viewBox="0 0 100 100" fill="#111" xmlns="http://www.w3.org/2000/svg">
+                <!-- QR Code Pattern -->
+                <rect width="100" height="100" fill="#fff"/>
+                <!-- Corner 1 -->
+                <rect x="5" y="5" width="30" height="30" fill="#111"/>
+                <rect x="10" y="10" width="20" height="20" fill="#fff"/>
+                <rect x="14" y="14" width="12" height="12" fill="#111"/>
+                <!-- Corner 2 -->
+                <rect x="65" y="5" width="30" height="30" fill="#111"/>
+                <rect x="70" y="10" width="20" height="20" fill="#fff"/>
+                <rect x="74" y="14" width="12" height="12" fill="#111"/>
+                <!-- Corner 3 -->
+                <rect x="5" y="65" width="30" height="30" fill="#111"/>
+                <rect x="10" y="70" width="20" height="20" fill="#fff"/>
+                <rect x="14" y="74" width="12" height="12" fill="#111"/>
+                <!-- Data Modules -->
+                <rect x="40" y="10" width="8" height="8" fill="#111"/>
+                <rect x="50" y="10" width="8" height="8" fill="#111"/>
+                <rect x="40" y="25" width="16" height="8" fill="#111"/>
+                <rect x="10" y="40" width="8" height="16" fill="#111"/>
+                <rect x="25" y="45" width="10" height="10" fill="#111"/>
+                <rect x="40" y="40" width="20" height="20" fill="#c9a84c"/>
+                <rect x="65" y="40" width="10" height="8" fill="#111"/>
+                <rect x="80" y="40" width="10" height="16" fill="#111"/>
+                <rect x="45" y="65" width="12" height="12" fill="#111"/>
+                <rect x="65" y="65" width="15" height="8" fill="#111"/>
+                <rect x="82" y="65" width="8" height="25" fill="#111"/>
+                <rect x="45" y="82" width="25" height="8" fill="#111"/>
+                <circle cx="50" cy="50" r="6" fill="#111"/>
+              </svg>
+            </div>
+            <div style="font-size:0.8rem; color:var(--gold); font-weight:700; letter-spacing:0.08em; text-transform:uppercase;">
+              <i class="fas fa-qrcode"></i> Scan to Pay • Instant Mobile Authorization
+            </div>
+          </div>
 
-            <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label">Expiry Date</label>
-                <input type="text" class="form-input" placeholder="MM/YY" maxlength="5" oninput="updateCardExp(this)" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label">CVC / CVV</label>
-                <input type="text" class="form-input" placeholder="123" maxlength="4" required />
-              </div>
+          <!-- 3. Cash Payment Panel -->
+          <div id="panel-cash" style="display:none; text-align:center; padding:2rem 1.5rem; background:var(--bg-dark); border:1px solid var(--border); border-radius:var(--radius-lg); margin-bottom:1.5rem;">
+            <div style="width:70px; height:70px; border-radius:50%; background:var(--gold-dim); border:2px solid var(--gold); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 1rem;">
+              <i class="fas fa-money-bill-wave"></i>
             </div>
+            <h3 style="font-family:var(--font-heading); color:var(--cream); font-size:1.3rem; margin-bottom:0.5rem;">
+              Pay with Cash
+            </h3>
+            <p id="cash-instructions-text" style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; max-width:400px; margin:0 auto;">
+              Your order will be sent directly to our kitchen. Cash payment will be collected upon arrival or dining completion.
+            </p>
           </div>
 
           <!-- Staff Tip Selector -->
@@ -384,8 +446,8 @@
             <i class="fas fa-heart" style="color:var(--gold)"></i> Add Chef & Staff Gratuity
           </h3>
           <div class="tip-options">
-            <button type="button" class="tip-btn" onclick="applyTip(0.00, this)">No Tip</button>
-            <button type="button" class="tip-btn active" onclick="applyTip(10, this)">10%</button>
+            <button type="button" class="tip-btn active" id="tip-btn-0" onclick="applyTip(0.00, this)">No Tip</button>
+            <button type="button" class="tip-btn" onclick="applyTip(10, this)">10%</button>
             <button type="button" class="tip-btn" onclick="applyTip(15, this)">15%</button>
             <button type="button" class="tip-btn" onclick="applyTip(20, this)">20%</button>
           </div>
@@ -439,6 +501,13 @@
     const info = JSON.parse(localStorage.getItem('savoir_checkout_info') || '{}');
     const type = localStorage.getItem('savoir_order_type') || 'pickup';
 
+    const step2Label = document.getElementById('pay-step2-label');
+    if (step2Label) {
+      if (type === 'dine_in') step2Label.textContent = 'Dine-In Details';
+      else if (type === 'pickup') step2Label.textContent = 'Pickup Details';
+      else step2Label.textContent = 'Delivery Info';
+    }
+
     document.getElementById('post-cart-data').value = JSON.stringify(cart);
     document.getElementById('post-name').value = info.name || "{{ user.first_name }} {{ user.last_name }}";
     document.getElementById('post-email').value = info.email || "{{ user.email }}";
@@ -448,7 +517,7 @@
     document.getElementById('post-notes').value = info.notes || "";
 
     currentSubtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    applyTip(10); // default 10% tip
+    applyTip(0, document.getElementById('tip-btn-0')); // default No Tip
   }
 
   function applyTip(percentage, btn) {
@@ -471,6 +540,59 @@
   function selectPayMethod(method) {
     document.querySelectorAll('.pay-tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('pay-' + method).classList.add('active');
+
+    const panelCard = document.getElementById('panel-card');
+    const panelApple = document.getElementById('panel-apple');
+    const panelCash = document.getElementById('panel-cash');
+    const submitBtn = document.getElementById('pay-submit-btn');
+
+    const cardNum = document.getElementById('card-num-input');
+    const cardExp = document.getElementById('card-exp-input');
+    const cardCvc = document.getElementById('card-cvc-input');
+
+    if (method === 'card') {
+      panelCard.style.display = 'block';
+      panelApple.style.display = 'none';
+      panelCash.style.display = 'none';
+
+      if (cardNum) cardNum.setAttribute('required', 'required');
+      if (cardExp) cardExp.setAttribute('required', 'required');
+      if (cardCvc) cardCvc.setAttribute('required', 'required');
+
+      if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-lock"></i> Authorize & Pay Now';
+    } else if (method === 'apple') {
+      panelCard.style.display = 'none';
+      panelApple.style.display = 'block';
+      panelCash.style.display = 'none';
+
+      if (cardNum) cardNum.removeAttribute('required');
+      if (cardExp) cardExp.removeAttribute('required');
+      if (cardCvc) cardCvc.removeAttribute('required');
+
+      if (submitBtn) submitBtn.innerHTML = '<i class="fab fa-apple"></i> Pay with Apple / Google Pay';
+    } else if (method === 'cash') {
+      panelCard.style.display = 'none';
+      panelApple.style.display = 'none';
+      panelCash.style.display = 'block';
+
+      if (cardNum) cardNum.removeAttribute('required');
+      if (cardExp) cardExp.removeAttribute('required');
+      if (cardCvc) cardCvc.removeAttribute('required');
+
+      const orderType = localStorage.getItem('savoir_order_type') || 'pickup';
+      const cashText = document.getElementById('cash-instructions-text');
+      if (cashText) {
+        if (orderType === 'dine_in') {
+          cashText.textContent = 'Pay with Cash directly at your dining table after your meal.';
+        } else if (orderType === 'pickup') {
+          cashText.textContent = 'Pay with Cash at the Savoir Front Desk / Reception counter when picking up your food.';
+        } else {
+          cashText.textContent = 'Pay with Cash to the courier upon delivery of your meal.';
+        }
+      }
+
+      if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Order (Pay Cash)';
+    }
   }
 
   function updateCardNum(input) {
