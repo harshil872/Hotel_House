@@ -1,7 +1,9 @@
 from django.contrib import admin
+
 from .models import (MenuCategory, MenuItem, GalleryImage, TeamMember,
                     Testimonial, ContactMessage, Reservation, UserProfile, Order, OrderItem,
-                    Table, Offer, CulinaryEvent, RestaurantSetting)
+                    Offer, CulinaryEvent, RestaurantSetting)
+
 
 
 class OrderItemInline(admin.TabularInline):
@@ -83,13 +85,6 @@ class ReservationAdmin(admin.ModelAdmin):
     ordering      = ['-created_at']
 
 
-@admin.register(Table)
-class TableAdmin(admin.ModelAdmin):
-    list_display  = ['table_number', 'capacity', 'location', 'is_occupied', 'is_active']
-    list_editable = ['is_occupied', 'is_active']
-    list_filter   = ['location', 'is_occupied', 'is_active']
-
-
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
     list_display  = ['code', 'title', 'discount_percent', 'valid_until', 'is_active']
@@ -105,3 +100,4 @@ class CulinaryEventAdmin(admin.ModelAdmin):
 @admin.register(RestaurantSetting)
 class RestaurantSettingAdmin(admin.ModelAdmin):
     list_display  = ['brand_name', 'phone', 'email', 'tax_rate']
+

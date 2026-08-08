@@ -60,5 +60,8 @@ urlpatterns = [
     path('admin-panel/gallery/',               admin_views.admin_gallery,             name='admin_gallery'),
     path('admin-panel/messages/',              admin_views.admin_messages,            name='admin_messages'),
     path('admin-panel/reports/',               admin_views.admin_reports,             name='admin_reports'),
+    path('admin-panel/sessions/',              admin_views.admin_sessions,            name='admin_sessions'),
+    path('admin-panel/sessions/<str:session_key>/', admin_views.admin_session_detail,   name='admin_session_detail'),
     path('admin-panel/settings/',              admin_views.admin_settings,            name='admin_settings'),
 ]
+

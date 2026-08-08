@@ -299,9 +299,6 @@
       <li class="admin-nav-item {% if request.resolver_match.url_name == 'admin_kitchen' %}active{% endif %}">
         <a href="{% url 'admin_kitchen' %}"><i class="fas fa-fire"></i> Kitchen KDS</a>
       </li>
-      <li class="admin-nav-item {% if request.resolver_match.url_name == 'admin_tables' %}active{% endif %}">
-        <a href="{% url 'admin_tables' %}"><i class="fas fa-chair"></i> Tables Layout</a>
-      </li>
 
       <div class="nav-section-label">MENU & CATALOG</div>
       <li class="admin-nav-item {% if request.resolver_match.url_name == 'admin_menu' or 'dish' in request.resolver_match.url_name %}active{% endif %}">
@@ -338,6 +335,8 @@
       <li class="admin-nav-item {% if request.resolver_match.url_name == 'admin_settings' %}active{% endif %}">
         <a href="{% url 'admin_settings' %}"><i class="fas fa-sliders-h"></i> Settings</a>
       </li>
+
+
       <li class="admin-nav-item">
         <a href="{% url 'index' %}" target="_blank"><i class="fas fa-external-link-alt"></i> View Public Site</a>
       </li>

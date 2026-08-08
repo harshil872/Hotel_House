@@ -200,3 +200,41 @@ class AdminPanelSecurityAndKDSTests(TestCase):
         data = json.loads(response.content)
         self.assertIn('orders', data)
         self.assertEqual(data['count'], 1)
+
+
+class AdminSessionManagementTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.staff_user = User.objects.create_user(
+            username='sessionadmin',
+            email='sessadmin@example.com',
+            password='StaffPassword123!',
+            is_staff=True
+        )
+
+    def test_admin_sessions_view_requires_staff(self):
+        response = self.client.get(reverse('admin_sessions'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_admin_sessions_view_staff_access(self):
+        self.client.login(username='sessionadmin', password='StaffPassword123!')
+        response = self.client.get(reverse('admin_sessions'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Active Sessions Register")
+
+    def test_admin_session_detail_view(self):
+        self.client.login(username='sessionadmin', password='StaffPassword123!')
+        session_key = self.client.session.session_key
+        response = self.client.get(reverse('admin_session_detail', args=[session_key]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Session Inspector")
+
+    def test_admin_session_terminate_action(self):
+        self.client.login(username='sessionadmin', password='StaffPassword123!')
+        session_key = self.client.session.session_key
+        response = self.client.post(reverse('admin_sessions'), {
+            'action': 'terminate',
+            'session_key': session_key
+        })
+        self.assertEqual(response.status_code, 302)
+

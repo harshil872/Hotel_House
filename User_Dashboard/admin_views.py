@@ -9,9 +9,12 @@ from django.utils.text import slugify
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 from .models import (MenuItem, MenuCategory, Reservation, Order, OrderItem,
                     UserProfile, ContactMessage, Testimonial, GalleryImage,
                     Table, Offer, CulinaryEvent, RestaurantSetting)
+
 
 
 # Helper decorator to redirect unauthenticated/non-staff users to custom /savoir_admin/ login page
@@ -601,3 +604,153 @@ def admin_settings(request):
         return redirect('admin_settings')
 
     return render(request, 'admin_panel/settings.html', {'setting': setting})
+
+
+# 20. Active User & Guest Session Manager View
+@staff_required
+def admin_sessions(request):
+    now = timezone.now()
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        session_key = request.POST.get('session_key')
+        target_user_id = request.POST.get('user_id')
+
+        if action == 'terminate' and session_key:
+            deleted_count = Session.objects.filter(session_key=session_key).delete()[0]
+            if deleted_count:
+                messages.success(request, f"Session '{session_key}' successfully terminated.")
+            else:
+                messages.warning(request, f"Session '{session_key}' not found or already deleted.")
+            return redirect('admin_sessions')
+
+        elif action == 'terminate_user_sessions' and target_user_id:
+            user_obj = User.objects.filter(pk=target_user_id).first()
+            if user_obj:
+                count = 0
+                for sess in Session.objects.all():
+                    try:
+                        decoded = sess.get_decoded()
+                        if str(decoded.get('_auth_user_id')) == str(target_user_id):
+                            sess.delete()
+                            count += 1
+                    except Exception:
+                        pass
+                messages.success(request, f"Terminated {count} session(s) for user @{user_obj.username}.")
+            return redirect('admin_sessions')
+
+        elif action == 'clear_expired':
+            expired_count = Session.objects.filter(expire_date__lt=now).delete()[0]
+            messages.success(request, f"Flushed {expired_count} expired session(s) from database.")
+            return redirect('admin_sessions')
+
+    # Fetch all sessions & parse metadata
+    all_sessions_qs = Session.objects.all().order_by('-expire_date')
+    
+    # Pre-fetch user dictionary for efficient lookups
+    users_dict = {str(u.id): u for u in User.objects.all()}
+
+    session_list = []
+    total_sessions_cnt = 0
+    active_user_cnt = 0
+    anonymous_cnt = 0
+    expired_cnt = 0
+
+    filter_type = request.GET.get('type', 'all').strip().lower()
+    search_query = request.GET.get('q', '').strip().lower()
+
+    for sess in all_sessions_qs:
+        total_sessions_cnt += 1
+        is_expired = sess.expire_date < now
+        if is_expired:
+            expired_cnt += 1
+
+        decoded = {}
+        try:
+            decoded = sess.get_decoded()
+        except Exception:
+            pass
+
+        user_id_val = decoded.get('_auth_user_id')
+        user_obj = users_dict.get(str(user_id_val)) if user_id_val else None
+
+        if user_obj and not is_expired:
+            active_user_cnt += 1
+        elif not user_obj and not is_expired:
+            anonymous_cnt += 1
+
+        # Check cart item count if present in session
+        cart_items_count = 0
+        cart_data = decoded.get('cart', {})
+        if isinstance(cart_data, dict):
+            cart_items_count = sum(cart_data.values()) if cart_data else 0
+
+        sess_info = {
+            'session_key': sess.session_key,
+            'expire_date': sess.expire_date,
+            'is_expired': is_expired,
+            'user': user_obj,
+            'cart_items_count': cart_items_count,
+            'keys_count': len(decoded),
+            'auth_backend': decoded.get('_auth_user_backend', ''),
+        }
+
+        # Apply filtering
+        if filter_type == 'user' and (not user_obj or is_expired):
+            continue
+        elif filter_type == 'anonymous' and (user_obj or is_expired):
+            continue
+        elif filter_type == 'expired' and not is_expired:
+            continue
+
+        # Apply searching
+        if search_query:
+            key_match = search_query in sess.session_key.lower()
+            username_match = user_obj and (search_query in user_obj.username.lower() or (user_obj.email and search_query in user_obj.email.lower()))
+            if not (key_match or username_match):
+                continue
+
+        session_list.append(sess_info)
+
+    return render(request, 'admin_panel/sessions.html', {
+        'sessions': session_list,
+        'total_sessions': total_sessions_cnt,
+        'active_user_sessions': active_user_cnt,
+        'anonymous_sessions': anonymous_cnt,
+        'expired_sessions': expired_cnt,
+        'current_type': filter_type,
+        'search_query': search_query,
+    })
+
+
+# 21. Detailed Session Inspector View
+@staff_required
+def admin_session_detail(request, session_key):
+    sess = get_object_or_404(Session, session_key=session_key)
+    now = timezone.now()
+    is_expired = sess.expire_date < now
+
+    decoded = {}
+    try:
+        decoded = sess.get_decoded()
+    except Exception as e:
+        decoded_error = str(e)
+    else:
+        decoded_error = None
+
+    user_obj = None
+    user_id_val = decoded.get('_auth_user_id')
+    if user_id_val:
+        user_obj = User.objects.filter(pk=user_id_val).first()
+
+    pretty_json = json.dumps(decoded, indent=2, default=str)
+
+    return render(request, 'admin_panel/session-detail.html', {
+        'session_obj': sess,
+        'is_expired': is_expired,
+        'decoded': decoded,
+        'pretty_json': pretty_json,
+        'decoded_error': decoded_error,
+        'associated_user': user_obj,
+    })
+
